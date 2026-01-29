@@ -1,0 +1,155 @@
+---
+import { Image } from "astro:assets";
+import logo from "../assets/logo.svg";
+---
+
+<nav class="fixed w-full z-50 backdrop-blur-xl bg-white/70 border-b border-gray-100">
+    <div class="max-w-7xl mx-auto px-6 lg:px-12">
+        <div class="flex items-center justify-between h-24">
+            <div class="flex-shrink-0 flex flex-col items-start cursor-pointer group">
+                <Image
+                    src={logo}
+                    alt="Nexus Digital Innovations"
+                    height={36}
+                    class="h-12 w-auto group-hover:scale-105 transition-transform duration-200"
+                />
+            </div>
+            <div class="hidden md:flex items-center space-x-12">
+                <div class="flex items-center space-x-10">
+                    <a
+                        class="text-[0.8rem] uppercase tracking-widest font-semibold text-slate-500 hover:text-slate-900 transition-colors"
+                        href="#services"
+                    >
+                        Services
+                    </a>
+                    <a
+                        class="text-[0.8rem] uppercase tracking-widest font-semibold text-slate-500 hover:text-slate-900 transition-colors"
+                        href="#industries"
+                    >
+                        Industries
+                    </a>
+                    <a
+                        class="text-[0.8rem] uppercase tracking-widest font-semibold text-slate-500 hover:text-slate-900 transition-colors"
+                        href="#projects"
+                    >
+                        Work
+                    </a>
+                    <a
+                        class="text-[0.8rem] uppercase tracking-widest font-semibold text-slate-500 hover:text-slate-900 transition-colors"
+                        href="#about"
+                    >
+                        About
+                    </a>
+                </div>
+                <a
+                    class="px-8 py-3 bg-slate-900 text-white text-xs uppercase tracking-widest font-bold rounded-full hover:bg-slate-800 transition-all shadow-lg shadow-slate-200"
+                    href="#contact"
+                >
+                    Let's Talk
+                </a>
+            </div>
+            <div class="md:hidden">
+                <button
+                    id="mobile-menu-button"
+                    class="p-2 text-slate-900 hover:text-slate-700 transition-colors cursor-pointer"
+                    aria-label="Toggle menu"
+                >
+                    <span id="menu-icon" class="material-symbols-outlined"> menu </span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div
+        id="mobile-menu"
+        class="hidden md:hidden absolute top-24 left-0 w-full bg-white border-b border-gray-100 shadow-lg transition-all duration-300 ease-in-out"
+    >
+        <div class="px-6 py-8 flex flex-col space-y-6">
+            <a
+                class="text-lg uppercase tracking-widest font-semibold text-slate-500 hover:text-slate-900 transition-colors mobile-menu-link"
+                href="#services"
+            >
+                Services
+            </a>
+            <a
+                class="text-lg uppercase tracking-widest font-semibold text-slate-500 hover:text-slate-900 transition-colors mobile-menu-link"
+                href="#industries"
+            >
+                Industries
+            </a>
+            <a
+                class="text-lg uppercase tracking-widest font-semibold text-slate-500 hover:text-slate-900 transition-colors mobile-menu-link"
+                href="#projects"
+            >
+                Work
+            </a>
+            <a
+                class="text-lg uppercase tracking-widest font-semibold text-slate-500 hover:text-slate-900 transition-colors mobile-menu-link"
+                href="#about"
+            >
+                About
+            </a>
+            <a
+                class="px-8 py-4 bg-slate-900 text-white text-sm uppercase tracking-widest font-bold rounded-full hover:bg-slate-800 transition-all shadow-lg text-center mobile-menu-link"
+                href="#contact"
+            >
+                Let's Talk
+            </a>
+        </div>
+    </div>
+</nav>
+
+<script>
+    // Mobile menu toggle functionality
+    const mobileMenuButton = document.getElementById("mobile-menu-button");
+    const mobileMenu = document.getElementById("mobile-menu");
+    const menuIcon = document.getElementById("menu-icon");
+    const mobileMenuLinks = document.querySelectorAll(".mobile-menu-link");
+
+    // Toggle menu visibility
+    function toggleMenu() {
+        const isHidden = mobileMenu?.classList.contains("hidden");
+
+        if (isHidden) {
+            mobileMenu?.classList.remove("hidden");
+            menuIcon!.textContent = "close";
+        } else {
+            mobileMenu?.classList.add("hidden");
+            menuIcon!.textContent = "menu";
+        }
+    }
+
+    // Close menu
+    function closeMenu() {
+        mobileMenu?.classList.add("hidden");
+        menuIcon!.textContent = "menu";
+    }
+
+    // Event listeners
+    mobileMenuButton?.addEventListener("click", toggleMenu);
+
+    // Close menu when clicking on any link
+    mobileMenuLinks.forEach((link) => {
+        link.addEventListener("click", closeMenu);
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener("click", (event) => {
+        const target = event.target as HTMLElement;
+        if (
+            !mobileMenu?.contains(target) &&
+            !mobileMenuButton?.contains(target) &&
+            !mobileMenu?.classList.contains("hidden")
+        ) {
+            closeMenu();
+        }
+    });
+
+    // Close menu on escape key
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && !mobileMenu?.classList.contains("hidden")) {
+            closeMenu();
+        }
+    });
+</script>

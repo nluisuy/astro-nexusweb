@@ -1,0 +1,116 @@
+---
+import type { ProjectItem } from "../types";
+
+const projects: ProjectItem[] = [
+    {
+        id: "p1",
+        category: "Infrastructure",
+        title: "Global Cloud Migration",
+        description: "Reduced infrastructure costs by 40% through intelligent serverless adoption.",
+        imageUrl:
+            "https://lh3.googleusercontent.com/aida-public/AB6AXuDAM9RMEJm-HPe6XDZW2gDuLn6RzdEeXTwHH7a1lI_RWkekMdBsMTD6j1vos2nGh_7ye22LLm6YHBfLnNzrZMJXiKofrJ4SnIuEXYyrf9qquZowRCno3cPb3jcRs8atBlTBd36FCsKoMzO8ahBlp9D3rDa1zP21lFdO1866LWwKJEcMiOSdXubYua_T3lN-HKWCCBv3jLmeRpwJUdcq_x5jiA9yHJWO4riq_g15Vw1TbiO_gLbJFMnWn6shaU9JbYcsojfr4MJCV50",
+        colorClass: "text-nexus-blue",
+    },
+    {
+        id: "p2",
+        category: "AI & ML",
+        title: "Custom LLM for Dev Teams",
+        description: "Accelerated coding velocity by 30% with context-aware AI tooling.",
+        imageUrl:
+            "https://lh3.googleusercontent.com/aida-public/AB6AXuCW4itAGtCbIH-84jWwnLWwo4-O4LNqNLBWdL1-D3Gb4OkT19swj8ZmhnbCKZ3LecSwPCXGziXsy5eKMshny5-6js1WiZEXrUyQruTUp1pbUU6M9Qmh5RSEfN35Jx053v066pKLJMupjmhbbwOVm5LACv3NJVqPACo1TqTubhFRrOqXaCZqzWktALBg5JWA6D33Py2WhoMz2Y7Y2QAC424I-79hjXgHknT4_EBHeS76in0qI0k6qJ5gDP4zd7kA_fl5xZ3AApSabTc",
+        colorClass: "text-nexus-red",
+    },
+    {
+        id: "p3",
+        category: "Security",
+        title: "Fintech Compliance Shield",
+        description:
+            "Achieved full PCI certification for a major payment processor in record time.",
+        imageUrl:
+            "https://lh3.googleusercontent.com/aida-public/AB6AXuDtfGapBFDggwk75OyYXTSBVG5BXWxu2dBz4Y2CfkhRX0-64pZ_jpu_Jzn_9AYm8JK_2or7tEu_GLj_wWGkFD5MK_TD3cMIjVhPjwuz-YJG6pHWQTNUW67bMAOT-5wLmMyVDJI3IS2ZPFN22SKEVyOo07WE9JgeSDoDceQvIsagphv3_g5KvRWKoMh0Go0bRKEUrXbxXAmIRjNpTeset7WTRvxxUW3dsdh_LLgkRESSKiNqA44ynSW8vFmpHfNRUeEwojkZFYuGFm0",
+        colorClass: "text-nexus-green",
+    },
+];
+---
+
+<section class="py-32 bg-nexus-gray-soft" id="projects">
+    <div class="max-w-7xl mx-auto px-6 lg:px-12">
+        <div class="mb-16 flex justify-between items-end">
+            <div>
+                <h2 class="text-sm font-bold tracking-[0.3em] uppercase text-nexus-purple mb-4">
+                    Case Studies
+                </h2>
+                <p class="text-3xl md:text-4xl font-display font-medium text-slate-900">
+                    Featured Projects
+                </p>
+            </div>
+            <div class="hidden md:flex gap-4">
+                <button
+                    id="scroll-left"
+                    class="w-12 h-12 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:border-slate-900 hover:text-slate-900 transition-all"
+                >
+                    <span class="material-symbols-outlined">west</span>
+                </button>
+                <button
+                    id="scroll-right"
+                    class="w-12 h-12 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:border-slate-900 hover:text-slate-900 transition-all"
+                >
+                    <span class="material-symbols-outlined">east</span>
+                </button>
+            </div>
+        </div>
+
+        <div id="projects-scroll" class="overflow-x-auto hide-scrollbar snap-x snap-mandatory">
+            <div class="flex gap-10">
+                {
+                    projects.map((project) => (
+                        <div class="snap-center flex-shrink-0 w-[300px] md:w-[480px] bg-white rounded-[2rem] overflow-hidden shadow-sm group hover:shadow-xl transition-all duration-500">
+                            <div class="h-[250px] md:h-[320px] overflow-hidden">
+                                <img
+                                    src={project.imageUrl}
+                                    alt={project.title}
+                                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
+                                />
+                            </div>
+                            <div class="p-8 md:p-12">
+                                <span
+                                    class={`text-[0.7rem] uppercase tracking-widest font-bold ${project.colorClass} mb-3 block`}
+                                >
+                                    {project.category}
+                                </span>
+                                <h3 class="text-xl md:text-2xl font-bold text-slate-900 mb-4">
+                                    {project.title}
+                                </h3>
+                                <p class="text-slate-500 font-light text-sm md:text-base leading-relaxed">
+                                    {project.description}
+                                </p>
+                            </div>
+                        </div>
+                    ))
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    const scrollContainer = document.getElementById("projects-scroll");
+    const scrollLeft = document.getElementById("scroll-left");
+    const scrollRight = document.getElementById("scroll-right");
+
+    if (scrollContainer && scrollLeft && scrollRight) {
+        scrollLeft.addEventListener("click", () => {
+            scrollContainer.scrollTo({
+                left: scrollContainer.scrollLeft - scrollContainer.clientWidth,
+                behavior: "smooth",
+            });
+        });
+
+        scrollRight.addEventListener("click", () => {
+            scrollContainer.scrollTo({
+                left: scrollContainer.scrollLeft + scrollContainer.clientWidth,
+                behavior: "smooth",
+            });
+        });
+    }
+</script>

@@ -1,0 +1,89 @@
+---
+import type { ServiceItem } from "../types";
+
+const services: ServiceItem[] = [
+    {
+        id: "infra",
+        title: "Infrastructure & Growth",
+        description:
+            "Scalable cloud-native architectures designed for massive expansion and peak performance.",
+        icon: "dns",
+        color: "text-nexus-blue",
+    },
+    {
+        id: "ai",
+        title: "Generative AI",
+        description:
+            "Leveraging large language models to automate complexity and drive creative efficiency.",
+        icon: "neurology",
+        color: "text-nexus-red",
+    },
+    {
+        id: "cyber",
+        title: "Cybersecurity",
+        description:
+            "Defense-in-depth strategies to secure your digital perimeter and protect institutional trust.",
+        icon: "admin_panel_settings",
+        color: "text-nexus-purple",
+    },
+    {
+        id: "cto",
+        title: "CTO as a Service",
+        description:
+            "Strategic technical leadership on-demand to align your roadmap with business objectives.",
+        icon: "manage_accounts",
+        color: "text-nexus-blue",
+    },
+    {
+        id: "ciso",
+        title: "CISO as a Service",
+        description:
+            "High-level security governance to manage risks and navigate complex compliance landscapes.",
+        icon: "verified_user",
+        color: "text-nexus-green",
+    },
+    {
+        id: "delivery",
+        title: "End-to-End Delivery",
+        description:
+            "From ideation to deployment, we manage the full lifecycle of your digital transformation.",
+        icon: "all_inclusive",
+        color: "text-nexus-yellow",
+    },
+];
+---
+
+<section class="py-32 bg-nexus-gray-soft" id="services">
+    <div class="max-w-7xl mx-auto px-6 lg:px-12">
+        <div class="mb-24">
+            <h2 class="text-sm font-bold tracking-[0.3em] uppercase text-nexus-blue mb-4">
+                Areas of Excellence
+            </h2>
+            <p
+                class="text-3xl md:text-4xl lg:text-5xl font-display font-medium text-slate-900 max-w-xl"
+            >
+                Precision-engineered services for the modern enterprise.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-16">
+            {
+                services.map((service) => (
+                    <div class="group cursor-default">
+                        <div class="w-14 h-14 rounded-2xl bg-white shadow-sm flex items-center justify-center mb-8 group-hover:shadow-md group-hover:-translate-y-1 transition-all duration-300">
+                            <span class={`material-symbols-outlined text-3xl ${service.color}`}>
+                                {service.icon}
+                            </span>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-4 tracking-tight">
+                            {service.title}
+                        </h3>
+                        <p class="text-slate-500 font-light leading-relaxed">
+                            {service.description}
+                        </p>
+                    </div>
+                ))
+            }
+        </div>
+    </div>
+</section>

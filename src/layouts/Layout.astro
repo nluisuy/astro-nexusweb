@@ -1,22 +1,166 @@
 ---
-import "@styles/global.css";
+import "../styles/global.css";
+
+interface Props {
+    title?: string;
+    description?: string;
+    image?: string;
+    article?: boolean;
+    publishedTime?: string;
+    modifiedTime?: string;
+}
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+
+const {
+    title = "Nexus Digital Innovations - Architecture of Innovation",
+    description = "High-end technical execution. Architecting fluid cloud ecosystems, robust enterprise security, and bespoke Generative AI models for enterprise-grade digital transformation.",
+    image = "/og-image.jpg",
+    article = false,
+    publishedTime,
+    modifiedTime,
+} = Astro.props;
+
+const siteTitle = "Nexus Digital Innovations";
+const fullTitle = title.includes(siteTitle) ? title : `${title} | ${siteTitle}`;
+const imageUrl = new URL(image, Astro.site);
+
+// Schema.org structured data
+const organizationSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "Nexus Digital Innovations",
+    url: Astro.site,
+    logo: new URL("/favicon.svg", Astro.site),
+    description:
+        "Enterprise digital transformation company specializing in cloud infrastructure, generative AI, cybersecurity, and executive technology services (CTO/CISO as a Service).",
+    sameAs: [
+        "https://www.linkedin.com/company/nexusinnovations",
+        "https://twitter.com/nexusinnovations",
+    ],
+    contactPoint: {
+        "@type": "ContactPoint",
+        contactType: "Sales",
+        email: "contact@nexusinnovations.com",
+    },
+    address: {
+        "@type": "PostalAddress",
+        addressCountry: "US",
+    },
+    serviceOffering: [
+        {
+            "@type": "Service",
+            name: "Cloud Infrastructure & Architecture",
+            description:
+                "Enterprise cloud solutions, multi-cloud architecture, and infrastructure optimization",
+        },
+        {
+            "@type": "Service",
+            name: "Generative AI Solutions",
+            description: "Custom AI models, LLM integration, and AI-powered business automation",
+        },
+        {
+            "@type": "Service",
+            name: "Cybersecurity Services",
+            description:
+                "Enterprise security architecture, threat detection, and compliance management",
+        },
+        {
+            "@type": "Service",
+            name: "CTO as a Service",
+            description: "Executive technology leadership and strategic technical guidance",
+        },
+        {
+            "@type": "Service",
+            name: "CISO as a Service",
+            description: "Executive security leadership and information security strategy",
+        },
+    ],
+};
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
     <head>
         <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <!-- Primary Meta Tags -->
+        <title>{fullTitle}</title>
+        <meta name="title" content={fullTitle} />
+        <meta name="description" content={description} />
         <meta name="generator" content={Astro.generator} />
+        <meta name="author" content="Nexus Digital Innovations" />
+        <meta
+            name="keywords"
+            content="digital transformation, cloud architecture, cloud infrastructure, generative AI, cybersecurity, CTO as a service, CISO as a service, enterprise security, AI solutions, multi-cloud, AWS, Azure, GCP, machine learning, data architecture, technology consulting, IT strategy"
+        />
+        <meta
+            name="robots"
+            content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+        />
+        <meta name="language" content="English" />
+        <meta name="revisit-after" content="7 days" />
 
-        <!-- Favicon - Múltiples formatos para compatibilidad -->
+        <!-- Canonical URL -->
+        <link rel="canonical" href={canonicalURL} />
+
+        <!-- Favicon -->
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" type="image/x-icon" href="/favicon.ico" />
 
-        <!-- SEO Meta Tags -->
-        <title>Astro Basics</title>
+        <!-- Open Graph / Facebook -->
+        <meta property="og:type" content={article ? "article" : "website"} />
+        <meta property="og:url" content={canonicalURL} />
+        <meta property="og:title" content={fullTitle} />
+        <meta property="og:description" content={description} />
+        <meta property="og:image" content={imageUrl} />
+        <meta property="og:image:alt" content={title} />
+        <meta property="og:site_name" content="Nexus Digital Innovations" />
+        <meta property="og:locale" content="en_US" />
+        {
+            article && publishedTime && (
+                <meta property="article:published_time" content={publishedTime} />
+            )
+        }
+        {
+            article && modifiedTime && (
+                <meta property="article:modified_time" content={modifiedTime} />
+            )
+        }
+
+        <!-- Twitter -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:url" content={canonicalURL} />
+        <meta name="twitter:title" content={fullTitle} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={imageUrl} />
+        <meta name="twitter:image:alt" content={title} />
+        <meta name="twitter:site" content="@nexusinnovations" />
+        <meta name="twitter:creator" content="@nexusinnovations" />
+
+        <!-- Schema.org JSON-LD -->
+        <script
+            is:inline
+            type="application/ld+json"
+            set:html={JSON.stringify(organizationSchema)}
+        />
+
+        <!-- Google Fonts - Preconnect for performance -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;500;600;700;800&display=swap"
+            rel="stylesheet"
+        />
+
+        <!-- Material Symbols -->
+        <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+        />
     </head>
-    <body class="overflow-x-hidden">
+    <body class="bg-white text-slate-800 antialiased font-sans blueprint-bg overflow-x-hidden">
         <slot />
     </body>
 </html>

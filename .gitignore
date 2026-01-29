@@ -19,6 +19,8 @@ pnpm-debug.log*
 
 # macOS-specific files
 .DS_Store
+SEO-IMPLEMENTATION.md
+CLAUDE.md
 
 # jetbrains setting folder
 .idea/

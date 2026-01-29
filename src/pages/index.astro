@@ -1,5 +1,81 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import Navbar from "../components/Navbar.astro";
+import Hero from "../components/Hero.astro";
+import Services from "../components/Services.astro";
+import Industries from "../components/Industries.astro";
+import Projects from "../components/Projects.astro";
+import About from "../components/About.astro";
+import CTA from "../components/CTA.astro";
+import Footer from "../components/Footer.astro";
+import AIProjectPlanner from "../components/AIProjectPlanner";
+
+// SEO-optimized metadata for homepage
+const pageTitle = "Nexus Digital Innovations - Enterprise Cloud, AI & Cybersecurity Solutions";
+const pageDescription =
+    "Transform your business with enterprise-grade cloud infrastructure, generative AI solutions, and cybersecurity services. Expert CTO/CISO as a Service for Finance, Healthcare, Retail & Technology sectors.";
 ---
 
-<Layout />
+<Layout title={pageTitle} description={pageDescription}>
+    <div class="relative min-h-screen overflow-x-hidden">
+        <Navbar />
+
+        <main>
+            <Hero />
+            <Services />
+            <Industries />
+            <Projects />
+            <About />
+            <CTA />
+        </main>
+
+        <Footer />
+
+        <!-- Modal container for AIProjectPlanner -->
+        <div id="planner-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-end">
+            <div id="modal-backdrop" class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm">
+            </div>
+            <div
+                class="relative w-full max-w-2xl h-full bg-white shadow-2xl animate-in slide-in-from-right duration-500"
+            >
+                <AIProjectPlanner client:only="react" isOpen={true} onClose={() => {}} />
+            </div>
+        </div>
+    </div>
+</Layout>
+
+<script>
+    // Simple functions to control modal visibility with CSS
+    function openPlanner() {
+        const modal = document.getElementById("planner-modal");
+        if (modal) {
+            modal.classList.remove("hidden");
+        }
+    }
+
+    function closePlanner() {
+        const modal = document.getElementById("planner-modal");
+        if (modal) {
+            modal.classList.add("hidden");
+        }
+    }
+
+    // Set up event listeners when DOM is ready
+    document.addEventListener("DOMContentLoaded", () => {
+        const heroBtn = document.getElementById("hero-planner-btn");
+        if (heroBtn) {
+            heroBtn.addEventListener("click", openPlanner);
+        }
+
+        const backdrop = document.getElementById("modal-backdrop");
+        if (backdrop) {
+            backdrop.addEventListener("click", closePlanner);
+        }
+
+        // Custom event listener for opening planner from other components
+        window.addEventListener("openPlanner", () => openPlanner());
+    });
+
+    // Make closePlanner available globally so React component can call it
+    (window as any).closePlanner = closePlanner;
+</script>

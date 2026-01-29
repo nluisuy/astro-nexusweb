@@ -1,1 +1,79 @@
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/outfit";
+
 @import "tailwindcss";
+
+@theme {
+    /* Custom Colors */
+    --color-primary: #6366f1;
+    --color-nexus-white: #ffffff;
+    --color-nexus-gray-soft: #f9fafb;
+    --color-nexus-gray-border: #e5e7eb;
+    --color-nexus-purple: #8b5cf6;
+    --color-nexus-blue: #3b82f6;
+    --color-nexus-green: #10b981;
+    --color-nexus-yellow: #eab308;
+    --color-nexus-red: #ef4444;
+
+    /* Custom Font Families */
+    --font-family-sans: "Inter", sans-serif;
+    --font-family-display: "Outfit", sans-serif;
+
+    /* Custom Animations */
+    --animate-pulse-slow: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    --animate-float: float 6s ease-in-out infinite;
+    --animate-slide-up: slideUp 0.8s ease-out forwards;
+
+    /* Custom Keyframes */
+    @keyframes float {
+        0%,
+        100% {
+            transform: translateY(0px);
+        }
+        50% {
+            transform: translateY(-20px);
+        }
+    }
+
+    @keyframes slideUp {
+        0% {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0px);
+        }
+    }
+}
+
+@layer utilities {
+    .text-gradient {
+        background: linear-gradient(to right, #8b5cf6, #3b82f6, #10b981, #eab308, #ef4444);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .glass-card {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(229, 231, 235, 0.5);
+    }
+
+    .hide-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+
+    .hide-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+    .blueprint-bg {
+        background-image:
+            linear-gradient(rgba(229, 231, 235, 0.2) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(229, 231, 235, 0.2) 1px, transparent 1px);
+        background-size: 40px 40px;
+    }
+}
