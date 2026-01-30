@@ -1,5 +1,8 @@
 ---
+import { Image } from "astro:assets";
 import type { ProjectItem } from "../types";
+
+
 
 const projects: ProjectItem[] = [
     {
@@ -30,6 +33,20 @@ const projects: ProjectItem[] = [
             "https://lh3.googleusercontent.com/aida-public/AB6AXuDtfGapBFDggwk75OyYXTSBVG5BXWxu2dBz4Y2CfkhRX0-64pZ_jpu_Jzn_9AYm8JK_2or7tEu_GLj_wWGkFD5MK_TD3cMIjVhPjwuz-YJG6pHWQTNUW67bMAOT-5wLmMyVDJI3IS2ZPFN22SKEVyOo07WE9JgeSDoDceQvIsagphv3_g5KvRWKoMh0Go0bRKEUrXbxXAmIRjNpTeset7WTRvxxUW3dsdh_LLgkRESSKiNqA44ynSW8vFmpHfNRUeEwojkZFYuGFm0",
         colorClass: "text-nexus-green",
     },
+
+    {
+        id: "p4",
+        category: "DRP",
+        title: "Disaster Recovery Strategy",
+        description:
+            "Disaster Recovery Strategy fintech.",
+        imageUrl:
+            "https://lh3.googleusercontent.com/aida-public/AB6AXuDtfGapBFDggwk75OyYXTSBVG5BXWxu2dBz4Y2CfkhRX0-64pZ_jpu_Jzn_9AYm8JK_2or7tEu_GLj_wWGkFD5MK_TD3cMIjVhPjwuz-YJG6pHWQTNUW67bMAOT-5wLmMyVDJI3IS2ZPFN22SKEVyOo07WE9JgeSDoDceQvIsagphv3_g5KvRWKoMh0Go0bRKEUrXbxXAmIRjNpTeset7WTRvxxUW3dsdh_LLgkRESSKiNqA44ynSW8vFmpHfNRUeEwojkZFYuGFm0",
+        colorClass: "text-nexus-green",
+    },
+
+
+
 ];
 ---
 
@@ -64,11 +81,13 @@ const projects: ProjectItem[] = [
             <div class="flex gap-10">
                 {
                     projects.map((project) => (
-                        <div class="snap-center flex-shrink-0 w-[300px] md:w-[480px] bg-white rounded-[2rem] overflow-hidden shadow-sm group hover:shadow-xl transition-all duration-500">
-                            <div class="h-[250px] md:h-[320px] overflow-hidden">
-                                <img
+                        <div class="snap-center flex-shrink-0 w-[300px] md:w-[400px] bg-white rounded-[2rem] overflow-hidden shadow-sm group hover:shadow-xl transition-all duration-500">
+                            <div class="h-[250px] md:h-[250px] overflow-hidden">
+                                <Image
                                     src={project.imageUrl}
                                     alt={project.title}
+                                    width={320}
+                                    height={300}
                                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
                                 />
                             </div>

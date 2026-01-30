@@ -3,13 +3,15 @@ import Layout from "../layouts/Layout.astro";
 import Navbar from "../components/Navbar.astro";
 import Hero from "../components/Hero.astro";
 import Services from "../components/Services.astro";
-import Industries from "../components/Industries.astro";
 import Projects from "../components/Projects.astro";
 import About from "../components/About.astro";
-import CTA from "../components/CTA.astro";
 import Footer from "../components/Footer.astro";
 import AIProjectPlanner from "../components/AIProjectPlanner";
 import ContactModal from "../components/ContactModal";
+import Stats from "../components/Stats.astro";
+import Industry from "../components/Industry.astro";
+import Bookingsession from "../components/Bookingsession.astro";
+
 
 // SEO-optimized metadata for homepage
 const pageTitle = "Nexus Digital Innovations - Enterprise Cloud, AI & Cybersecurity Solutions";
@@ -24,10 +26,11 @@ const pageDescription =
         <main>
             <Hero />
             <Services />
-            <Industries />
+            <Industry />
+            <Stats />
             <Projects />
             <About />
-            <CTA />
+            <Bookingsession />
         </main>
 
         <Footer />
