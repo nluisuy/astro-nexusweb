@@ -8,7 +8,7 @@ import sitemap from "@astrojs/sitemap";
 
 // https://astro.build/config
 export default defineConfig({
-    site: "https://www.nexusinnovations.com",
+    // site: "https://www.nexusinnovations.com",
     // Astro 5.x: output: "static" (default) with prerender: false on API routes
     // Node adapter is required for server-rendered routes
     adapter: node({
