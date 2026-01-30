@@ -5,6 +5,7 @@
     "scripts": {
         "dev": "astro dev",
         "build": "astro build",
+        "build:local": "pnpm validate && astro build",
         "preview": "astro preview",
         "astro": "astro",
         "lint": "biome check",
@@ -13,8 +14,7 @@
         "format:check": "prettier --check .",
         "type-check": "astro check",
         "clean": "rm -rf dist/ .astro/",
-        "validate": "pnpm lint:fix && pnpm format && pnpm type-check",
-        "prebuild": "pnpm validate"
+        "validate": "pnpm lint:fix && pnpm format && pnpm type-check"
     },
     "dependencies": {
         "@astrojs/check": "^0.9.4",
