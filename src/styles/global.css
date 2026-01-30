@@ -3,6 +3,8 @@
 
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
     /* Custom Colors */
     --color-primary: #6366f1;
@@ -60,6 +62,11 @@
         backdrop-filter: blur(12px);
         border: 1px solid rgba(229, 231, 235, 0.5);
     }
+    
+    .dark .glass-card {
+        background: rgba(15, 23, 42, 0.7);
+        border: 1px solid rgba(30, 41, 59, 0.5);
+    }
 
     .hide-scrollbar::-webkit-scrollbar {
         display: none;
@@ -77,6 +84,12 @@
         background-size: 40px 40px;
     }
 
+    .dark .blueprint-bg {
+        background-image:
+            linear-gradient(rgba(30, 41, 59, 0.4) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(30, 41, 59, 0.4) 1px, transparent 1px);
+    }
+
     /* Custom scrollbar styling */
     .custom-scrollbar::-webkit-scrollbar {
         width: 8px;
@@ -87,12 +100,24 @@
         border-radius: 10px;
     }
 
+    .dark .custom-scrollbar::-webkit-scrollbar-track {
+        background: #1e293b;
+    }
+
     .custom-scrollbar::-webkit-scrollbar-thumb {
         background: #cbd5e1;
         border-radius: 10px;
     }
 
+    .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #475569;
+    }
+
     .custom-scrollbar::-webkit-scrollbar-thumb:hover {
         background: #94a3b8;
+    }
+    
+    .dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: #64748b;
     }
 }

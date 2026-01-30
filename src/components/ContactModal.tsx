@@ -165,7 +165,7 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
 
     return (
         <div
-            className="fixed inset-0 z-50 flex items-center justify-end"
+            className="fixed inset-0 z-50 flex items-center justify-end transition-colors"
             onClick={handleClose}
             style={{
                 backgroundColor: "rgba(0, 0, 0, 0.4)",
@@ -173,19 +173,19 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
             }}
         >
             <div
-                className="h-full w-full max-w-2xl bg-white shadow-2xl flex flex-col animate-in slide-in-from-right duration-300"
+                className="h-full w-full max-w-2xl bg-white dark:bg-slate-900 shadow-2xl flex flex-col animate-in slide-in-from-right duration-300 transition-colors"
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* Header */}
-                <div className="p-8 border-b border-slate-100 flex justify-between items-center bg-white/50 backdrop-blur-md sticky top-0 z-20">
+                <div className="p-8 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-white/50 dark:bg-slate-900/50 backdrop-blur-md sticky top-0 z-20 transition-colors">
                     <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 bg-slate-900 rounded-xl flex items-center justify-center">
-                            <span className="material-symbols-outlined text-white text-xl">
+                        <div className="w-10 h-10 bg-slate-900 dark:bg-white rounded-xl flex items-center justify-center transition-colors">
+                            <span className="material-symbols-outlined text-white dark:text-slate-900 text-xl transition-colors">
                                 mail
                             </span>
                         </div>
                         <div>
-                            <h2 className="text-xl font-display font-bold text-slate-900">
+                            <h2 className="text-xl font-display font-bold text-slate-900 dark:text-white transition-colors">
                                 Contact Us
                             </h2>
                             <p className="text-[0.6rem] text-slate-400 uppercase tracking-widest font-bold">
@@ -195,7 +195,7 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
                     </div>
                     <button
                         onClick={handleClose}
-                        className="p-2 hover:bg-slate-100 rounded-full transition-colors text-slate-400 hover:text-slate-900"
+                        className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors text-slate-400 hover:text-slate-900 dark:hover:text-white"
                         aria-label="Close modal"
                     >
                         <span className="material-symbols-outlined">close</span>
@@ -209,10 +209,10 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
                             <span className="inline-block px-3 py-1 bg-nexus-blue/5 text-nexus-blue text-[0.65rem] font-bold uppercase tracking-widest rounded-full mb-6">
                                 Get In Touch
                             </span>
-                            <h3 className="text-3xl font-display font-bold text-slate-900 mb-4">
+                            <h3 className="text-3xl font-display font-bold text-slate-900 dark:text-white mb-4 transition-colors">
                                 Start Your Digital Transformation
                             </h3>
-                            <p className="text-slate-500 text-sm leading-relaxed font-light">
+                            <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed font-light transition-colors">
                                 Share your vision with us, and our enterprise architects will
                                 connect with you within 24 hours to discuss your strategic
                                 objectives.
@@ -239,7 +239,7 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
                             <div>
                                 <label
                                     htmlFor="name"
-                                    className="block text-[0.65rem] font-bold uppercase tracking-widest text-slate-500 mb-3"
+                                    className="block text-[0.65rem] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-3"
                                 >
                                     Full Name <span className="text-nexus-red">*</span>
                                 </label>
@@ -253,8 +253,8 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
                                     className={`w-full px-6 py-4 rounded-2xl border ${
                                         errors.name
                                             ? "border-nexus-red focus:ring-nexus-red"
-                                            : "border-slate-200 focus:ring-nexus-blue"
-                                    } focus:ring-2 focus:border-transparent resize-none text-slate-700 bg-slate-50 focus:bg-white transition-all outline-none text-sm`}
+                                            : "border-slate-200 dark:border-slate-700 focus:ring-nexus-blue"
+                                    } focus:ring-2 focus:border-transparent resize-none text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-slate-800 focus:bg-white dark:focus:bg-slate-900 transition-all outline-none text-sm`}
                                     placeholder="John Smith"
                                 />
                                 {errors.name && (
@@ -268,7 +268,7 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
                             <div>
                                 <label
                                     htmlFor="email"
-                                    className="block text-[0.65rem] font-bold uppercase tracking-widest text-slate-500 mb-3"
+                                    className="block text-[0.65rem] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-3"
                                 >
                                     Email Address <span className="text-nexus-red">*</span>
                                 </label>
@@ -282,8 +282,8 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
                                     className={`w-full px-6 py-4 rounded-2xl border ${
                                         errors.email
                                             ? "border-nexus-red focus:ring-nexus-red"
-                                            : "border-slate-200 focus:ring-nexus-blue"
-                                    } focus:ring-2 focus:border-transparent resize-none text-slate-700 bg-slate-50 focus:bg-white transition-all outline-none text-sm`}
+                                            : "border-slate-200 dark:border-slate-700 focus:ring-nexus-blue"
+                                    } focus:ring-2 focus:border-transparent resize-none text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-slate-800 focus:bg-white dark:focus:bg-slate-900 transition-all outline-none text-sm`}
                                     placeholder="john.smith@company.com"
                                 />
                                 {errors.email && (
@@ -297,9 +297,9 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
                             <div>
                                 <label
                                     htmlFor="phone"
-                                    className="block text-[0.65rem] font-bold uppercase tracking-widest text-slate-500 mb-3"
+                                    className="block text-[0.65rem] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-3"
                                 >
-                                    Phone Number <span className="text-slate-300">(Optional)</span>
+                                    Phone Number <span className="text-slate-300 dark:text-slate-600">(Optional)</span>
                                 </label>
                                 <input
                                     type="tel"
@@ -308,7 +308,7 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
                                     value={formData.phone}
                                     onChange={handleChange}
                                     disabled={loading}
-                                    className="w-full px-6 py-4 rounded-2xl border border-slate-200 focus:ring-2 focus:ring-nexus-blue focus:border-transparent resize-none text-slate-700 bg-slate-50 focus:bg-white transition-all outline-none text-sm"
+                                    className="w-full px-6 py-4 rounded-2xl border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-nexus-blue focus:border-transparent resize-none text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-slate-800 focus:bg-white dark:focus:bg-slate-900 transition-all outline-none text-sm"
                                     placeholder="+1 (555) 123-4567"
                                 />
                             </div>
@@ -317,17 +317,18 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
                             <div>
                                 <label
                                     htmlFor="subject"
-                                    className="block text-[0.65rem] font-bold uppercase tracking-widest text-slate-500 mb-3"
+                                    className="block text-[0.65rem] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-3"
                                 >
                                     Service Interest
                                 </label>
+                                <div className="relative">
                                 <select
                                     id="subject"
                                     name="subject"
                                     value={formData.subject}
                                     onChange={handleChange}
                                     disabled={loading}
-                                    className="w-full px-6 py-4 rounded-2xl border border-slate-200 focus:ring-2 focus:ring-nexus-blue focus:border-transparent text-slate-700 bg-slate-50 focus:bg-white transition-all outline-none text-sm"
+                                    className="w-full px-6 py-4 rounded-2xl border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-nexus-blue focus:border-transparent text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-slate-800 focus:bg-white dark:focus:bg-slate-900 transition-all outline-none text-sm appearance-none"
                                 >
                                     <option value="General Inquiry">General Inquiry</option>
                                     <option value="Cloud Architecture">Cloud Architecture</option>
@@ -337,13 +338,17 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
                                         Digital Transformation
                                     </option>
                                 </select>
+                                    <div className="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-slate-500">
+                                        <span className="material-symbols-outlined text-sm">expand_more</span>
+                                    </div>
+                                </div>
                             </div>
 
                             {/* Message */}
                             <div>
                                 <label
                                     htmlFor="message"
-                                    className="block text-[0.65rem] font-bold uppercase tracking-widest text-slate-500 mb-3"
+                                    className="block text-[0.65rem] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-3"
                                 >
                                     Message <span className="text-nexus-red">*</span>
                                 </label>
@@ -357,8 +362,8 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
                                     className={`w-full px-6 py-4 rounded-2xl border ${
                                         errors.message
                                             ? "border-nexus-red focus:ring-nexus-red"
-                                            : "border-slate-200 focus:ring-nexus-blue"
-                                    } focus:ring-2 focus:border-transparent resize-none text-slate-700 bg-slate-50 focus:bg-white transition-all outline-none text-sm leading-relaxed`}
+                                            : "border-slate-200 dark:border-slate-700 focus:ring-nexus-blue"
+                                    } focus:ring-2 focus:border-transparent resize-none text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-slate-800 focus:bg-white dark:focus:bg-slate-900 transition-all outline-none text-sm leading-relaxed`}
                                     placeholder="Tell us about your project goals and challenges..."
                                 />
                                 {errors.message && (
@@ -372,11 +377,11 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="w-full py-5 bg-slate-900 text-white rounded-2xl font-bold text-sm uppercase tracking-[0.2em] hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 transition-all shadow-xl shadow-slate-200 active:scale-[0.98]"
+                                className="w-full py-5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-2xl font-bold text-sm uppercase tracking-[0.2em] hover:bg-slate-800 dark:hover:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 transition-all shadow-xl shadow-slate-200 dark:shadow-none active:scale-[0.98]"
                             >
                                 {loading ? (
                                     <>
-                                        <span className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin"></span>
+                                        <span className="w-5 h-5 border-2 border-white/20 dark:border-slate-900/20 border-t-white dark:border-t-slate-900 rounded-full animate-spin"></span>
                                         Sending Message...
                                     </>
                                 ) : (
@@ -391,7 +396,7 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
                         </form>
 
                         {/* Additional Info */}
-                        <div className="mt-12 pt-8 border-t border-slate-100">
+                        <div className="mt-12 pt-8 border-t border-slate-100 dark:border-slate-800 transition-colors">
                             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
                                 <div className="flex flex-col items-center gap-2">
                                     <span className="material-symbols-outlined text-nexus-blue text-2xl">
@@ -423,12 +428,12 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
                 </div>
 
                 {/* Footer */}
-                <div className="p-8 bg-slate-50/50 border-t border-slate-100">
+                <div className="p-8 bg-slate-50/50 dark:bg-slate-800/20 border-t border-slate-100 dark:border-slate-800 transition-colors">
                     <div className="flex justify-between items-center opacity-40">
-                        <p className="text-[0.6rem] text-slate-500 uppercase tracking-widest font-bold">
+                        <p className="text-[0.6rem] text-slate-500 dark:text-slate-400 uppercase tracking-widest font-bold">
                             Encrypted Connection
                         </p>
-                        <p className="text-[0.6rem] text-slate-500 uppercase tracking-widest font-bold">
+                        <p className="text-[0.6rem] text-slate-500 dark:text-slate-400 uppercase tracking-widest font-bold">
                             © 2024 Nexus Innovations
                         </p>
                     </div>

@@ -159,8 +159,28 @@ const organizationSchema = {
             rel="stylesheet"
             href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
         />
+
+        <script is:inline>
+            // Initialize theme to prevent flash of incorrect theme
+            const theme = (() => {
+                if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+                    return localStorage.getItem('theme');
+                }
+                if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    return 'dark';
+                }
+                return 'light';
+            })();
+
+            if (theme === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+            window.localStorage.setItem('theme', theme);
+        </script>
     </head>
-    <body class="bg-white text-slate-800 antialiased font-sans blueprint-bg overflow-x-hidden">
+    <body class="bg-white dark:bg-slate-950 text-slate-800 dark:text-slate-50 antialiased font-sans blueprint-bg overflow-x-hidden transition-colors duration-300">
         <slot />
     </body>
 </html>

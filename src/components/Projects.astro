@@ -50,27 +50,27 @@ const projects: ProjectItem[] = [
 ];
 ---
 
-<section class="py-32 bg-nexus-gray-soft" id="projects">
+<section class="py-32 bg-nexus-gray-soft dark:bg-slate-950 transition-colors duration-300" id="projects">
     <div class="max-w-7xl mx-auto px-6 lg:px-12">
         <div class="mb-16 flex justify-between items-end">
             <div>
                 <h2 class="text-sm font-bold tracking-[0.3em] uppercase text-nexus-purple mb-4">
                     Case Studies
                 </h2>
-                <p class="text-3xl md:text-4xl font-display font-medium text-slate-900">
+                <p class="text-3xl md:text-4xl font-display font-medium text-slate-900 dark:text-white transition-colors">
                     Featured Projects
                 </p>
             </div>
             <div class="hidden md:flex gap-4">
                 <button
                     id="scroll-left"
-                    class="w-12 h-12 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:border-slate-900 hover:text-slate-900 transition-all"
+                    class="w-12 h-12 rounded-full border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-400 dark:text-slate-500 hover:border-slate-900 dark:hover:border-white hover:text-slate-900 dark:hover:text-white transition-all"
                 >
                     <span class="material-symbols-outlined">west</span>
                 </button>
                 <button
                     id="scroll-right"
-                    class="w-12 h-12 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:border-slate-900 hover:text-slate-900 transition-all"
+                    class="w-12 h-12 rounded-full border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-400 dark:text-slate-500 hover:border-slate-900 dark:hover:border-white hover:text-slate-900 dark:hover:text-white transition-all"
                 >
                     <span class="material-symbols-outlined">east</span>
                 </button>
@@ -81,7 +81,7 @@ const projects: ProjectItem[] = [
             <div class="flex gap-10">
                 {
                     projects.map((project) => (
-                        <div class="snap-center flex-shrink-0 w-[300px] md:w-[400px] bg-white rounded-[2rem] overflow-hidden shadow-sm group hover:shadow-xl transition-all duration-500">
+                        <div class="snap-center flex-shrink-0 w-[300px] md:w-[400px] bg-white dark:bg-slate-900 rounded-[2rem] overflow-hidden shadow-sm dark:shadow-none dark:border dark:border-slate-800 group hover:shadow-xl dark:hover:border-nexus-blue/30 transition-all duration-500">
                             <div class="h-[250px] md:h-[250px] overflow-hidden">
                                 <Image
                                     src={project.imageUrl}
@@ -97,10 +97,10 @@ const projects: ProjectItem[] = [
                                 >
                                     {project.category}
                                 </span>
-                                <h3 class="text-xl md:text-2xl font-bold text-slate-900 mb-4">
+                                <h3 class="text-xl md:text-2xl font-bold text-slate-900 dark:text-white mb-4 transition-colors">
                                     {project.title}
                                 </h3>
-                                <p class="text-slate-500 font-light text-sm md:text-base leading-relaxed">
+                                <p class="text-slate-500 dark:text-slate-400 font-light text-sm md:text-base leading-relaxed transition-colors">
                                     {project.description}
                                 </p>
                             </div>
