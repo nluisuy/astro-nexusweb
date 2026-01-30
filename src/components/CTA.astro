@@ -28,11 +28,13 @@
 
                 <div class="flex flex-col sm:flex-row gap-6 justify-center items-center">
                     <button
+                        id="openContactBtn"
                         class="w-full sm:w-auto px-12 py-6 bg-slate-900 text-white rounded-full font-bold text-sm uppercase tracking-[0.2em] hover:bg-slate-800 transition-all shadow-xl shadow-slate-200 hover:-translate-y-1"
                     >
                         Book Free Assessment
                     </button>
                     <button
+                        id="openContactBtn2"
                         class="w-full sm:w-auto px-12 py-6 bg-white border border-slate-200 text-slate-900 rounded-full font-bold text-sm uppercase tracking-[0.2em] hover:border-slate-400 transition-all"
                     >
                         Book Strategy Session
@@ -56,3 +58,23 @@
         </div>
     </div>
 </section>
+
+<script>
+    // Initialize event listeners
+    document.addEventListener("DOMContentLoaded", () => {
+        const btn1 = document.getElementById("openContactBtn");
+        const btn2 = document.getElementById("openContactBtn2");
+
+        if (btn1) {
+            btn1.addEventListener("click", () => {
+                window.dispatchEvent(new CustomEvent("openContactModal"));
+            });
+        }
+
+        if (btn2) {
+            btn2.addEventListener("click", () => {
+                window.dispatchEvent(new CustomEvent("openContactModal"));
+            });
+        }
+    });
+</script>

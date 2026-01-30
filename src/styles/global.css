@@ -76,4 +76,23 @@
             linear-gradient(90deg, rgba(229, 231, 235, 0.2) 1px, transparent 1px);
         background-size: 40px 40px;
     }
+
+    /* Custom scrollbar styling */
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: #f1f5f9;
+        border-radius: 10px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 10px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
+    }
 }
