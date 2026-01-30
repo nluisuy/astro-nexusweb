@@ -22,6 +22,7 @@
         "@astrojs/partytown": "^2.1.4",
         "@astrojs/react": "^4.4.2",
         "@astrojs/sitemap": "^3.6.0",
+        "@astrojs/vercel": "9.0.2",
         "@fontsource-variable/inter": "^5.2.8",
         "@fontsource-variable/outfit": "^5.2.8",
         "@sendgrid/mail": "^8.1.6",
@@ -30,7 +31,8 @@
         "react": "^19.2.4",
         "react-dom": "^19.2.4",
         "sharp": "^0.34.3",
-        "tailwindcss": "^4.1.18"
+        "tailwindcss": "^4.1.18",
+        "vercel": "^50.9.6"
     },
     "devDependencies": {
         "@types/react": "^19.2.10",

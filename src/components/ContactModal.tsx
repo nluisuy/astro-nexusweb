@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 interface ContactModalProps {
     isOpen: boolean;
@@ -99,7 +99,7 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit: React.ComponentProps<"form">["onSubmit"] = async (e) => {
         e.preventDefault();
         setSubmitStatus({ type: null, message: "" });
 

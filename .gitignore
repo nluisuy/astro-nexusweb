@@ -23,9 +23,11 @@ pnpm-debug.log*
 # Markdown files
 *.md
 
+
 # jetbrains setting folder
 .idea/
 .claude/
+.vercel/
 
 # modelo folder
 /modelo
