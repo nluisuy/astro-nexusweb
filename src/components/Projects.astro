@@ -80,31 +80,40 @@ const projects: ProjectItem[] = [
         </div>
 
         <div id="projects-scroll" class="overflow-x-auto hide-scrollbar snap-x snap-mandatory">
-            <div class="flex gap-10">
+            <div class="flex gap-6">
                 {
                     projects.map((project) => (
-                        <div class="snap-center flex-shrink-0 w-[300px] md:w-[400px] bg-white dark:bg-slate-900 rounded-[2rem] overflow-hidden shadow-sm dark:shadow-none dark:border dark:border-slate-800 group hover:shadow-xl dark:hover:border-nexus-blue/30 transition-all duration-500">
-                            <div class="h-[250px] md:h-[250px] overflow-hidden">
+                        <div class="snap-center flex-shrink-0 w-[260px] md:w-[320px] bg-white dark:bg-slate-900 rounded-2xl overflow-hidden shadow-sm dark:shadow-none border border-gray-100 dark:border-slate-800 group hover:shadow-xl dark:hover:border-nexus-blue/30 transition-all duration-500">
+                            <div class="relative h-[180px] md:h-[200px] overflow-hidden">
                                 <Image
                                     src={project.imageUrl}
                                     alt={project.title}
                                     width={320}
-                                    height={300}
-                                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
+                                    height={200}
+                                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                                 />
+                                <!-- Hover overlay -->
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-5">
+                                    <span class={`text-[0.65rem] uppercase tracking-widest font-bold ${project.colorClass} mb-1.5 block`}>
+                                        {project.category}
+                                    </span>
+                                    <h3 class="text-base font-bold text-white mb-2 leading-snug">
+                                        {project.title}
+                                    </h3>
+                                    <p class="text-xs text-slate-300 font-light leading-relaxed">
+                                        {project.description}
+                                    </p>
+                                </div>
                             </div>
-                            <div class="p-8 md:p-12">
+                            <div class="p-5">
                                 <span
-                                    class={`text-[0.7rem] uppercase tracking-widest font-bold ${project.colorClass} mb-3 block`}
+                                    class={`text-[0.65rem] uppercase tracking-widest font-bold ${project.colorClass} mb-1.5 block`}
                                 >
                                     {project.category}
                                 </span>
-                                <h3 class="text-xl md:text-2xl font-bold text-slate-900 dark:text-white mb-4 transition-colors">
+                                <h3 class="text-base font-bold text-slate-900 dark:text-white tracking-tight transition-colors leading-snug">
                                     {project.title}
                                 </h3>
-                                <p class="text-slate-500 dark:text-slate-400 font-light text-sm md:text-base leading-relaxed transition-colors">
-                                    {project.description}
-                                </p>
                             </div>
                         </div>
                     ))
