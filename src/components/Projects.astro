@@ -1,15 +1,12 @@
 ---
-import { Image } from "astro:assets";
 import type { ProjectItem } from "../types";
-
-
 
 const projects: ProjectItem[] = [
     {
         id: "p1",
         category: "Infrastructure",
         title: "Global Cloud Migration",
-        description: "Reduced infrastructure costs by 40% through intelligent serverless adoption.",
+        description: "Reduced infrastructure costs by 40% through intelligent serverless adoption and multi-cloud orchestration.",
         imageUrl:
             "https://lh3.googleusercontent.com/aida-public/AB6AXuDAM9RMEJm-HPe6XDZW2gDuLn6RzdEeXTwHH7a1lI_RWkekMdBsMTD6j1vos2nGh_7ye22LLm6YHBfLnNzrZMJXiKofrJ4SnIuEXYyrf9qquZowRCno3cPb3jcRs8atBlTBd36FCsKoMzO8ahBlp9D3rDa1zP21lFdO1866LWwKJEcMiOSdXubYua_T3lN-HKWCCBv3jLmeRpwJUdcq_x5jiA9yHJWO4riq_g15Vw1TbiO_gLbJFMnWn6shaU9JbYcsojfr4MJCV50",
         colorClass: "text-nexus-blue",
@@ -18,7 +15,7 @@ const projects: ProjectItem[] = [
         id: "p2",
         category: "AI & ML",
         title: "AI Adoption for Dev Teams",
-        description: "Accelerated coding velocity by 30% with context-aware AI tooling.",
+        description: "Accelerated coding velocity by 30% with context-aware AI tooling and copilot integration.",
         imageUrl:
             "https://lh3.googleusercontent.com/aida-public/AB6AXuCW4itAGtCbIH-84jWwnLWwo4-O4LNqNLBWdL1-D3Gb4OkT19swj8ZmhnbCKZ3LecSwPCXGziXsy5eKMshny5-6js1WiZEXrUyQruTUp1pbUU6M9Qmh5RSEfN35Jx053v066pKLJMupjmhbbwOVm5LACv3NJVqPACo1TqTubhFRrOqXaCZqzWktALBg5JWA6D33Py2WhoMz2Y7Y2QAC424I-79hjXgHknT4_EBHeS76in0qI0k6qJ5gDP4zd7kA_fl5xZ3AApSabTc",
         colorClass: "text-nexus-red",
@@ -26,27 +23,40 @@ const projects: ProjectItem[] = [
     {
         id: "p3",
         category: "Security",
-        title: "Fintech Compliance Shield",
+        title: "Security Assessment",
         description:
-            "Achieved full PCI certification for a major payment processor in record time.",
+            "Comprehensive vulnerability analysis and penetration testing for enterprise financial platforms.",
         imageUrl:
             "https://lh3.googleusercontent.com/aida-public/AB6AXuDtfGapBFDggwk75OyYXTSBVG5BXWxu2dBz4Y2CfkhRX0-64pZ_jpu_Jzn_9AYm8JK_2or7tEu_GLj_wWGkFD5MK_TD3cMIjVhPjwuz-YJG6pHWQTNUW67bMAOT-5wLmMyVDJI3IS2ZPFN22SKEVyOo07WE9JgeSDoDceQvIsagphv3_g5KvRWKoMh0Go0bRKEUrXbxXAmIRjNpTeset7WTRvxxUW3dsdh_LLgkRESSKiNqA44ynSW8vFmpHfNRUeEwojkZFYuGFm0",
         colorClass: "text-nexus-green",
     },
-
     {
         id: "p4",
+        category: "Compliance",
+        title: "ISO & PCI Certification",
+        description:
+            "Guided a major payment processor through ISO 27001 and PCI DSS certification in record time.",
+        imageUrl: "/images/iso-pci-project.png",
+        colorClass: "text-nexus-yellow",
+    },
+    {
+        id: "p5",
         category: "DRP",
         title: "Disaster Recovery Strategy",
         description:
-            "Disaster Recovery Strategy fintech.",
-        imageUrl:
-            "https://lh3.googleusercontent.com/aida-public/AB6AXuDtfGapBFDggwk75OyYXTSBVG5BXWxu2dBz4Y2CfkhRX0-64pZ_jpu_Jzn_9AYm8JK_2or7tEu_GLj_wWGkFD5MK_TD3cMIjVhPjwuz-YJG6pHWQTNUW67bMAOT-5wLmMyVDJI3IS2ZPFN22SKEVyOo07WE9JgeSDoDceQvIsagphv3_g5KvRWKoMh0Go0bRKEUrXbxXAmIRjNpTeset7WTRvxxUW3dsdh_LLgkRESSKiNqA44ynSW8vFmpHfNRUeEwojkZFYuGFm0",
+            "Designed and implemented a multi-region disaster recovery plan ensuring 99.99% uptime for a fintech platform.",
+        imageUrl: "/images/drp-project.png",
         colorClass: "text-nexus-green",
     },
-
-
-
+    {
+        id: "p6",
+        category: "AI Agents",
+        title: "Autonomous AI Agents",
+        description:
+            "Deployed intelligent AI agents that automate complex workflows, reducing operational overhead by 60%.",
+        imageUrl: "/images/ai-agents-project.png",
+        colorClass: "text-nexus-purple",
+    },
 ];
 ---
 
@@ -85,11 +95,10 @@ const projects: ProjectItem[] = [
                     projects.map((project) => (
                         <div class="snap-center flex-shrink-0 w-[260px] md:w-[320px] bg-white dark:bg-slate-900 rounded-2xl overflow-hidden shadow-sm dark:shadow-none border border-gray-100 dark:border-slate-800 group hover:shadow-xl dark:hover:border-nexus-blue/30 transition-all duration-500">
                             <div class="relative h-[180px] md:h-[200px] overflow-hidden">
-                                <Image
+                                <img
                                     src={project.imageUrl}
                                     alt={project.title}
-                                    width={320}
-                                    height={200}
+                                    loading="lazy"
                                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                                 />
                                 <!-- Hover overlay -->
