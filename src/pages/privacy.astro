@@ -1,0 +1,85 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Navbar from "../components/Navbar.astro";
+import Footer from "../components/Footer.astro";
+
+const pageTitle = "Privacy Policy";
+const pageDescription = "Learn how Nexus Digital Innovations collects, uses, and protects your personal data. Our commitment to transparency and data security.";
+---
+
+<Layout title={pageTitle} description={pageDescription}>
+    <div class="relative min-h-screen overflow-x-hidden">
+        <Navbar />
+
+        <main class="pt-40 pb-24">
+            <div class="max-w-4xl mx-auto px-6 lg:px-12">
+                <div class="mb-16">
+                    <span class="text-sm font-bold tracking-[0.3em] uppercase text-nexus-purple mb-4 block">Legal</span>
+                    <h1 class="text-4xl md:text-6xl font-display font-bold text-slate-900 dark:text-white mb-6 tracking-tight transition-colors">
+                        Privacy <span class="text-gradient">Policy</span>
+                    </h1>
+                    <p class="text-slate-400 text-sm uppercase tracking-widest font-medium">Last updated: March 2026</p>
+                </div>
+
+                <div class="space-y-12 text-slate-600 dark:text-slate-400 font-light leading-relaxed transition-colors">
+                    <section>
+                        <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-4 font-display transition-colors">1. Information We Collect</h2>
+                        <p class="mb-4">At Nexus Digital Innovations, we collect information that you provide directly to us when you:</p>
+                        <ul class="list-disc list-inside space-y-2 ml-4">
+                            <li>Fill out contact forms or book an assessment session</li>
+                            <li>Subscribe to our communications</li>
+                            <li>Interact with our AI Project Planner tool</li>
+                            <li>Communicate with us via email or other channels</li>
+                        </ul>
+                        <p class="mt-4">This may include your name, email address, company name, phone number, and details about your project requirements.</p>
+                    </section>
+
+                    <section>
+                        <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-4 font-display transition-colors">2. How We Use Your Information</h2>
+                        <p class="mb-4">We use the information we collect to:</p>
+                        <ul class="list-disc list-inside space-y-2 ml-4">
+                            <li>Respond to your inquiries and provide requested services</li>
+                            <li>Schedule and conduct assessment sessions</li>
+                            <li>Send relevant communications about our services</li>
+                            <li>Improve and optimize our website and services</li>
+                            <li>Comply with legal obligations</li>
+                        </ul>
+                    </section>
+
+                    <section>
+                        <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-4 font-display transition-colors">3. Data Security</h2>
+                        <p>We implement industry-standard security measures to protect your personal data. As a cybersecurity-focused company, we apply the same rigorous defense-in-depth strategies to our own infrastructure that we recommend to our clients. All data is encrypted in transit and at rest.</p>
+                    </section>
+
+                    <section>
+                        <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-4 font-display transition-colors">4. Third-Party Services</h2>
+                        <p>We may use third-party services for analytics, email communication, and hosting. These providers are carefully vetted and are bound by their own privacy policies. We do not sell your personal information to third parties.</p>
+                    </section>
+
+                    <section>
+                        <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-4 font-display transition-colors">5. Cookies</h2>
+                        <p>Our website uses cookies and similar technologies to enhance your browsing experience. For detailed information about the cookies we use, please see our <a href="/cookies" class="text-nexus-blue hover:underline font-medium">Cookie Policy</a>.</p>
+                    </section>
+
+                    <section>
+                        <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-4 font-display transition-colors">6. Your Rights</h2>
+                        <p class="mb-4">You have the right to:</p>
+                        <ul class="list-disc list-inside space-y-2 ml-4">
+                            <li>Access, correct, or delete your personal data</li>
+                            <li>Opt out of marketing communications</li>
+                            <li>Request a copy of the data we hold about you</li>
+                            <li>Lodge a complaint with a supervisory authority</li>
+                        </ul>
+                    </section>
+
+                    <section>
+                        <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-4 font-display transition-colors">7. Contact Us</h2>
+                        <p>For any privacy-related inquiries, please contact us at <a href="mailto:hello@nexusinnova.com" class="text-nexus-blue hover:underline font-medium">hello@nexusinnova.com</a>.</p>
+                    </section>
+                </div>
+            </div>
+        </main>
+
+        <Footer />
+    </div>
+</Layout>

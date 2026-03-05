@@ -41,7 +41,7 @@ const organizationSchema = {
     contactPoint: {
         "@type": "ContactPoint",
         contactType: "Sales",
-        email: "contact@nexusinnovations.com",
+        email: "hello@nexusinnova.com",
     },
     address: {
         "@type": "PostalAddress",
@@ -182,5 +182,27 @@ const organizationSchema = {
     </head>
     <body class="bg-white dark:bg-slate-950 text-slate-800 dark:text-slate-50 antialiased font-sans blueprint-bg overflow-x-hidden transition-colors duration-300">
         <slot />
+
+        <!-- Scroll-triggered reveal animations -->
+        <script is:inline>
+            document.addEventListener('DOMContentLoaded', () => {
+                const revealElements = document.querySelectorAll('.reveal');
+                if (revealElements.length === 0) return;
+
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('active');
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, {
+                    threshold: 0.1,
+                    rootMargin: '0px 0px -50px 0px'
+                });
+
+                revealElements.forEach(el => observer.observe(el));
+            });
+        </script>
     </body>
 </html>

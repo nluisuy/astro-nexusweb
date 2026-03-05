@@ -1,0 +1,82 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Navbar from "../components/Navbar.astro";
+import Footer from "../components/Footer.astro";
+
+const pageTitle = "Careers at Nexus";
+const pageDescription = "Join Nexus Digital Innovations — we're looking for architects, strategists, and innovators who thrive on building enterprise-grade digital solutions.";
+
+const values = [
+    { icon: "neurology", title: "Think Bold", description: "We tackle the hardest problems in enterprise technology. If it doesn't push boundaries, it doesn't excite us.", color: "text-nexus-blue", bg: "bg-nexus-blue/10" },
+    { icon: "groups", title: "Collaborate Deeply", description: "We operate as a tight-knit collective where every voice matters.", color: "text-nexus-purple", bg: "bg-nexus-purple/10" },
+    { icon: "trending_up", title: "Grow Continuously", description: "We invest in our people. From certifications to conferences to hands-on experimentation.", color: "text-nexus-green", bg: "bg-nexus-green/10" },
+    { icon: "workspace_premium", title: "Own the Outcome", description: "We don't just write code — we take responsibility for the impact of our work.", color: "text-nexus-yellow", bg: "bg-nexus-yellow/10" },
+];
+---
+
+<Layout title={pageTitle} description={pageDescription}>
+    <div class="relative min-h-screen overflow-x-hidden">
+        <Navbar />
+
+        <main class="pt-40 pb-24">
+            <div class="max-w-5xl mx-auto px-6 lg:px-12 text-center mb-24">
+                <span class="text-sm font-bold tracking-[0.3em] uppercase text-nexus-green mb-6 block">Careers</span>
+                <h1 class="text-5xl md:text-7xl font-display font-bold text-slate-900 dark:text-white mb-8 tracking-tighter leading-[1] transition-colors">
+                    Build the Future <span class="text-gradient">With Us</span>
+                </h1>
+                <p class="max-w-2xl mx-auto text-xl text-slate-500 dark:text-slate-400 font-light leading-relaxed transition-colors">
+                    We're a collective of architects, security experts, and AI specialists who believe technology should create extraordinary outcomes.
+                </p>
+            </div>
+
+            <div class="max-w-5xl mx-auto px-6 lg:px-12 mb-24">
+                <h2 class="text-sm font-bold tracking-[0.3em] uppercase text-nexus-blue mb-12 text-center">What Drives Us</h2>
+                <div class="grid sm:grid-cols-2 gap-8">
+                    {values.map((value) => (
+                        <div class="group p-8 rounded-2xl bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 hover:border-nexus-blue/30 transition-all hover:shadow-lg">
+                            <div class={`w-14 h-14 rounded-xl ${value.bg} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
+                                <span class={`material-symbols-outlined ${value.color}`} style="font-size: 26px;">{value.icon}</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-3 font-display transition-colors">{value.title}</h3>
+                            <p class="text-slate-500 dark:text-slate-400 font-light leading-relaxed text-sm transition-colors">{value.description}</p>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            <div class="max-w-5xl mx-auto px-6 lg:px-12">
+                <div class="relative bg-[#050505] rounded-3xl overflow-hidden border border-gray-800 p-12 md:p-20 text-center">
+                    <div class="absolute -top-24 -right-24 w-96 h-96 bg-nexus-purple/20 rounded-full blur-[100px] animate-pulse-slow"></div>
+                    <div class="absolute -bottom-24 -left-24 w-96 h-96 bg-nexus-blue/20 rounded-full blur-[100px] animate-pulse-slow" style="animation-delay: 1s;"></div>
+                    <div class="relative z-10">
+                        <div class="inline-flex items-center space-x-2 mb-6">
+                            <span class="relative flex h-3 w-3">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-nexus-green opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-3 w-3 bg-nexus-green"></span>
+                            </span>
+                            <span class="text-nexus-green font-bold tracking-wider text-xs uppercase">We're Hiring</span>
+                        </div>
+                        <h2 class="text-3xl md:text-5xl font-display font-bold text-white mb-6 leading-tight">
+                            Don't See Your Role?<br />
+                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-nexus-purple via-nexus-blue to-nexus-green">Reach Out Anyway</span>
+                        </h2>
+                        <p class="text-lg text-slate-400 mb-10 max-w-2xl mx-auto leading-relaxed">
+                            We're always looking for exceptional talent in cloud architecture, AI/ML engineering, cybersecurity, and strategic consulting.
+                        </p>
+                        <a href="mailto:hello@nexusinnova.com?subject=Career%20Inquiry%20-%20Nexus%20Digital%20Innovations" class="inline-flex items-center gap-3 px-10 py-5 bg-white text-slate-900 rounded-xl font-extrabold text-lg hover:bg-gray-50 transition-all shadow-[0_0_20px_rgba(255,255,255,0.25)] hover:shadow-[0_0_40px_rgba(255,255,255,0.5)] hover:-translate-y-1">
+                            Send Your Profile
+                            <span class="material-symbols-outlined">mail</span>
+                        </a>
+                        <div class="mt-8 flex flex-wrap justify-center gap-6 text-sm text-slate-500">
+                            <div class="flex items-center"><span class="material-symbols-outlined text-nexus-blue mr-2 text-lg">public</span><span>Remote-Friendly</span></div>
+                            <div class="flex items-center"><span class="material-symbols-outlined text-nexus-purple mr-2 text-lg">school</span><span>Learning Budget</span></div>
+                            <div class="flex items-center"><span class="material-symbols-outlined text-nexus-green mr-2 text-lg">diversity_3</span><span>Inclusive Culture</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <Footer />
+    </div>
+</Layout>

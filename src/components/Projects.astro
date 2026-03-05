@@ -52,7 +52,7 @@ const projects: ProjectItem[] = [
 
 <section class="py-32 bg-nexus-gray-soft dark:bg-slate-950 transition-colors duration-300" id="projects">
     <div class="max-w-7xl mx-auto px-6 lg:px-12">
-        <div class="mb-16 flex justify-between items-end">
+        <div class="mb-16 flex justify-between items-end reveal">
             <div>
                 <h2 class="text-sm font-bold tracking-[0.3em] uppercase text-nexus-purple mb-4">
                     Case Studies
@@ -64,13 +64,15 @@ const projects: ProjectItem[] = [
             <div class="hidden md:flex gap-4">
                 <button
                     id="scroll-left"
-                    class="w-12 h-12 rounded-full border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-400 dark:text-slate-500 hover:border-slate-900 dark:hover:border-white hover:text-slate-900 dark:hover:text-white transition-all"
+                    aria-label="Scroll projects left"
+                    class="w-12 h-12 rounded-full border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-400 dark:text-slate-500 hover:border-slate-900 dark:hover:border-white hover:text-slate-900 dark:hover:text-white transition-all cursor-pointer"
                 >
                     <span class="material-symbols-outlined">west</span>
                 </button>
                 <button
                     id="scroll-right"
-                    class="w-12 h-12 rounded-full border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-400 dark:text-slate-500 hover:border-slate-900 dark:hover:border-white hover:text-slate-900 dark:hover:text-white transition-all"
+                    aria-label="Scroll projects right"
+                    class="w-12 h-12 rounded-full border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-400 dark:text-slate-500 hover:border-slate-900 dark:hover:border-white hover:text-slate-900 dark:hover:text-white transition-all cursor-pointer"
                 >
                     <span class="material-symbols-outlined">east</span>
                 </button>
