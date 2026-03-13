@@ -12,7 +12,7 @@ export default defineConfig({
     output: "server",
     adapter: vercel(),
     outDir: "dist",
-    site: "https://astro-nexusweb.vercel.app/",
+    site: "https://www.nexusinnova.com/",
 
     // Optimizaciones para imágenes locales
     image: {
