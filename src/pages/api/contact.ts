@@ -81,7 +81,7 @@ export const POST: APIRoute = async ({ request }) => {
         sgMail.setApiKey(apiKey);
 
         const fromEmail = import.meta.env.SENDGRID_FROM_EMAIL || "noreply@nexusinnovations.com";
-        const toEmail = import.meta.env.SENDGRID_TO_EMAIL || "contact@nexusinnovations.com";
+        const toEmail = import.meta.env.SENDGRID_TO_EMAIL || "hello@nexusinnova.com";
 
         // Create email content
         const textContent = `
