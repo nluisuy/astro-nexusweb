@@ -1,0 +1,47 @@
+---
+
+---
+
+<section class="py-12 bg-nexus-gray-soft dark:bg-slate-950 transition-colors duration-300">
+    <div class="max-w-7xl mx-auto px-6 lg:px-12">
+        <div class="relative rounded-2xl overflow-hidden bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 p-8 md:p-12 reveal">
+            <!-- Background particles -->
+            <div class="absolute -top-16 -right-16 w-48 h-48 bg-nexus-blue/20 rounded-full blur-[60px] animate-pulse-slow"></div>
+            <div class="absolute -bottom-16 -left-16 w-48 h-48 bg-nexus-purple/20 rounded-full blur-[60px] animate-pulse-slow" style="animation-delay: 1.5s;"></div>
+
+            <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="flex items-center gap-4">
+                    <div class="hidden sm:flex w-12 h-12 rounded-2xl bg-white/10 items-center justify-center flex-shrink-0">
+                        <span class="material-symbols-outlined text-white text-2xl">neurology</span>
+                    </div>
+                    <div>
+                        <p class="text-white font-bold text-lg md:text-xl">
+                            Ready to accelerate with AI?
+                        </p>
+                        <p class="text-slate-400 text-sm font-light">
+                            Get a free 30-min AI Readiness Assessment — valued at $1,500.
+                        </p>
+                    </div>
+                </div>
+                <button
+                    id="mini-cta-btn"
+                    class="flex-shrink-0 inline-flex items-center px-8 py-4 bg-white text-slate-900 rounded-xl font-bold text-sm hover:bg-gray-50 transition-all shadow-[0_0_20px_rgba(255,255,255,0.15)] hover:shadow-[0_0_30px_rgba(255,255,255,0.3)] hover:-translate-y-0.5 active:scale-95 cursor-pointer"
+                >
+                    Book Free Assessment
+                    <span class="material-symbols-outlined ml-2 text-lg">arrow_forward</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const miniCtaBtn = document.getElementById("mini-cta-btn");
+        if (miniCtaBtn) {
+            miniCtaBtn.addEventListener("click", () => {
+                window.dispatchEvent(new CustomEvent("openContactModal"));
+            });
+        }
+    });
+</script>

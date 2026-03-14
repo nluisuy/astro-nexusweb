@@ -13,6 +13,8 @@ export interface ProjectItem {
     description: string;
     imageUrl: string;
     colorClass: string;
+    metric?: string;
+    techStack?: string[];
 }
 
 export interface RoadmapStep {

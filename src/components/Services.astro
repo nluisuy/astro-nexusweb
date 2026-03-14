@@ -3,20 +3,28 @@ import type { ServiceItem } from "../types";
 
 const services: ServiceItem[] = [
     {
+        id: "ai",
+        title: "Enterprise AI Agents",
+        description:
+            "Autonomous agentic systems that execute, not just generate. From RAG pipelines to intelligent workflows delivering measurable ROI.",
+        icon: "neurology",
+        color: "text-nexus-red",
+    },
+    {
+        id: "devpods",
+        title: "AI Dev Pods",
+        description:
+            "Dedicated development squads powered by Agentic AI, accelerating your product innovation with autonomous coding, testing, and deployment workflows.",
+        icon: "group_work",
+        color: "text-orange-500",
+    },
+    {
         id: "infra",
         title: "Infrastructure & Growth",
         description:
             "Scalable cloud-native architectures designed for massive expansion and peak performance.",
         icon: "dns",
         color: "text-nexus-blue",
-    },
-    {
-        id: "ai",
-        title: "Generative AI",
-        description:
-            "Leveraging large language models to automate complexity and drive creative efficiency.",
-        icon: "neurology",
-        color: "text-nexus-red",
     },
     {
         id: "cyber",
@@ -62,7 +70,7 @@ const services: ServiceItem[] = [
             <p
                 class="text-3xl md:text-4xl lg:text-5xl font-display font-medium text-slate-900 dark:text-white max-w-xl transition-colors"
             >
-                Precision-engineered services for the modern enterprise.
+                AI-first capabilities for the modern enterprise.
             </p>
         </div>
 
@@ -70,7 +78,7 @@ const services: ServiceItem[] = [
             {
                 services.map((service) => (
                     <div
-                        class="service-tile group reveal p-8 rounded-2xl bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 cursor-default transition-all duration-300 hover:shadow-2xl hover:shadow-slate-200/50 dark:hover:shadow-none hover:border-nexus-blue/20 dark:hover:border-nexus-blue/30"
+                        class={`service-tile group reveal p-8 rounded-2xl bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 cursor-default transition-all duration-300 hover:shadow-2xl hover:shadow-slate-200/50 dark:hover:shadow-none hover:border-nexus-blue/20 dark:hover:border-nexus-blue/30 ${service.id === 'ai' || service.id === 'devpods' ? 'ring-1 ring-nexus-blue/10 dark:ring-nexus-blue/20' : ''}`}
                         style={`transition-delay: ${0.1 * (services.indexOf(service) + 1)}s; transform-style: preserve-3d; will-change: transform;`}
                     >
                         <div class="pointer-events-none" style="transform: translateZ(20px);">
@@ -81,6 +89,11 @@ const services: ServiceItem[] = [
                             </div>
                             <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-4 tracking-tight transition-colors">
                                 {service.title}
+                                {(service.id === 'ai' || service.id === 'devpods') && (
+                                    <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-[0.6rem] font-bold tracking-wider uppercase bg-nexus-blue/10 text-nexus-blue dark:bg-nexus-blue/20">
+                                        AI-Powered
+                                    </span>
+                                )}
                             </h3>
                             <p class="text-slate-500 dark:text-slate-400 font-light leading-relaxed transition-colors">
                                 {service.description}

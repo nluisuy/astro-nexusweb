@@ -3,12 +3,15 @@ import type { ProjectItem } from "../types";
 
 const projects: ProjectItem[] = [
     {
-        id: "p1",
-        category: "Infrastructure",
-        title: "Global Cloud Migration",
-        description: "Reduced infrastructure costs by 40% through intelligent serverless adoption and multi-cloud orchestration.",
-        imageUrl: "/images/cloud-migration.png",
-        colorClass: "text-nexus-blue",
+        id: "p6",
+        category: "AI Agents",
+        title: "Autonomous AI Agents",
+        description:
+            "Deployed intelligent AI agents that automate complex workflows, reducing operational overhead by 60%.",
+        imageUrl: "/images/ai-agents-project.png",
+        colorClass: "text-nexus-purple",
+        metric: "60% ops reduction",
+        techStack: ["LangChain", "GPT-4", "Vector DB"],
     },
     {
         id: "p2",
@@ -17,6 +20,18 @@ const projects: ProjectItem[] = [
         description: "Accelerated coding velocity by 30% with context-aware AI tooling and copilot integration.",
         imageUrl: "/images/ai-dev-teams.png",
         colorClass: "text-nexus-red",
+        metric: "3x faster delivery",
+        techStack: ["Copilot", "Claude", "CI/CD"],
+    },
+    {
+        id: "p1",
+        category: "Infrastructure",
+        title: "Global Cloud Migration",
+        description: "Reduced infrastructure costs by 40% through intelligent serverless adoption and multi-cloud orchestration.",
+        imageUrl: "/images/cloud-migration.png",
+        colorClass: "text-nexus-blue",
+        metric: "40% cost reduction",
+        techStack: ["AWS", "Terraform", "K8s"],
     },
     {
         id: "p3",
@@ -26,6 +41,8 @@ const projects: ProjectItem[] = [
             "Comprehensive vulnerability analysis and penetration testing for enterprise financial platforms.",
         imageUrl: "/images/security-assessment.png",
         colorClass: "text-nexus-green",
+        metric: "Zero breaches",
+        techStack: ["Pentest", "SIEM", "WAF"],
     },
     {
         id: "p4",
@@ -35,6 +52,8 @@ const projects: ProjectItem[] = [
             "Guided a major payment processor through ISO 27001 and PCI DSS certification in record time.",
         imageUrl: "/images/iso-pci-project.png",
         colorClass: "text-nexus-yellow",
+        metric: "12 weeks to cert",
+        techStack: ["ISO 27001", "PCI DSS"],
     },
     {
         id: "p5",
@@ -44,15 +63,8 @@ const projects: ProjectItem[] = [
             "Designed and implemented a multi-region disaster recovery plan ensuring 99.99% uptime for a fintech platform.",
         imageUrl: "/images/drp-project.png",
         colorClass: "text-nexus-green",
-    },
-    {
-        id: "p6",
-        category: "AI Agents",
-        title: "Autonomous AI Agents",
-        description:
-            "Deployed intelligent AI agents that automate complex workflows, reducing operational overhead by 60%.",
-        imageUrl: "/images/ai-agents-project.png",
-        colorClass: "text-nexus-purple",
+        metric: "99.99% uptime",
+        techStack: ["Multi-region", "AWS", "RTO<1h"],
     },
 ];
 ---
@@ -65,7 +77,7 @@ const projects: ProjectItem[] = [
                     Case Studies
                 </h2>
                 <p class="text-3xl md:text-4xl font-display font-medium text-slate-900 dark:text-white transition-colors">
-                    Featured Projects
+                    Proven Impact
                 </p>
             </div>
             <div class="hidden md:flex gap-4">
@@ -98,7 +110,15 @@ const projects: ProjectItem[] = [
                                     loading="lazy"
                                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                                 />
-                                <!-- Hover overlay -->
+                                {/* Metric badge */}
+                                {project.metric && (
+                                    <div class="absolute top-3 right-3 px-3 py-1.5 bg-black/70 backdrop-blur-sm rounded-full">
+                                        <span class="text-[0.65rem] font-bold text-white uppercase tracking-wider">
+                                            {project.metric}
+                                        </span>
+                                    </div>
+                                )}
+                                {/* Hover overlay */}
                                 <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-5">
                                     <span class={`text-[0.65rem] uppercase tracking-widest font-bold ${project.colorClass} mb-1.5 block`}>
                                         {project.category}
@@ -106,9 +126,18 @@ const projects: ProjectItem[] = [
                                     <h3 class="text-base font-bold text-white mb-2 leading-snug">
                                         {project.title}
                                     </h3>
-                                    <p class="text-xs text-slate-300 font-light leading-relaxed">
+                                    <p class="text-xs text-slate-300 font-light leading-relaxed mb-3">
                                         {project.description}
                                     </p>
+                                    {project.techStack && (
+                                        <div class="flex flex-wrap gap-1.5">
+                                            {project.techStack.map((tech) => (
+                                                <span class="px-2 py-0.5 bg-white/10 backdrop-blur-sm rounded text-[0.6rem] text-white/80 font-medium">
+                                                    {tech}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                             <div class="p-5">
