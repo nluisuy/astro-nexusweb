@@ -1,0 +1,52 @@
+# Robots.txt for Nexus Digital Innovations
+# https://www.nexusinnovations.com/robots.txt
+
+# Allow all bots to crawl all content
+User-agent: *
+Allow: /
+
+# Disallow access to admin or private areas (if any exist in the future)
+# Disallow: /admin/
+# Disallow: /api/
+
+# Crawl-delay for polite crawling (1 second between requests)
+Crawl-delay: 1
+
+# Sitemap location
+Sitemap: https://www.nexusinnovations.com/sitemap-index.xml
+Sitemap: https://www.nexusinnovations.com/sitemap-0.xml
+
+# Specific bot instructions
+
+# Google Bot
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+# Bing Bot
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+# Claude and other AI crawlers
+User-agent: Claude-Web
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+# Social media crawlers
+User-agent: Twitterbot
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
