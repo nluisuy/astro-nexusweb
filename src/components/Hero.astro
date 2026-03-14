@@ -3,15 +3,9 @@
 ---
 
 <section class="relative pt-40 pb-24 lg:pt-64 lg:pb-56 overflow-hidden">
-    <!-- Flowing Aurora Background -->
-    <div class="absolute inset-0 w-full h-full overflow-hidden pointer-events-none z-0">
-        <div class="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] bg-nexus-purple/20 dark:bg-nexus-purple/10 rounded-full blur-[120px] mix-blend-multiply dark:mix-blend-screen animate-blob"></div>
-        <div class="absolute top-[10%] -right-[10%] w-[50%] h-[50%] bg-nexus-blue/20 dark:bg-nexus-blue/10 rounded-full blur-[120px] mix-blend-multiply dark:mix-blend-screen animate-blob" style="animation-delay: 2s;"></div>
-        <div class="absolute -bottom-[20%] left-[20%] w-[60%] h-[60%] bg-nexus-green/20 dark:bg-nexus-green/10 rounded-full blur-[120px] mix-blend-multiply dark:mix-blend-screen animate-blob" style="animation-delay: 4s;"></div>
-    </div>
-    <div class="absolute top-0 left-0 w-full h-full opacity-40 pointer-events-none">
-        <div
-            class="absolute top-[15%] right-[10%] w-[30%] h-[30%] bg-nexus-blue/10 rounded-full blur-[80px] animate-pulse-slow"
+    <!-- Particle Canvas Background -->
+    <canvas id="hero-particles" class="absolute inset-0 w-full h-full pointer-events-none z-0"></canvas>
+
         >
         </div>
         <div
@@ -80,3 +74,96 @@
         <span class="text-[0.6rem] font-bold uppercase tracking-widest text-slate-400">Scroll</span>
         <div class="w-px h-12 bg-gradient-to-b from-slate-400 to-transparent"></div>
     </div>
+</section>
+
+<script>
+    // Neural network particle animation
+    const canvas = document.getElementById('hero-particles') as HTMLCanvasElement;
+    if (canvas) {
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+            let animationId: number;
+            let particles: Array<{x: number; y: number; vx: number; vy: number; size: number; opacity: number}> = [];
+
+            function resize() {
+                canvas.width = canvas.offsetWidth * window.devicePixelRatio;
+                canvas.height = canvas.offsetHeight * window.devicePixelRatio;
+                ctx!.scale(window.devicePixelRatio, window.devicePixelRatio);
+            }
+
+            function createParticles() {
+                const count = Math.min(80, Math.floor(canvas.offsetWidth * canvas.offsetHeight / 15000));
+                particles = [];
+                for (let i = 0; i < count; i++) {
+                    particles.push({
+                        x: Math.random() * canvas.offsetWidth,
+                        y: Math.random() * canvas.offsetHeight,
+                        vx: (Math.random() - 0.5) * 0.4,
+                        vy: (Math.random() - 0.5) * 0.4,
+                        size: Math.random() * 2 + 1,
+                        opacity: Math.random() * 0.5 + 0.1
+                    });
+                }
+            }
+
+            function isDark() {
+                return document.documentElement.classList.contains('dark');
+            }
+
+            function draw() {
+                ctx!.clearRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
+                const dark = isDark();
+                const nodeColor = dark ? '148, 163, 184' : '100, 116, 139';
+                const lineColor = dark ? '148, 163, 184' : '148, 163, 184';
+
+                // Update and draw particles
+                for (const p of particles) {
+                    p.x += p.vx;
+                    p.y += p.vy;
+
+                    if (p.x < 0 || p.x > canvas.offsetWidth) p.vx *= -1;
+                    if (p.y < 0 || p.y > canvas.offsetHeight) p.vy *= -1;
+
+                    ctx!.beginPath();
+                    ctx!.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx!.fillStyle = `rgba(${nodeColor}, ${p.opacity})`;
+                    ctx!.fill();
+                }
+
+                // Draw connections
+                for (let i = 0; i < particles.length; i++) {
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const dx = particles[i].x - particles[j].x;
+                        const dy = particles[i].y - particles[j].y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+
+                        if (dist < 150) {
+                            ctx!.beginPath();
+                            ctx!.moveTo(particles[i].x, particles[i].y);
+                            ctx!.lineTo(particles[j].x, particles[j].y);
+                            ctx!.strokeStyle = `rgba(${lineColor}, ${0.08 * (1 - dist / 150)})`;
+                            ctx!.lineWidth = 0.5;
+                            ctx!.stroke();
+                        }
+                    }
+                }
+
+                animationId = requestAnimationFrame(draw);
+            }
+
+            resize();
+            createParticles();
+            draw();
+
+            window.addEventListener('resize', () => {
+                resize();
+                createParticles();
+            });
+
+            // Cleanup on navigation
+            document.addEventListener('astro:before-swap', () => {
+                cancelAnimationFrame(animationId);
+            });
+        }
+    }
+</script>
