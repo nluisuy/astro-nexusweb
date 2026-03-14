@@ -70,7 +70,7 @@ const services: ServiceItem[] = [
             {
                 services.map((service) => (
                     <div
-                        class={`service-tile group reveal p-8 rounded-2xl bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 cursor-default transition-all duration-300 hover:shadow-2xl hover:shadow-slate-200/50 dark:hover:shadow-none hover:border-nexus-blue/20 dark:hover:border-nexus-blue/30 ${service.id === 'ai' || service.id === 'devpods' ? 'ring-1 ring-nexus-blue/10 dark:ring-nexus-blue/20' : ''}`}
+                        class={`service-tile group reveal p-8 rounded-2xl bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 cursor-default transition-all duration-300 hover:shadow-2xl hover:shadow-slate-200/50 dark:hover:shadow-none hover:border-nexus-blue/20 dark:hover:border-nexus-blue/30 ${service.id === 'ai' || service.id === 'devpods' ? 'ring-1 ring-nexus-blue/10 dark:ring-nexus-blue/20 hover:bg-gradient-to-br hover:from-nexus-purple/5 hover:to-nexus-blue/10 dark:hover:from-nexus-purple/10 dark:hover:to-nexus-blue/20' : 'hover:bg-slate-50 dark:hover:bg-slate-800/50'}`}
                         style={`transition-delay: ${0.1 * (services.indexOf(service) + 1)}s; transform-style: preserve-3d; will-change: transform;`}
                     >
                         <div class="pointer-events-none" style="transform: translateZ(20px);">
