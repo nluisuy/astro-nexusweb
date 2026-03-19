@@ -27,6 +27,7 @@
         "@fontsource-variable/outfit": "^5.2.8",
         "@sendgrid/mail": "^8.1.6",
         "@tailwindcss/vite": "^4.1.18",
+        "@vercel/analytics": "^2.0.1",
         "astro": "^5.16.14",
         "react": "^19.2.4",
         "react-dom": "^19.2.4",
