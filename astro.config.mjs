@@ -10,7 +10,11 @@ import partytown from "@astrojs/partytown";
 // https://astro.build/config
 export default defineConfig({
     output: "server",
-    adapter: vercel(),
+    adapter: vercel({
+        webAnalytics: {
+            enabled: true,
+        },
+    }),
     outDir: "dist",
     site: "https://www.nexusinnova.com/",
 
