@@ -1,52 +1,50 @@
 ---
 import type { ServiceItem } from "../types";
+import { getLangFromUrl, useTranslations } from "../i18n/utils";
+
+const lang = Astro.currentLocale || getLangFromUrl(Astro.url);
+const t = useTranslations(lang as any);
 
 const services: ServiceItem[] = [
     {
         id: "ai",
-        title: "Enterprise AI Agents",
-        description:
-            "Autonomous agentic systems that execute, not just generate. From RAG pipelines to intelligent workflows delivering measurable ROI.",
+        title: t('services.item.ai.title') as string,
+        description: t('services.item.ai.desc') as string,
         icon: "neurology",
         color: "text-nexus-red",
     },
     {
         id: "devpods",
-        title: "AI Dev Pods",
-        description:
-            "Dedicated development squads powered by Agentic AI, accelerating your product innovation with autonomous coding, testing, and deployment workflows.",
+        title: t('services.item.devpods.title') as string,
+        description: t('services.item.devpods.desc') as string,
         icon: "group_work",
         color: "text-orange-500",
     },
     {
         id: "infra",
-        title: "Infrastructure & Growth",
-        description:
-            "Scalable cloud-native architectures designed for massive expansion and peak performance.",
+        title: t('services.item.infra.title') as string,
+        description: t('services.item.infra.desc') as string,
         icon: "dns",
         color: "text-nexus-blue",
     },
     {
         id: "cyber",
-        title: "Cybersecurity",
-        description:
-            "Defense-in-depth strategies to secure your digital perimeter and protect institutional trust.",
+        title: t('services.item.cyber.title') as string,
+        description: t('services.item.cyber.desc') as string,
         icon: "admin_panel_settings",
         color: "text-nexus-purple",
     },
     {
         id: "cto",
-        title: "CTO as a Service",
-        description:
-            "Strategic technical leadership on-demand to align your roadmap with business objectives.",
+        title: t('services.item.cto.title') as string,
+        description: t('services.item.cto.desc') as string,
         icon: "manage_accounts",
         color: "text-nexus-blue",
     },
     {
         id: "ciso",
-        title: "CISO as a Service",
-        description:
-            "High-level security governance to manage risks and navigate complex compliance landscapes.",
+        title: t('services.item.ciso.title') as string,
+        description: t('services.item.ciso.desc') as string,
         icon: "verified_user",
         color: "text-nexus-green",
     },
@@ -57,12 +55,12 @@ const services: ServiceItem[] = [
     <div class="max-w-7xl mx-auto px-6 lg:px-12">
         <div class="mb-24 reveal">
             <h2 class="text-sm font-bold tracking-[0.3em] uppercase text-nexus-blue mb-4">
-                Areas of Excellence
+                {t('services.badge')}
             </h2>
             <p
                 class="text-3xl md:text-4xl lg:text-5xl font-display font-medium text-slate-900 dark:text-white max-w-xl transition-colors"
             >
-                AI-first capabilities for the modern enterprise.
+                {t('services.title')}
             </p>
         </div>
 

@@ -1,12 +1,17 @@
 ---
 import { Image } from "astro:assets";
 import logo from "../assets/logo.svg";
+import { getLangFromUrl, useTranslations } from "../i18n/utils";
+
+const lang = Astro.currentLocale || getLangFromUrl(Astro.url);
+const t = useTranslations(lang as any);
+const isEs = lang === 'es';
 ---
 
 <nav class="fixed w-full z-50 backdrop-blur-xl bg-white/70 dark:bg-slate-950/80 border-b border-gray-100 dark:border-slate-800 transition-colors duration-300">
     <div class="max-w-7xl mx-auto px-6 lg:px-12">
         <div class="flex items-center justify-between h-24">
-            <a href="/" class="flex-shrink-0 flex flex-col items-start cursor-pointer group" aria-label="Nexus Digital Innovations home">
+            <a href={isEs ? '/es/' : '/'} class="flex-shrink-0 flex flex-col items-start cursor-pointer group" aria-label="Nexus Digital Innovations home">
                 <Image
                     src={logo}
                     alt="Nexus Digital Innovations"
@@ -16,68 +21,52 @@ import logo from "../assets/logo.svg";
             </a>
             <div class="hidden md:flex items-center space-x-12">
                 <div class="flex items-center space-x-10">
-                    <a
-                        class="text-[0.8rem] uppercase tracking-widest font-semibold text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors"
-                        href="/#services"
-                    >
-                        Services
+                    <a class="text-[0.8rem] uppercase tracking-widest font-semibold text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors" href={`${isEs ? '/es' : ''}/#services`}>
+                        {t('nav.services')}
                     </a>
-                    <a
-                        class="text-[0.8rem] uppercase tracking-widest font-semibold text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors"
-                        href="/#industries"
-                    >
-                        Industries
+                    <a class="text-[0.8rem] uppercase tracking-widest font-semibold text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors" href={`${isEs ? '/es' : ''}/#industries`}>
+                        {t('nav.industries')}
                     </a>
-                    <a
-                        class="text-[0.8rem] uppercase tracking-widest font-semibold text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors"
-                        href="/#projects"
-                    >
-                        Work
+                    <a class="text-[0.8rem] uppercase tracking-widest font-semibold text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors" href={`${isEs ? '/es' : ''}/#projects`}>
+                        {t('nav.work')}
                     </a>
-                    <a
-                        class="text-[0.8rem] uppercase tracking-widest font-semibold text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors"
-                        href="/#about"
-                    >
-                        About
+                    <a class="text-[0.8rem] uppercase tracking-widest font-semibold text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors" href={`${isEs ? '/es' : ''}/#about`}>
+                        {t('nav.about')}
                     </a>
-                    <a
-                        class="text-[0.8rem] uppercase tracking-widest font-semibold text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors"
-                        href="/blog"
-                    >
-                        Insights
+                    <a class="text-[0.8rem] uppercase tracking-widest font-semibold text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors" href={`${isEs ? '/es' : ''}/blog`}>
+                        {t('nav.insights')}
                     </a>
                 </div>
-                <a
-                    class="px-8 py-3 bg-slate-900 text-white text-xs uppercase tracking-widest font-bold rounded-full hover:bg-slate-800 transition-all shadow-lg shadow-slate-200 dark:shadow-none dark:border dark:border-slate-700"
-                    href="/#contact"
-                >
-                    Let's Talk
-                </a>
-                <button
-                    id="theme-toggle"
-                    type="button"
-                    class="relative flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border border-gray-200 bg-white text-gray-700 shadow-sm transition-all hover:border-blue-400 hover:text-blue-600 dark:border-gray-800 dark:bg-gray-950 dark:text-gray-400 dark:hover:border-blue-500 dark:hover:text-blue-400"
-                    aria-label="Cambiar tema"
-                >
-                    <span class="material-symbols-outlined absolute text-[18px] transition-all duration-300 scale-100 rotate-0 opacity-100 dark:scale-0 dark:-rotate-90 dark:opacity-0">dark_mode</span>
-                    <span class="material-symbols-outlined absolute text-[18px] transition-all duration-300 scale-0 rotate-90 opacity-0 dark:scale-100 dark:rotate-0 dark:opacity-100">light_mode</span>
-                </button>
+                <div class="flex flex-row items-center space-x-4">
+                    <a class="px-8 py-3 bg-slate-900 text-white text-xs uppercase tracking-widest font-bold rounded-full hover:bg-slate-800 transition-all shadow-lg shadow-slate-200 dark:shadow-none dark:border dark:border-slate-700" href={`${isEs ? '/es' : ''}/#contact`}>
+                        {t('nav.contact')}
+                    </a>
+                    
+                    <!-- Language Switcher -->
+                    <div class="relative group">
+                        <button class="flex items-center space-x-1 text-xs font-bold text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors uppercase">
+                            <span>{lang}</span>
+                            <span class="material-symbols-outlined text-[1rem]">expand_more</span>
+                        </button>
+                        <div class="absolute right-0 mt-2 w-24 bg-white dark:bg-slate-900 rounded-lg shadow-xl border border-gray-100 dark:border-slate-800 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 flex flex-col overflow-hidden text-xs font-bold uppercase overflow-hidden">
+                            <button class="lang-switch-btn px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 transition-colors" data-lang="en">EN</button>
+                            <div class="h-px w-full bg-gray-100 dark:bg-slate-800"></div>
+                            <button class="lang-switch-btn px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 transition-colors" data-lang="es">ES</button>
+                        </div>
+                    </div>
+
+                    <button id="theme-toggle" type="button" class="relative flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border border-gray-200 bg-white text-gray-700 shadow-sm transition-all hover:border-blue-400 hover:text-blue-600 dark:border-gray-800 dark:bg-gray-950 dark:text-gray-400 dark:hover:border-blue-500 dark:hover:text-blue-400" aria-label="Cambiar tema">
+                        <span class="material-symbols-outlined absolute text-[18px] transition-all duration-300 scale-100 rotate-0 opacity-100 dark:scale-0 dark:-rotate-90 dark:opacity-0">dark_mode</span>
+                        <span class="material-symbols-outlined absolute text-[18px] transition-all duration-300 scale-0 rotate-90 opacity-0 dark:scale-100 dark:rotate-0 dark:opacity-100">light_mode</span>
+                    </button>
+                </div>
             </div>
             <div class="md:hidden flex items-center gap-4">
-                <button
-                    id="theme-toggle-mobile"
-                    type="button"
-                    class="relative flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border border-gray-200 bg-white text-gray-700 shadow-sm transition-all hover:border-blue-400 hover:text-blue-600 dark:border-gray-800 dark:bg-gray-950 dark:text-gray-400 dark:hover:border-blue-500 dark:hover:text-blue-400"
-                    aria-label="Cambiar tema"
-                >
+                <button id="theme-toggle-mobile" type="button" class="relative flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border border-gray-200 bg-white text-gray-700 shadow-sm transition-all hover:border-blue-400 hover:text-blue-600 dark:border-gray-800 dark:bg-gray-950 dark:text-gray-400 dark:hover:border-blue-500 dark:hover:text-blue-400" aria-label="Cambiar tema">
                     <span class="material-symbols-outlined absolute text-[18px] transition-all duration-300 scale-100 rotate-0 opacity-100 dark:scale-0 dark:-rotate-90 dark:opacity-0">dark_mode</span>
                     <span class="material-symbols-outlined absolute text-[18px] transition-all duration-300 scale-0 rotate-90 opacity-0 dark:scale-100 dark:rotate-0 dark:opacity-100">light_mode</span>
                 </button>
-                <button
-                    id="mobile-menu-button"
-                    class="p-2 text-slate-900 dark:text-white hover:text-slate-700 dark:hover:text-slate-300 transition-colors cursor-pointer"
-                    aria-label="Toggle menu"
-                >
+                <button id="mobile-menu-button" class="p-2 text-slate-900 dark:text-white hover:text-slate-700 dark:hover:text-slate-300 transition-colors cursor-pointer" aria-label="Toggle menu">
                     <span id="menu-icon" class="material-symbols-outlined"> menu </span>
                 </button>
             </div>
@@ -85,52 +74,50 @@ import logo from "../assets/logo.svg";
     </div>
 
     <!-- Mobile Menu -->
-    <div
-        id="mobile-menu"
-        class="hidden md:hidden absolute top-24 left-0 w-full bg-white dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800 shadow-lg transition-all duration-300 ease-in-out"
-    >
+    <div id="mobile-menu" class="hidden md:hidden absolute top-24 left-0 w-full bg-white dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800 shadow-lg transition-all duration-300 ease-in-out">
         <div class="px-6 py-8 flex flex-col space-y-6">
-            <a
-                class="text-lg uppercase tracking-widest font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors mobile-menu-link"
-                href="/#services"
-            >
-                Services
-            </a>
-            <a
-                class="text-lg uppercase tracking-widest font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors mobile-menu-link"
-                href="/#industries"
-            >
-                Industries
-            </a>
-            <a
-                class="text-lg uppercase tracking-widest font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors mobile-menu-link"
-                href="/#projects"
-            >
-                Work
-            </a>
-            <a
-                class="text-lg uppercase tracking-widest font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors mobile-menu-link"
-                href="/#about"
-            >
-                About
-            </a>
-            <a
-                class="text-lg uppercase tracking-widest font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors mobile-menu-link"
-                href="/blog"
-            >
-                Insights
-            </a>
-            <a
-                class="px-8 py-4 bg-slate-900 dark:bg-slate-800 text-white text-sm uppercase tracking-widest font-bold rounded-full hover:bg-slate-800 dark:hover:bg-slate-700 transition-all shadow-lg text-center mobile-menu-link"
-                href="/#contact"
-            >
-                Let's Talk
-            </a>
+            <div class="flex justify-between items-center mb-4">
+                <span class="text-sm font-bold text-slate-400 uppercase tracking-widest">Language</span>
+                <div class="flex bg-gray-100 dark:bg-slate-800 rounded-lg p-1">
+                    <button class={`lang-switch-btn px-4 py-2 text-xs font-bold rounded-md transition-colors ${!isEs ? 'bg-white dark:bg-slate-700 shadow-sm' : 'text-slate-500'}`} data-lang="en">EN</button>
+                    <button class={`lang-switch-btn px-4 py-2 text-xs font-bold rounded-md transition-colors ${isEs ? 'bg-white dark:bg-slate-700 shadow-sm' : 'text-slate-500'}`} data-lang="es">ES</button>
+                </div>
+            </div>
+            <a class="text-lg uppercase tracking-widest font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors mobile-menu-link" href={`${isEs ? '/es' : ''}/#services`}>{t('nav.services')}</a>
+            <a class="text-lg uppercase tracking-widest font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors mobile-menu-link" href={`${isEs ? '/es' : ''}/#industries`}>{t('nav.industries')}</a>
+            <a class="text-lg uppercase tracking-widest font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors mobile-menu-link" href={`${isEs ? '/es' : ''}/#projects`}>{t('nav.work')}</a>
+            <a class="text-lg uppercase tracking-widest font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors mobile-menu-link" href={`${isEs ? '/es' : ''}/#about`}>{t('nav.about')}</a>
+            <a class="text-lg uppercase tracking-widest font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors mobile-menu-link" href={`${isEs ? '/es' : ''}/blog`}>{t('nav.insights')}</a>
+            <a class="px-8 py-4 bg-slate-900 dark:bg-slate-800 text-white text-sm uppercase tracking-widest font-bold rounded-full hover:bg-slate-800 dark:hover:bg-slate-700 transition-all shadow-lg text-center mobile-menu-link" href={`${isEs ? '/es' : ''}/#contact`}>{t('nav.contact')}</a>
         </div>
     </div>
 </nav>
 
 <script>
+    // Language Switcher Logic
+    document.querySelectorAll('.lang-switch-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const targetLang = (e.currentTarget as HTMLElement).getAttribute('data-lang');
+            if (targetLang) {
+                // Set language cookie with max age 1 year
+                document.cookie = `nx_lang=${targetLang}; path=/; max-age=31536000; samesite=lax`;
+                
+                // Redirect user based on current url
+                const currentPath = window.location.pathname;
+                if (targetLang === 'es') {
+                    if (!currentPath.startsWith('/es')) {
+                        window.location.pathname = `/es${currentPath === '/' ? '' : currentPath}`;
+                    }
+                } else {
+                    if (currentPath.startsWith('/es')) {
+                        const newPath = currentPath.replace(/^\/es/, '');
+                        window.location.pathname = newPath || '/';
+                    }
+                }
+            }
+        });
+    });
+
     // Theme toggle functionality
     const themeToggleBtn = document.getElementById('theme-toggle');
     const themeToggleMobileBtn = document.getElementById('theme-toggle-mobile');
@@ -157,7 +144,6 @@ import logo from "../assets/logo.svg";
     const menuIcon = document.getElementById("menu-icon");
     const mobileMenuLinks = document.querySelectorAll(".mobile-menu-link");
 
-    // Toggle menu visibility
     function toggleMenu() {
         const isHidden = mobileMenu?.classList.contains("hidden");
 
@@ -170,21 +156,17 @@ import logo from "../assets/logo.svg";
         }
     }
 
-    // Close menu
     function closeMenu() {
         mobileMenu?.classList.add("hidden");
         menuIcon!.textContent = "menu";
     }
 
-    // Event listeners
     mobileMenuButton?.addEventListener("click", toggleMenu);
 
-    // Close menu when clicking on any link
     mobileMenuLinks.forEach((link) => {
         link.addEventListener("click", closeMenu);
     });
 
-    // Close menu when clicking outside
     document.addEventListener("click", (event) => {
         const target = event.target as HTMLElement;
         if (
@@ -196,7 +178,6 @@ import logo from "../assets/logo.svg";
         }
     });
 
-    // Close menu on escape key
     document.addEventListener("keydown", (event) => {
         if (event.key === "Escape" && !mobileMenu?.classList.contains("hidden")) {
             closeMenu();

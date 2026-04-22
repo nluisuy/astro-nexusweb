@@ -1,5 +1,8 @@
 ---
+import { getLangFromUrl, useTranslations } from "../i18n/utils";
 
+const lang = Astro.currentLocale || getLangFromUrl(Astro.url);
+const t = useTranslations(lang as any);
 ---
 
 <section class="py-12 bg-nexus-gray-soft dark:bg-slate-950 transition-colors duration-300">
@@ -16,10 +19,10 @@
                     </div>
                     <div>
                         <p class="text-white font-bold text-lg md:text-xl">
-                            Ready to accelerate with AI?
+                            {t('minicta.title')}
                         </p>
                         <p class="text-slate-400 text-sm font-light">
-                            Get a free 30-min AI Readiness Assessment — valued at $1,500.
+                            {t('minicta.desc')}
                         </p>
                     </div>
                 </div>
@@ -27,7 +30,7 @@
                     id="mini-cta-btn"
                     class="flex-shrink-0 inline-flex items-center px-8 py-4 bg-white text-slate-900 rounded-xl font-bold text-sm hover:bg-gray-50 transition-all shadow-[0_0_20px_rgba(255,255,255,0.15)] hover:shadow-[0_0_30px_rgba(255,255,255,0.3)] hover:-translate-y-0.5 active:scale-95 cursor-pointer"
                 >
-                    Book Free Assessment
+                    {t('minicta.btn')}
                     <span class="material-symbols-outlined ml-2 text-lg">arrow_forward</span>
                 </button>
             </div>

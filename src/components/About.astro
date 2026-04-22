@@ -1,5 +1,9 @@
 ---
+import { getLangFromUrl, useTranslations } from "../i18n/utils";
 
+const lang = Astro.currentLocale || getLangFromUrl(Astro.url);
+const t = useTranslations(lang as any);
+const isEs = lang === 'es';
 ---
 
 <section class="py-32 bg-white dark:bg-slate-950 transition-colors duration-300" id="about">
@@ -9,12 +13,10 @@
                 <h2
                     class="text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white mb-8 leading-tight transition-colors"
                 >
-                    Where Vision Meets <span class="text-gradient">Execution</span>
+                    {t('about.title1')} <span class="text-gradient">{t('about.title2')}</span>
                 </h2>
                 <p class="text-lg text-slate-500 dark:text-slate-400 font-light leading-relaxed mb-8 transition-colors">
-                    Nexus is a collective of architects and strategists dedicated to the philosophy
-                    of high-end execution. We don't just solve problems; we define new standards of
-                    digital excellence.
+                    {t('about.desc')}
                 </p>
 
                 <ul class="space-y-6 mb-12">
@@ -23,7 +25,7 @@
                             >auto_awesome_motion</span
                         >
                         <span class="text-slate-700 dark:text-slate-300 font-medium transition-colors"
-                            >Fluid scalability built for enterprise-grade demands.</span
+                            >{t('about.point1')}</span
                         >
                     </li>
                     <li class="flex items-start gap-4">
@@ -31,7 +33,7 @@
                             >shield_with_house</span
                         >
                         <span class="text-slate-700 dark:text-slate-300 font-medium transition-colors"
-                            >Proactive defense through intelligent security protocols.</span
+                            >{t('about.point2')}</span
                         >
                     </li>
                     <li class="flex items-start gap-4">
@@ -39,16 +41,16 @@
                             >lightbulb_circle</span
                         >
                         <span class="text-slate-700 dark:text-slate-300 font-medium transition-colors"
-                            >Purpose-driven AI implementation with tangible ROI.</span
+                            >{t('about.point3')}</span
                         >
                     </li>
                 </ul>
 
                 <a
-                    href="/manifesto"
+                    href={`${isEs ? '/es' : ''}/manifesto`}
                     class="inline-flex items-center gap-2 text-sm font-bold tracking-widest uppercase text-slate-900 dark:text-white border-b-2 border-slate-900 dark:border-white pb-1 hover:text-nexus-blue dark:hover:text-nexus-blue hover:border-nexus-blue dark:hover:border-nexus-blue transition-all"
                 >
-                    Read Our Manifesto
+                    {t('about.link')}
                 </a>
             </div>
 
@@ -70,12 +72,11 @@
                           <span class="relative inline-flex rounded-full h-3 w-3 bg-nexus-green"></span>
                         </span>
                         <span class="text-xs font-bold uppercase tracking-widest text-slate-900 dark:text-white"
-                            >System Integrity</span
+                            >{t('about.card.title')}</span
                         >
                     </div>
                     <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-medium">
-                        Optimal architecture achieved through continuous refinement and strategic
-                        orchestration.
+                        {t('about.card.desc')}
                     </p>
                 </div>
             </div>

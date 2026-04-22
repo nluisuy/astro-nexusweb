@@ -1,6 +1,12 @@
 ---
 import { Image } from "astro:assets";
 import logo from "../assets/logo.svg";
+import { getLangFromUrl, useTranslations } from "../i18n/utils";
+
+const lang = Astro.currentLocale || getLangFromUrl(Astro.url);
+const t = useTranslations(lang as any);
+const isEs = lang === 'es';
+const langPrefix = isEs ? '/es' : '';
 ---
 
 <footer class="py-24 bg-white dark:bg-slate-950 border-t border-gray-100 dark:border-slate-800 transition-colors duration-300">
@@ -18,7 +24,7 @@ import logo from "../assets/logo.svg";
                     </a>
                 </div>
                 <p class="text-sm text-slate-400 dark:text-slate-500 font-light leading-relaxed mb-8 transition-colors">
-                    The intersection of vision and refined technical execution.
+                    {t('footer.desc')}
                 </p>
                 <div class="flex space-x-6">
                     <a href="mailto:hello@nexusinnova.com" class="text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors" aria-label="Send us an email"
@@ -32,33 +38,34 @@ import logo from "../assets/logo.svg";
 
             <div>
                 <h4 class="text-[0.7rem] font-bold uppercase tracking-[0.3em] text-slate-900 dark:text-white mb-8 transition-colors">
-                    Capabilities
+                    {t('footer.col1')}
                 </h4>
                 <ul class="space-y-4">
                     <li>
                         <a
-                            href="/#services"
+                        <a
+                            href={`${langPrefix}/#services`}
                             class="text-sm text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
                             >AI Agents</a
                         >
                     </li>
                     <li>
                         <a
-                            href="/#services"
+                            href={`${langPrefix}/#services`}
                             class="text-sm text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
                             >AI Dev Pods</a
                         >
                     </li>
                     <li>
                         <a
-                            href="/#services"
+                            href={`${langPrefix}/#services`}
                             class="text-sm text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
                             >Infrastructure</a
                         >
                     </li>
                     <li>
                         <a
-                            href="/#services"
+                            href={`${langPrefix}/#services`}
                             class="text-sm text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
                             >Cybersecurity</a
                         >
@@ -68,19 +75,20 @@ import logo from "../assets/logo.svg";
 
             <div>
                 <h4 class="text-[0.7rem] font-bold uppercase tracking-[0.3em] text-slate-900 dark:text-white mb-8 transition-colors">
-                    Company
+                    {t('footer.col2')}
                 </h4>
                 <ul class="space-y-4">
                     <li>
                         <a
-                            href="/#about"
+                        <a
+                            href={`${langPrefix}/#about`}
                             class="text-sm text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
-                            >About</a
+                            >{t('nav.about')}</a
                         >
                     </li>
                     <li>
                         <a
-                            href="/manifesto"
+                            href={`${langPrefix}/manifesto`}
                             class="text-sm text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
                             >Manifesto</a
                         >
@@ -89,21 +97,21 @@ import logo from "../assets/logo.svg";
                         <a
                             href="mailto:hello@nexusinnova.com"
                             class="text-sm text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
-                            >Contact</a
+                            >{t('nav.contact')}</a
                         >
                     </li>
                     <li>
                         <a
-                            href="/careers"
+                            href={`${langPrefix}/careers`}
                             class="text-sm text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
                             >Careers</a
                         >
                     </li>
                     <li>
                         <a
-                            href="/blog"
+                            href={`${langPrefix}/blog`}
                             class="text-sm text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
-                            >Blog</a
+                            >{t('nav.insights')}</a
                         >
                     </li>
                 </ul>
@@ -111,26 +119,26 @@ import logo from "../assets/logo.svg";
 
             <div>
                 <h4 class="text-[0.7rem] font-bold uppercase tracking-[0.3em] text-slate-900 dark:text-white mb-8 transition-colors">
-                    Legal
+                    {t('footer.col3')}
                 </h4>
                 <ul class="space-y-4">
                     <li>
                         <a
-                            href="/privacy"
+                            href={`${langPrefix}/privacy`}
                             class="text-sm text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
                             >Privacy</a
                         >
                     </li>
                     <li>
                         <a
-                            href="/terms"
+                            href={`${langPrefix}/terms`}
                             class="text-sm text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
                             >Terms</a
                         >
                     </li>
                     <li>
                         <a
-                            href="/cookies"
+                            href={`${langPrefix}/cookies`}
                             class="text-sm text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
                             >Cookies</a
                         >
@@ -143,17 +151,18 @@ import logo from "../assets/logo.svg";
             class="flex flex-col md:flex-row justify-between items-center pt-12 border-t border-gray-100 dark:border-slate-800 transition-colors"
         >
             <p class="text-[0.7rem] text-slate-400 dark:text-slate-500 font-medium uppercase tracking-widest transition-colors">
-                © {new Date().getFullYear()} Nexus Digital Innovations. All rights reserved.
+                © {new Date().getFullYear()} {t('footer.rights')}
             </p>
             <div class="mt-8 md:mt-0 flex items-center gap-6">
-                <span
+                <!-- Keep English (US) as visual or actual switcher if desired -->
+                <!-- <span
                     class="text-[0.7rem] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-widest cursor-pointer hover:text-slate-900 dark:hover:text-white transition-colors"
                     >English (US)</span
-                >
+                > -->
                 <span
                     id="back-to-top"
                     class="text-[0.7rem] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-widest cursor-pointer hover:text-slate-900 dark:hover:text-white transition-colors"
-                    >Back to Top</span
+                    >{t('footer.backtotop')}</span
                 >
             </div>
         </div>

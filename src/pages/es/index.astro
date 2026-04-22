@@ -1,26 +1,26 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import Navbar from "../components/Navbar.astro";
-import Hero from "../components/Hero.astro";
-import Services from "../components/Services.astro";
-import MiniCTA from "../components/MiniCTA.astro";
-import Projects from "../components/Projects.astro";
-import About from "../components/About.astro";
-import AILab from "../components/AILab.astro";
-import Footer from "../components/Footer.astro";
-import AIProjectPlanner from "../components/AIProjectPlanner";
-import ContactModal from "../components/ContactModal";
-import Stats from "../components/Stats.astro";
-import Industry from "../components/Industry.astro";
-import Bookingsession from "../components/Bookingsession.astro";
-import { getLangFromUrl } from "../i18n/utils";
+import Layout from "../../layouts/Layout.astro";
+import Navbar from "../../components/Navbar.astro";
+import Hero from "../../components/Hero.astro";
+import Services from "../../components/Services.astro";
+import MiniCTA from "../../components/MiniCTA.astro";
+import Projects from "../../components/Projects.astro";
+import About from "../../components/About.astro";
+import AILab from "../../components/AILab.astro";
+import Footer from "../../components/Footer.astro";
+import AIProjectPlanner from "../../components/AIProjectPlanner";
+import ContactModal from "../../components/ContactModal";
+import Stats from "../../components/Stats.astro";
+import Industry from "../../components/Industry.astro";
+import Bookingsession from "../../components/Bookingsession.astro";
+import { getLangFromUrl } from "../../i18n/utils";
 
 const lang = getLangFromUrl(Astro.url);
 
 // SEO-optimized metadata for homepage
-const pageTitle = "Nexus Digital Innovations — Enterprise AI Agents, Cloud & Cybersecurity";
+const pageTitle = "Nexus Digital Innovations — Agentes de IA Empresarial, Cloud y Ciberseguridad";
 const pageDescription =
-    "We architect autonomous AI agent systems, AI Dev Pods, secure cloud infrastructure, and cybersecurity solutions that transform how enterprises build, scale, and innovate.";
+    "Diseñamos sistemas autónomos de agentes de IA, AI Dev Pods, infraestructura segura en la nube y soluciones de ciberseguridad que transforman la forma en que las empresas construyen, escalan e innovan.";
 ---
 
 <Layout title={pageTitle} description={pageDescription}>

@@ -13,6 +13,15 @@ export default defineConfig({
     adapter: vercel(),
     outDir: "dist",
     site: "https://www.nexusinnova.com/",
+    
+    i18n: {
+        defaultLocale: "en",
+        locales: ["en", "es"],
+        routing: {
+            prefixDefaultLocale: false,
+            strategy: "pathname",
+        },
+    },
 
     // Optimizaciones para imágenes locales
     image: {

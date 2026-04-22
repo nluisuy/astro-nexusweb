@@ -1,15 +1,18 @@
 ---
+import { getLangFromUrl, useTranslations } from "../i18n/utils";
 
+const lang = Astro.currentLocale || getLangFromUrl(Astro.url);
+const t = useTranslations(lang as any);
 ---
 
 <section class="py-24 bg-white dark:bg-slate-950 transition-colors duration-300" id="ai-lab">
     <div class="max-w-7xl mx-auto px-6 lg:px-12">
         <div class="mb-16 reveal">
             <h2 class="text-sm font-bold tracking-[0.3em] uppercase text-nexus-purple mb-4">
-                AI Innovation Lab
+                {t('ailab.badge')}
             </h2>
             <p class="text-3xl md:text-4xl lg:text-5xl font-display font-medium text-slate-900 dark:text-white max-w-2xl transition-colors">
-                The engine behind our AI-first approach.
+                {t('ailab.title')}
             </p>
         </div>
 
@@ -17,7 +20,7 @@
             <!-- Left: Tech Stack Grid -->
             <div class="reveal">
                 <p class="text-lg text-slate-500 dark:text-slate-400 font-light leading-relaxed mb-10 transition-colors">
-                    We don't just advise on AI — we build and deploy production-grade agent systems. Our lab is where enterprise AI goes from concept to measurable impact.
+                    {t('ailab.desc')}
                 </p>
                 <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
                     {[
@@ -53,7 +56,7 @@
                     <div class="relative z-10">
                         <h3 class="text-lg font-bold text-white mb-8 flex items-center gap-2">
                             <span class="material-symbols-outlined text-nexus-purple">architecture</span>
-                            Agent Architecture
+                            {t('ailab.diagram.title')}
                         </h3>
 
                         <!-- Architecture Flow -->
@@ -63,7 +66,7 @@
                                 <div class="w-8 h-8 rounded-lg bg-nexus-blue/20 flex items-center justify-center flex-shrink-0">
                                     <span class="material-symbols-outlined text-nexus-blue text-sm">person</span>
                                 </div>
-                                <span class="text-sm text-white font-medium">User Request / Business Trigger</span>
+                                <span class="text-sm text-white font-medium">{t('ailab.diagram.step1')}</span>
                             </div>
 
                             <!-- Arrow -->
@@ -75,9 +78,9 @@
                             <div class="p-4 rounded-xl bg-nexus-purple/10 border border-nexus-purple/30">
                                 <div class="flex items-center gap-2 mb-2">
                                     <span class="material-symbols-outlined text-nexus-purple text-sm">hub</span>
-                                    <span class="text-sm font-bold text-nexus-purple">Orchestration Layer</span>
+                                    <span class="text-sm font-bold text-nexus-purple">{t('ailab.diagram.step2.title')}</span>
                                 </div>
-                                <p class="text-xs text-slate-400 leading-relaxed">Routes tasks to specialized agents, manages state, and ensures quality.</p>
+                                <p class="text-xs text-slate-400 leading-relaxed">{t('ailab.diagram.step2.desc')}</p>
                             </div>
 
                             <!-- Arrow -->
@@ -88,15 +91,15 @@
                             <!-- Agent Grid -->
                             <div class="grid grid-cols-3 gap-2">
                                 {[
-                                    { name: "Research Agent", icon: "search", color: "bg-nexus-blue/20 text-nexus-blue" },
-                                    { name: "Code Agent", icon: "code", color: "bg-emerald-500/20 text-emerald-400" },
-                                    { name: "Review Agent", icon: "rate_review", color: "bg-orange-500/20 text-orange-400" },
+                                    { name: t('ailab.diagram.agent1'), icon: "search", color: "bg-nexus-blue/20 text-nexus-blue" },
+                                    { name: t('ailab.diagram.agent2'), icon: "code", color: "bg-emerald-500/20 text-emerald-400" },
+                                    { name: t('ailab.diagram.agent3'), icon: "rate_review", color: "bg-orange-500/20 text-orange-400" },
                                 ].map((agent) => (
                                     <div class={`p-3 rounded-xl bg-white/5 border border-white/10 text-center`}>
                                         <div class={`w-8 h-8 rounded-lg ${agent.color} flex items-center justify-center mx-auto mb-2`}>
                                             <span class="material-symbols-outlined text-sm">{agent.icon}</span>
                                         </div>
-                                        <span class="text-[0.65rem] text-slate-400 font-medium leading-tight block">{agent.name}</span>
+                                        <span class="text-[0.65rem] text-slate-400 font-medium leading-tight block">{agent.name as string}</span>
                                     </div>
                                 ))}
                             </div>
@@ -112,8 +115,8 @@
                                     <span class="material-symbols-outlined text-nexus-green text-sm">database</span>
                                 </div>
                                 <div>
-                                    <span class="text-sm text-white font-medium block">Knowledge Base</span>
-                                    <span class="text-[0.65rem] text-slate-500">RAG · Vector Store · Enterprise Data</span>
+                                    <span class="text-sm text-white font-medium block">{t('ailab.diagram.step3.title')}</span>
+                                    <span class="text-[0.65rem] text-slate-500">{t('ailab.diagram.step3.desc')}</span>
                                 </div>
                             </div>
                         </div>

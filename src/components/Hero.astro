@@ -1,11 +1,18 @@
 ---
+import { getLangFromUrl, useTranslations } from "../i18n/utils";
 
+const lang = Astro.currentLocale || getLangFromUrl(Astro.url);
+const t = useTranslations(lang as any);
+const isEs = lang === 'es';
 ---
 
 <section class="relative pt-40 pb-24 lg:pt-64 lg:pb-56 overflow-hidden">
     <!-- Particle Canvas Background -->
     <canvas id="hero-particles" class="absolute inset-0 w-full h-full pointer-events-none z-0"></canvas>
 
+    <div class="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+        <div
+            class="absolute top-[20%] right-[10%] w-[50%] h-[50%] bg-blue-500/5 dark:bg-blue-600/5 rounded-full blur-[120px] animate-pulse-slow"
         >
         </div>
         <div
@@ -20,7 +27,7 @@
             <span
                 class="px-4 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-full text-[0.65rem] font-bold text-slate-400 tracking-[0.3em] uppercase transition-colors"
             >
-                AI-Engineered Excellence
+                {t('hero.badge')}
             </span>
         </div>
 
@@ -28,37 +35,41 @@
             class="text-5xl md:text-8xl lg:text-9xl font-display font-bold tracking-tighter text-slate-900 dark:text-white mb-12 leading-[1] animate-slide-up transition-colors"
             style="animation-delay: 0.1s;"
         >
-            <span class="text-gradient block">Future of Innovation</span>
+            <span class="text-gradient block">{t('hero.title2')}</span>
         </h1>
 
         <p
             class="max-w-3xl mx-auto text-lg md:text-xl text-slate-500 dark:text-slate-400 font-light leading-relaxed mb-16 px-4 animate-slide-up transition-colors"
             style="animation-delay: 0.2s;"
         >
-            We architect autonomous AI agent systems, secure cloud infrastructure, and dedicated AI Dev Pods that transform how enterprises build, scale, and innovate.
+            {t('hero.paragraph')}
         </p>
 
         <div
             class="flex flex-col sm:flex-row gap-6 justify-center items-center animate-slide-up"
             style="animation-delay: 0.3s;"
         >
-            <a
-                href="#services"
-                class="group relative px-10 py-5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-full overflow-hidden transition-all hover:bg-slate-800 dark:hover:bg-slate-200 shadow-2xl shadow-slate-200 dark:shadow-none active:scale-95"
+            <button
+                id="hero-planner-btn"
+                class="group relative px-10 py-5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-full overflow-hidden transition-all hover:bg-slate-800 dark:hover:bg-slate-200 shadow-2xl shadow-slate-200 dark:shadow-none active:scale-95 cursor-pointer"
             >
                 <span
                     class="relative z-10 text-sm font-bold tracking-widest uppercase flex items-center gap-3"
                 >
-                    Explore Capabilities
-
+                    {t('hero.btn1')}
+                    <span
+                        class="material-symbols-outlined text-lg transition-transform group-hover:translate-x-1"
+                    >
+                        arrow_right_alt
+                    </span>
                 </span>
-            </a>
+            </button>
 
             <a
-                href="#projects"
+                href={`${isEs ? '/es' : ''}/#projects`}
                 class="px-10 py-5 text-sm font-bold tracking-widest uppercase text-slate-900 dark:text-white bg-white dark:bg-transparent border border-slate-200 dark:border-slate-700 rounded-full hover:border-slate-400 dark:hover:border-slate-500 transition-all flex items-center gap-2 group shadow-sm active:scale-95"
             >
-                View Case Studies
+                {t('hero.btn2')}
                 <span
                     class="material-symbols-outlined text-lg transition-transform group-hover:translate-x-1"
                     >arrow_right_alt</span

@@ -1,69 +1,70 @@
 ---
 import type { ProjectItem } from "../types";
+import { getLangFromUrl, useTranslations } from "../i18n/utils";
+
+const lang = Astro.currentLocale || getLangFromUrl(Astro.url);
+const t = useTranslations(lang as any);
+const isEs = lang === 'es';
 
 const projects: ProjectItem[] = [
     {
         id: "p6",
         category: "AI Agents",
-        title: "Autonomous AI Agents",
-        description:
-            "Deployed intelligent AI agents that automate complex workflows, reducing operational overhead by 60%.",
+        title: t('projects.p1.title') as string,
+        description: t('projects.p1.desc') as string,
         imageUrl: "/images/ai-agents-project.png",
         colorClass: "text-nexus-purple",
-        metric: "60% ops reduction",
+        metric: t('projects.p1.metric') as string,
         techStack: ["LangChain", "GPT-4", "Vector DB"],
     },
     {
         id: "p2",
         category: "AI & ML",
-        title: "AI Adoption for Dev Teams",
-        description: "Accelerated coding velocity by 30% with context-aware AI tooling and copilot integration.",
+        title: t('projects.p2.title') as string,
+        description: t('projects.p2.desc') as string,
         imageUrl: "/images/ai-dev-teams.png",
         colorClass: "text-nexus-red",
-        metric: "3x faster delivery",
+        metric: t('projects.p2.metric') as string,
         techStack: ["Copilot", "Claude", "CI/CD"],
     },
     {
         id: "p1",
         category: "Infrastructure",
-        title: "Global Cloud Migration",
-        description: "Reduced infrastructure costs by 40% through intelligent serverless adoption and multi-cloud orchestration.",
+        title: t('projects.p3.title') as string,
+        description: t('projects.p3.desc') as string,
         imageUrl: "/images/cloud-migration.png",
         colorClass: "text-nexus-blue",
-        metric: "40% cost reduction",
+        metric: t('projects.p3.metric') as string,
         techStack: ["AWS", "Terraform", "K8s"],
     },
     {
         id: "p3",
         category: "Security",
-        title: "Security Assessment",
-        description:
-            "Comprehensive vulnerability analysis and penetration testing for enterprise financial platforms.",
+        title: t('projects.p4.title') as string,
+        description: t('projects.p4.desc') as string,
         imageUrl: "/images/security-assessment.png",
         colorClass: "text-nexus-green",
-        metric: "Zero breaches",
+        metric: t('projects.p4.metric') as string,
         techStack: ["Pentest", "SIEM", "WAF"],
     },
     {
         id: "p4",
         category: "Compliance",
-        title: "ISO & PCI Certification",
-        description:
-            "Guided a major payment processor through ISO 27001 and PCI DSS certification in record time.",
+        title: t('projects.p5.title') as string,
+        description: t('projects.p5.desc') as string,
         imageUrl: "/images/iso-pci-project.png",
         colorClass: "text-nexus-yellow",
-        metric: "12 weeks to cert",
+        metric: t('projects.p5.metric') as string,
         techStack: ["ISO 27001", "PCI DSS"],
     },
     {
         id: "p5",
         category: "DRP",
-        title: "Disaster Recovery Strategy",
-        description:
-            "Designed and implemented a multi-region disaster recovery plan ensuring 99.99% uptime for a fintech platform.",
+        title: t('projects.p6.title') as string,
+        description: t('projects.p6.desc') as string,
         imageUrl: "/images/drp-project.png",
         colorClass: "text-nexus-green",
-        metric: "99.99% uptime",
+        metric: t('projects.p6.metric') as string,
         techStack: ["Multi-region", "AWS", "RTO<1h"],
     },
 ];
@@ -74,10 +75,10 @@ const projects: ProjectItem[] = [
         <div class="mb-16 flex justify-between items-end reveal">
             <div>
                 <h2 class="text-sm font-bold tracking-[0.3em] uppercase text-nexus-purple mb-4">
-                    Case Studies
+                    {t('projects.badge')}
                 </h2>
                 <p class="text-3xl md:text-4xl font-display font-medium text-slate-900 dark:text-white transition-colors">
-                    Proven Impact
+                    {t('projects.title')}
                 </p>
             </div>
             <div class="hidden md:flex gap-4">

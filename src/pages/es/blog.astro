@@ -1,0 +1,127 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Navbar from "../../components/Navbar.astro";
+import Footer from "../../components/Footer.astro";
+
+const pageTitle = "Ideas y Perspectivas — Nexus Digital Innovations";
+const pageDescription = "Perspectivas de expertos sobre IA Empresarial, Sistemas de Agentes, Arquitectura Cloud y Ciberseguridad. Liderazgo intelectual del equipo de Nexus.";
+
+interface BlogPost {
+    slug: string;
+    title: string;
+    excerpt: string;
+    category: string;
+    categoryColor: string;
+    date: string;
+    readTime: string;
+}
+
+const posts: BlogPost[] = [
+    {
+        slug: "agentic-ai-vs-traditional-automation",
+        title: "IA Agéntica vs Automatización Tradicional: Lo que los Líderes Empresariales Deben Saber",
+        excerpt: "El cambio de la automatización basada en reglas a los agentes de IA autónomos está remodelando cómo operan las empresas. Desglosamos las diferencias clave, casos de uso y las implicaciones en el ROI.",
+        category: "Estrategia IA",
+        categoryColor: "text-nexus-red bg-nexus-red/10",
+        date: "Marzo 2026",
+        readTime: "8 min de lectura",
+    },
+    {
+        slug: "building-first-ai-agent-pipeline",
+        title: "Construyendo tu Primer Pipeline de Agente de IA: Guía para CTOs",
+        excerpt: "Un recorrido práctico para diseñar y desplegar tu primer agente de IA a nivel de producción — desde la capa de orquestación hasta la integración de la base de conocimientos.",
+        category: "Ingeniería",
+        categoryColor: "text-nexus-blue bg-nexus-blue/10",
+        date: "Marzo 2026",
+        readTime: "12 min de lectura",
+    },
+    {
+        slug: "ai-dev-pods-future-software-teams",
+        title: "AI Dev Pods: El Futuro de los Equipos de Software",
+        excerpt: "Cómo los escuadrones de desarrollo dedicados impulsados por IA Agéntica están acelerando la innovación de productos, reduciendo tiempos de ciclo y redefiniendo lo que significa un 'equipo'.",
+        category: "Innovación",
+        categoryColor: "text-orange-500 bg-orange-500/10",
+        date: "Febrero 2026",
+        readTime: "6 min de lectura",
+    },
+    {
+        slug: "enterprise-rag-architecture-guide",
+        title: "Arquitectura RAG Empresarial: De un POC a Producción",
+        excerpt: "La Generación Aumentada por Recuperación (RAG) es la columna vertebral de la IA empresarial. Aprende a diseñar sistemas RAG que sean precisos, escalables y seguros.",
+        category: "Arquitectura",
+        categoryColor: "text-nexus-purple bg-nexus-purple/10",
+        date: "Febrero 2026",
+        readTime: "10 min de lectura",
+    },
+];
+---
+
+<Layout title={pageTitle} description={pageDescription}>
+    <div class="relative min-h-screen overflow-x-hidden">
+        <Navbar />
+
+        <main class="pt-36 pb-24">
+            <div class="max-w-7xl mx-auto px-6 lg:px-12">
+                <!-- Header -->
+                <div class="mb-20">
+                    <h2 class="text-sm font-bold tracking-[0.3em] uppercase text-nexus-purple mb-4">
+                        Ideas y Perspectivas
+                    </h2>
+                    <h1 class="text-4xl md:text-6xl font-display font-bold text-slate-900 dark:text-white mb-6 tracking-tight transition-colors">
+                        Liderazgo Intelectual
+                    </h1>
+                    <p class="text-lg text-slate-500 dark:text-slate-400 font-light max-w-2xl transition-colors">
+                        Perspectivas de expertos sobre IA Empresarial, Sistemas de Agentes, Arquitectura Cloud y Ciberseguridad del equipo de Nexus.
+                    </p>
+                </div>
+
+                <!-- Articles Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    {posts.map((post) => (
+                        <article class="group p-8 rounded-2xl bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 hover:shadow-xl hover:border-nexus-blue/20 dark:hover:border-nexus-blue/30 transition-all duration-300 cursor-pointer">
+                            <div class="flex items-center gap-3 mb-6">
+                                <span class={`px-3 py-1 rounded-full text-[0.65rem] font-bold tracking-wider uppercase ${post.categoryColor}`}>
+                                    {post.category}
+                                </span>
+                                <span class="text-xs text-slate-400 dark:text-slate-500">{post.date}</span>
+                                <span class="text-xs text-slate-400 dark:text-slate-500">·</span>
+                                <span class="text-xs text-slate-400 dark:text-slate-500">{post.readTime}</span>
+                            </div>
+                            <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-4 leading-snug group-hover:text-nexus-blue transition-colors">
+                                {post.title}
+                            </h2>
+                            <p class="text-slate-500 dark:text-slate-400 font-light leading-relaxed mb-6 transition-colors">
+                                {post.excerpt}
+                            </p>
+                            <span class="inline-flex items-center gap-1 text-sm font-bold text-nexus-blue group-hover:gap-2 transition-all">
+                                Próximamente
+                                <span class="material-symbols-outlined text-lg">arrow_forward</span>
+                            </span>
+                        </article>
+                    ))}
+                </div>
+
+                <!-- Newsletter CTA -->
+                <div class="mt-20 text-center p-12 rounded-3xl bg-nexus-gray-soft dark:bg-slate-900 border border-gray-100 dark:border-slate-800 transition-colors">
+                    <span class="material-symbols-outlined text-4xl text-nexus-blue mb-4">mail</span>
+                    <h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-4 transition-colors">Mantente a la vanguardia</h3>
+                    <p class="text-slate-500 dark:text-slate-400 mb-8 max-w-lg mx-auto transition-colors">
+                        Recibe nuestras últimas perspectivas sobre IA Empresarial, seguridad y arquitectura cloud mensualmente.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+                        <input
+                            type="email"
+                            placeholder="tu@correo.com"
+                            class="flex-1 px-5 py-3 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-nexus-blue/30 transition-all"
+                        />
+                        <button class="px-6 py-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-xl font-bold text-sm hover:bg-slate-800 dark:hover:bg-slate-200 transition-all active:scale-95">
+                            Suscribirse
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <Footer />
+    </div>
+</Layout>
