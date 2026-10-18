@@ -2,6 +2,7 @@
 import Layout from "../../layouts/Layout.astro";
 import Navbar from "../../components/Navbar.astro";
 import Footer from "../../components/Footer.astro";
+import Projects from "../../components/Projects.astro";
 
 const pageTitle = "Ideas y Perspectivas — Nexus Digital Innovations";
 const pageDescription = "Perspectivas de expertos sobre IA Empresarial, Sistemas de Agentes, Arquitectura Cloud y Ciberseguridad. Liderazgo intelectual del equipo de Nexus.";
@@ -121,6 +122,9 @@ const posts: BlogPost[] = [
                 </div>
             </div>
         </main>
+
+        <!-- Casos de éxito (compartidos con la home) -->
+        <Projects />
 
         <Footer />
     </div>

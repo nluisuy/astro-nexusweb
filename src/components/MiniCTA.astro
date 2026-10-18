@@ -1,50 +1,89 @@
 ---
+// MiniCTA — the free-offer band. Links to the booking section so it works on every page.
 import { getLangFromUrl, useTranslations } from "../i18n/utils";
 
 const lang = Astro.currentLocale || getLangFromUrl(Astro.url);
 const t = useTranslations(lang as any);
+const prefix = lang === "es" ? "/es" : "";
 ---
 
-<section class="py-12 bg-nexus-gray-soft dark:bg-slate-950 transition-colors duration-300">
+<section class="relative py-10 lg:py-12">
     <div class="max-w-7xl mx-auto px-6 lg:px-12">
-        <div id="mini-cta-banner" class="relative rounded-2xl overflow-hidden bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 p-8 md:p-12">
-            <!-- Background particles -->
-            <div class="parallax-blob absolute -top-16 -right-16 w-48 h-48 bg-nexus-blue/20 rounded-full blur-[60px]" data-speed="0.4"></div>
-            <div class="parallax-blob absolute -bottom-16 -left-16 w-48 h-48 bg-nexus-purple/20 rounded-full blur-[60px]" data-speed="0.6"></div>
-
-            <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
-                <div class="flex items-center gap-4">
-                    <div class="hidden sm:flex w-12 h-12 rounded-2xl bg-white/10 items-center justify-center flex-shrink-0">
-                        <span class="material-symbols-outlined text-white text-2xl">neurology</span>
-                    </div>
-                    <div>
-                        <p class="text-white font-bold text-lg md:text-xl">
-                            {t('minicta.title')}
-                        </p>
-                        <p class="text-slate-400 text-sm font-light">
-                            {t('minicta.desc')}
-                        </p>
-                    </div>
+        <div id="mini-cta-banner" class="mc-band">
+            <div class="min-w-0">
+                <div class="nx-kicker mb-2">{t("minicta2.kicker")}</div>
+                <p class="font-display font-extrabold tracking-[-0.02em] text-slate-900 dark:text-white text-xl md:text-2xl leading-tight mb-1.5">
+                    {t("minicta2.title")}
+                </p>
+                <p class="text-[0.9rem] text-slate-500 dark:text-slate-400 font-light leading-relaxed max-w-2xl">
+                    {t("minicta2.desc")}
+                </p>
+            </div>
+            <div class="flex flex-col sm:flex-row lg:flex-col xl:flex-row items-start sm:items-center gap-3 flex-shrink-0">
+                <div class="flex flex-wrap gap-2">
+                    <span class="mc-chip">{t("hero.offer.poc")}<i>{t("hero.offer.free")}</i></span>
+                    <span class="mc-chip">{t("hero.offer.assessment")}<i>{t("hero.offer.free")}</i></span>
+                    <span class="mc-chip">{t("hero.offer.case")}<i>{t("hero.offer.free")}</i></span>
                 </div>
-                <button
-                    id="mini-cta-btn"
-                    class="flex-shrink-0 inline-flex items-center px-8 py-4 bg-white text-slate-900 rounded-xl font-bold text-sm hover:bg-gray-50 transition-all shadow-[0_0_20px_rgba(255,255,255,0.15)] hover:shadow-[0_0_30px_rgba(255,255,255,0.3)] hover:-translate-y-0.5 active:scale-95 cursor-pointer"
-                >
-                    {t('minicta.btn')}
-                    <span class="material-symbols-outlined ml-2 text-lg">arrow_forward</span>
-                </button>
+                <a href={`${prefix}/#contact`} class="nx-cta whitespace-nowrap">
+                    {t("minicta2.btn")}
+                    <span class="material-symbols-outlined text-lg">arrow_right_alt</span>
+                </a>
             </div>
         </div>
     </div>
 </section>
 
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const miniCtaBtn = document.getElementById("mini-cta-btn");
-        if (miniCtaBtn) {
-            miniCtaBtn.addEventListener("click", () => {
-                window.dispatchEvent(new CustomEvent("openContactModal"));
-            });
-        }
-    });
-</script>
+<style>
+    .mc-band {
+        position: relative;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px 28px;
+        padding: 24px 26px;
+        border-radius: 20px;
+        border: 1px solid rgba(245, 158, 66, 0.35);
+        background: linear-gradient(100deg, rgba(99, 102, 241, 0.08), rgba(245, 158, 66, 0.1));
+        backdrop-filter: blur(10px);
+    }
+    :global(.dark) .mc-band {
+        background: linear-gradient(100deg, rgba(99, 102, 241, 0.14), rgba(245, 158, 66, 0.12));
+        border-color: rgba(245, 158, 66, 0.3);
+    }
+    .mc-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 6px 7px 6px 11px;
+        border-radius: 999px;
+        border: 1px solid rgba(100, 116, 139, 0.2);
+        background: rgba(255, 255, 255, 0.6);
+        font-size: 0.74rem;
+        font-weight: 500;
+        color: #334155;
+        white-space: nowrap;
+    }
+    :global(.dark) .mc-chip {
+        background: rgba(15, 23, 42, 0.55);
+        border-color: rgba(148, 163, 184, 0.18);
+        color: #cbd5e1;
+    }
+    .mc-chip i {
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-style: normal;
+        font-size: 0.58rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-weight: 600;
+        color: #047857;
+        background: rgba(16, 185, 129, 0.16);
+        border-radius: 999px;
+        padding: 2px 7px;
+    }
+    :global(.dark) .mc-chip i {
+        color: #6ee7b7;
+        background: rgba(16, 185, 129, 0.14);
+    }
+</style>

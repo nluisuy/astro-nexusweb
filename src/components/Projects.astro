@@ -1,6 +1,7 @@
 ---
-// Projects — compact case studies in the deck's language: icon + mesh motif, vertical chip,
-// one-line outcome, the metric, the stack. No photography.
+// Case studies — real engagements, in the deck's language: icon + mesh motif, vertical chip,
+// one-line outcome, a highlight, where it happened and the stack. No photography.
+// Used on the home page and on the Insights page.
 import Motif from "./Motif.astro";
 import { getLangFromUrl, useTranslations } from "../i18n/utils";
 
@@ -19,13 +20,16 @@ const colorFor: Record<Vertical, string> = {
     pod: "text-nexus-amber",
 };
 
-const projects: { key: string; vertical: Vertical; icon: string; stack: string[] }[] = [
-    { key: "p1", vertical: "pod", icon: "smart_toy", stack: ["LangChain", "GPT-4", "Vector DB"] },
-    { key: "p2", vertical: "pod", icon: "terminal", stack: ["Copilot", "Claude", "CI/CD"] },
-    { key: "p3", vertical: "infra", icon: "cloud_sync", stack: ["AWS", "Terraform", "K8s"] },
-    { key: "p4", vertical: "security", icon: "shield", stack: ["Pentest", "SIEM", "WAF"] },
-    { key: "p5", vertical: "security", icon: "verified", stack: ["ISO 27001", "PCI DSS"] },
-    { key: "p6", vertical: "security", icon: "sync_alt", stack: ["Multi-region", "AWS", "RTO<1h"] },
+const cases: { key: string; vertical: Vertical; icon: string; stack: string[]; tag?: string }[] = [
+    { key: "c1", vertical: "infra", icon: "cloud_done", stack: ["AWS MAP", "Landing Zone", "Terraform"] },
+    { key: "c2", vertical: "infra", icon: "cloud_sync", stack: ["Azure", "AWS", "Kubernetes"] },
+    { key: "c3", vertical: "pod", icon: "manage_accounts", stack: ["Roadmap", "Architecture", "Teams"], tag: "cases.c3.tag" },
+    { key: "c4", vertical: "security", icon: "health_and_safety", stack: ["Resilience", "Impact tolerances", "Testing"] },
+    { key: "c5", vertical: "security", icon: "sync_alt", stack: ["DRP", "BCP", "Multi-region"] },
+    { key: "c6", vertical: "pod", icon: "smart_toy", stack: ["AI migration", "Refactoring", "Test generation"] },
+    { key: "c7", vertical: "pod", icon: "rocket_launch", stack: ["Innovation Pod", "15-day POC"] },
+    { key: "c8", vertical: "pod", icon: "neurology", stack: ["LangChain", "Vector DB"] },
+    { key: "c9", vertical: "security", icon: "verified", stack: ["ISO 27001", "PCI DSS"] },
 ];
 ---
 
@@ -38,46 +42,47 @@ const projects: { key: string; vertical: Vertical; icon: string; stack: string[]
     </div>
 
     <div class="relative max-w-7xl mx-auto px-6 lg:px-12">
-        <div class="reveal mb-12 lg:mb-14 flex flex-wrap items-end justify-between gap-6">
-            <div class="max-w-2xl">
-                <div class="nx-kicker mb-5">{t("projects.badge")}</div>
-                <h2
-                    class="font-display font-extrabold tracking-[-0.035em] leading-[0.98] text-4xl md:text-5xl text-slate-900 dark:text-white mb-4"
-                >
-                    {t("projects.title")}
-                </h2>
-                <p class="text-slate-500 dark:text-slate-400 text-base md:text-lg font-light leading-relaxed">
-                    {t("projects.lead")}
-                </p>
-            </div>
+        <div class="reveal mb-12 lg:mb-14 max-w-2xl">
+            <div class="nx-kicker mb-5">{t("cases.badge")}</div>
+            <h2
+                class="font-display font-extrabold tracking-[-0.035em] leading-[0.98] text-4xl md:text-5xl text-slate-900 dark:text-white mb-4"
+            >
+                {t("cases.title")}
+            </h2>
+            <p class="text-slate-500 dark:text-slate-400 text-base md:text-lg font-light leading-relaxed">
+                {t("cases.lead")}
+            </p>
         </div>
 
         <div id="bento-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {
-                projects.map((p) => (
+                cases.map((c) => (
                     <article class="bento-card pcard group">
                         <div class="pcard-top">
-                            <span class={`pcard-icon ${colorFor[p.vertical]}`}>
-                                <span class="material-symbols-outlined text-[1.35rem]">{p.icon}</span>
+                            <span class={`pcard-icon ${colorFor[c.vertical]}`}>
+                                <span class="material-symbols-outlined text-[1.35rem]">{c.icon}</span>
                             </span>
-                            <span class={`pcard-motif ${colorFor[p.vertical]}`}>
-                                <Motif kind={motifFor[p.vertical]} />
+                            <span class={`pcard-motif ${colorFor[c.vertical]}`}>
+                                <Motif kind={motifFor[c.vertical]} />
                             </span>
                         </div>
-                        <span class="nx-kicker pcard-chip">{t(`hero.intent.${p.vertical}` as any)}</span>
-                        <h3 class="font-display font-bold text-slate-900 dark:text-white text-[1.12rem] tracking-tight leading-snug mt-2 mb-2">
-                            {t(`projects.${p.key}.title` as any)}
+                        <span class="nx-kicker pcard-chip">
+                            {c.tag ? t(c.tag as any) : t(`hero.intent.${c.vertical}` as any)}
+                        </span>
+                        <h3 class="font-display font-bold text-slate-900 dark:text-white text-[1.12rem] tracking-tight leading-snug mt-2 mb-1">
+                            {t(`cases.${c.key}.title` as any)}
                         </h3>
+                        <div class="nx-mono pcard-where">{t(`cases.${c.key}.where` as any)}</div>
                         <p class="text-[0.86rem] leading-relaxed text-slate-500 dark:text-slate-400 font-light mb-4">
-                            {t(`projects.${p.key}.desc` as any)}
+                            {t(`cases.${c.key}.desc` as any)}
                         </p>
                         <div class="pcard-foot">
                             <span class="pcard-metric">
                                 <span class="material-symbols-outlined text-[1rem]">trending_up</span>
-                                {t(`projects.${p.key}.metric` as any)}
+                                {t(`cases.${c.key}.metric` as any)}
                             </span>
                             <span class="pcard-tags">
-                                {p.stack.map((s) => (
+                                {c.stack.map((s) => (
                                     <i>{s}</i>
                                 ))}
                             </span>
@@ -142,6 +147,16 @@ const projects: { key: string; vertical: Vertical; icon: string; stack: string[]
         border-radius: 999px;
         border: 1px solid rgba(99, 102, 241, 0.3);
         color: #6366f1;
+    }
+    .pcard-where {
+        font-size: 0.64rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #94a3b8;
+        margin-bottom: 10px;
+    }
+    :global(.dark) .pcard-where {
+        color: #64748b;
     }
     .pcard-foot {
         margin-top: auto;

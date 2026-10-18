@@ -112,6 +112,37 @@ html {
     .nx-free .material-symbols-outlined {
         color: #f59e42;
     }
+    .nx-cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 15px 26px;
+        border-radius: 999px;
+        border: none;
+        background: #0f172a;
+        color: #fff;
+        font-family: inherit;
+        font-size: 0.86rem;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        line-height: 1.2;
+        text-decoration: none;
+        cursor: pointer;
+        box-shadow: 0 18px 40px -18px rgba(15, 23, 42, 0.5);
+        transition: transform 0.15s, background 0.2s;
+    }
+    .nx-cta:hover {
+        transform: translateY(-2px);
+        color: #fff;
+    }
+    .dark .nx-cta {
+        background: #fff;
+        color: #0f172a;
+        box-shadow: none;
+    }
+    .dark .nx-cta:hover {
+        color: #0f172a;
+    }
     /* a thin animated thread: the mesh's signal running between sections */
     .nx-signal {
         background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.55), rgba(245, 158, 66, 0.6), rgba(99, 102, 241, 0.55), transparent);

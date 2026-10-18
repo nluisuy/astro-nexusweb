@@ -5,15 +5,14 @@ const lang = Astro.currentLocale || getLangFromUrl(Astro.url);
 const t = useTranslations(lang as any);
 ---
 
-<section class="py-24 bg-white dark:bg-slate-950 transition-colors duration-300" id="ai-lab">
-    <div class="max-w-7xl mx-auto px-6 lg:px-12">
-        <div class="mb-16 reveal">
-            <h2 class="text-sm font-bold tracking-[0.3em] uppercase text-nexus-purple mb-4">
-                {t('ailab.badge')}
-            </h2>
-            <p class="text-3xl md:text-4xl lg:text-5xl font-display font-medium text-slate-900 dark:text-white max-w-2xl transition-colors">
+<section class="relative py-24 lg:py-32 overflow-hidden" id="ai-lab">
+    <div class="nx-signal absolute top-0 inset-x-0 h-px" aria-hidden="true"></div>
+    <div class="relative max-w-7xl mx-auto px-6 lg:px-12">
+        <div class="mb-14 reveal max-w-3xl">
+            <div class="nx-kicker mb-5">{t('ailab.badge')}</div>
+            <h2 class="font-display font-extrabold tracking-[-0.035em] leading-[0.98] text-4xl md:text-5xl text-slate-900 dark:text-white">
                 {t('ailab.title')}
-            </p>
+            </h2>
         </div>
 
         <div class="grid lg:grid-cols-2 gap-12 items-start">
