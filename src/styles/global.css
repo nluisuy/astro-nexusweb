@@ -143,6 +143,34 @@ html {
     .dark .nx-cta:hover {
         color: #0f172a;
     }
+    /* glass card used by secondary pages and lists */
+    .nx-glass {
+        border: 1px solid rgba(100, 116, 139, 0.16);
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.62);
+        backdrop-filter: blur(10px);
+        transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .dark .nx-glass {
+        background: rgba(15, 23, 42, 0.5);
+        border-color: rgba(148, 163, 184, 0.14);
+    }
+    .nx-glass--hover:hover {
+        transform: translateY(-3px);
+        border-color: rgba(99, 102, 241, 0.5);
+        box-shadow: 0 26px 50px -30px rgba(99, 102, 241, 0.4);
+    }
+    .nx-icon-tile {
+        flex-shrink: 0;
+        width: 40px;
+        height: 40px;
+        border-radius: 11px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: #6366f1;
+        background: rgba(99, 102, 241, 0.1);
+    }
     /* a thin animated thread: the mesh's signal running between sections */
     .nx-signal {
         background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.55), rgba(245, 158, 66, 0.6), rgba(99, 102, 241, 0.55), transparent);

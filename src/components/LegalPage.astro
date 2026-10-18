@@ -1,0 +1,119 @@
+---
+// LegalPage — header + readable prose column for privacy / terms / cookies.
+// Pages pass plain <section><h2>…</h2><p>…</p><ul>…</ul></section> markup in the slot.
+import PageHero from "./PageHero.astro";
+
+interface Props {
+    kicker: string;
+    title: string;
+    accent?: string;
+    updated: string;
+}
+const { kicker, title, accent, updated } = Astro.props;
+---
+
+<PageHero kicker={kicker} title={title} accent={accent} size="md" />
+
+<section class="relative pb-24 lg:pb-32">
+    <div class="max-w-7xl mx-auto px-6 lg:px-12">
+        <div class="max-w-3xl">
+            <div class="nx-mono text-[0.66rem] tracking-[0.2em] uppercase text-slate-400 dark:text-slate-500 mb-10">
+                {updated}
+            </div>
+            <article class="legal-prose">
+                <slot />
+            </article>
+        </div>
+    </div>
+</section>
+
+<style>
+    .legal-prose :global(section) {
+        margin-bottom: 2.4rem;
+    }
+    .legal-prose :global(h2) {
+        font-family: "Outfit", sans-serif;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        font-size: 1.3rem;
+        line-height: 1.2;
+        color: #0f172a;
+        margin: 0 0 0.75rem;
+    }
+    :global(.dark) .legal-prose :global(h2) {
+        color: #fff;
+    }
+    .legal-prose :global(p) {
+        color: #475569;
+        font-weight: 300;
+        line-height: 1.7;
+        margin: 0 0 0.75rem;
+    }
+    :global(.dark) .legal-prose :global(p) {
+        color: #cbd5e1;
+    }
+    .legal-prose :global(ul) {
+        list-style: none;
+        margin: 0.25rem 0 0.9rem;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    .legal-prose :global(li) {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        color: #475569;
+        font-weight: 300;
+        line-height: 1.6;
+    }
+    :global(.dark) .legal-prose :global(li) {
+        color: #cbd5e1;
+    }
+    .legal-prose :global(li)::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #6366f1;
+        margin-top: 0.62em;
+        flex-shrink: 0;
+    }
+    .legal-prose :global(a) {
+        color: #6366f1;
+        font-weight: 500;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+    }
+    .legal-prose :global(.legal-cards) {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin: 1rem 0 0.5rem;
+    }
+    .legal-prose :global(.legal-card) {
+        padding: 16px 18px;
+    }
+    .legal-prose :global(.legal-card h3) {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        font-family: "Outfit", sans-serif;
+        font-weight: 700;
+        font-size: 1rem;
+        color: #0f172a;
+        margin: 0 0 0.35rem;
+    }
+    :global(.dark) .legal-prose :global(.legal-card h3) {
+        color: #fff;
+    }
+    .legal-prose :global(.legal-card h3 .material-symbols-outlined) {
+        color: #6366f1;
+        font-size: 1.15rem;
+    }
+    .legal-prose :global(.legal-card p) {
+        font-size: 0.9rem;
+        margin: 0;
+    }
+</style>

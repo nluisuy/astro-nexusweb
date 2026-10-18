@@ -118,6 +118,8 @@ const also = [
 <style>
     .vcard {
         position: relative;
+        display: flex;
+        flex-direction: column; /* footer pinned to the bottom so the three cards line up */
         padding: 26px 26px 24px;
         border-radius: 20px;
         border: 1px solid rgba(100, 116, 139, 0.18);
@@ -167,6 +169,7 @@ const also = [
         color: #cbd5e1;
     }
     .vcard-foot {
+        margin-top: auto;
         display: flex;
         flex-wrap: wrap;
         align-items: center;

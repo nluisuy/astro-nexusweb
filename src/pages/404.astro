@@ -1,36 +1,71 @@
 ---
+// Astro serves this root page for every not-found URL (including /es/...), so it
+// picks its language from the URL instead of relying on a separate es/404 page.
 import Layout from "../layouts/Layout.astro";
 import Navbar from "../components/Navbar.astro";
 import Footer from "../components/Footer.astro";
+import Motif from "../components/Motif.astro";
+import { getLangFromUrl } from "../i18n/utils";
 
-const pageTitle = "Page Not Found";
-const pageDescription = "The page you're looking for doesn't exist. Navigate back to Nexus Digital Innovations.";
+const lang = getLangFromUrl(Astro.url);
+const isEs = lang === "es";
+const prefix = isEs ? "/es" : "";
+
+const copy = isEs
+    ? {
+          title: "Página no encontrada",
+          description: "La página que buscas no existe. Vuelve a Nexus Digital Innovations.",
+          kicker: "Error 404 · fuera de la malla",
+          heading: "Este nodo no está en el mapa.",
+          lead: "La página que buscas no existe o fue movida. Te llevamos de vuelta.",
+          home: "Volver al inicio",
+          contact: "Contáctanos →",
+      }
+    : {
+          title: "Page Not Found",
+          description: "The page you're looking for doesn't exist. Navigate back to Nexus Digital Innovations.",
+          kicker: "Error 404 · lost in the mesh",
+          heading: "This node isn't on the map.",
+          lead: "The page you're looking for doesn't exist or has been moved. Let's route you back.",
+          home: "Back to home",
+          contact: "Contact us →",
+      };
 ---
 
-<Layout title={pageTitle} description={pageDescription}>
-    <div class="relative min-h-screen overflow-x-hidden">
+<Layout title={copy.title} description={copy.description}>
+    <div class="relative min-h-screen overflow-x-clip">
         <Navbar />
 
-        <main class="pt-40 pb-24 flex items-center justify-center min-h-[70vh]">
-            <div class="max-w-2xl mx-auto px-6 lg:px-12 text-center">
-                <h1 class="text-8xl md:text-[12rem] font-display font-bold tracking-tighter leading-none mb-4">
-                    <span class="text-gradient">404</span>
-                </h1>
-                <h2 class="text-2xl md:text-3xl font-display font-bold text-slate-900 dark:text-white mb-6 transition-colors">
-                    Lost in the Architecture
-                </h2>
-                <p class="text-lg text-slate-500 dark:text-slate-400 font-light leading-relaxed mb-12 max-w-lg mx-auto transition-colors">
-                    The page you're looking for doesn't exist or has been moved. Let's get you back on track.
-                </p>
-                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                    <a href="/" class="px-10 py-5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-full font-bold text-sm uppercase tracking-widest hover:bg-slate-800 dark:hover:bg-gray-100 transition-all shadow-xl shadow-slate-200 dark:shadow-none hover:-translate-y-1 flex items-center gap-3">
-                        <span class="material-symbols-outlined">home</span>
-                        Back to Home
-                    </a>
-                    <a href="mailto:hello@nexusinnova.com" class="px-10 py-5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-full font-bold text-sm uppercase tracking-widest hover:border-slate-400 dark:hover:border-slate-500 transition-all flex items-center gap-3">
-                        <span class="material-symbols-outlined">mail</span>
-                        Contact Us
-                    </a>
+        <main class="relative pt-40 pb-24 lg:pt-48 overflow-hidden min-h-[80vh] flex items-center">
+            <div
+                class="absolute -top-20 right-[-8%] w-[44%] h-[44%] rounded-full blur-[140px] bg-nexus-purple/6 dark:bg-nexus-purple/10 pointer-events-none"
+                aria-hidden="true"
+            >
+            </div>
+            <div class="relative max-w-7xl mx-auto px-6 lg:px-12 w-full grid lg:grid-cols-[1.15fr_0.85fr] gap-12 items-center">
+                <div>
+                    <div class="nx-kicker mb-5">{copy.kicker}</div>
+                    <h1 class="font-display font-extrabold tracking-[-0.04em] leading-[0.9] text-[6rem] md:text-[9rem] mb-4">
+                        <span class="accent-grad">404</span>
+                    </h1>
+                    <h2 class="font-display font-extrabold tracking-[-0.03em] text-3xl md:text-4xl text-slate-900 dark:text-white mb-4">
+                        {copy.heading}
+                    </h2>
+                    <p class="text-slate-500 dark:text-slate-400 text-base md:text-lg font-light leading-relaxed max-w-xl mb-8">
+                        {copy.lead}
+                    </p>
+                    <div class="flex flex-wrap items-center gap-4">
+                        <a href={`${prefix}/`} class="nx-cta">
+                            {copy.home}
+                            <span class="material-symbols-outlined text-lg">arrow_right_alt</span>
+                        </a>
+                        <a href={`${prefix}/#contact`} class="nx-mono text-xs tracking-[0.16em] uppercase text-slate-500 dark:text-slate-400 hover:text-nexus-purple transition-colors">
+                            {copy.contact}
+                        </a>
+                    </div>
+                </div>
+                <div class="hidden lg:block text-nexus-purple opacity-80">
+                    <Motif kind="cluster" />
                 </div>
             </div>
         </main>
