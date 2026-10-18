@@ -1,0 +1,163 @@
+---
+// Motif — the three mesh formations from the entrance deck as small, CSS-animated SVGs.
+// grid = Infra, ring = Security, cluster = Innovation Pod. Colour comes from currentColor.
+interface Props {
+    kind: "grid" | "ring" | "cluster";
+    class?: string;
+}
+const { kind, class: cls = "" } = Astro.props;
+const gridX = [20, 60, 100, 140];
+const gridY = [20, 50, 80];
+const satAngles = [-90, -18, 54, 126, 198];
+const sat = satAngles.map((a) => ({
+    x: +(80 + Math.cos((a * Math.PI) / 180) * 36).toFixed(1),
+    y: +(50 + Math.sin((a * Math.PI) / 180) * 30).toFixed(1),
+}));
+---
+
+<svg class={`motif motif--${kind} ${cls}`} viewBox="0 0 160 100" fill="none" aria-hidden="true">
+    {
+        kind === "grid" && (
+            <>
+                {gridX.map((x) => (
+                    <line x1={x} y1="20" x2={x} y2="80" stroke="currentColor" stroke-opacity="0.35" />
+                ))}
+                {gridY.map((y) => (
+                    <line x1="20" y1={y} x2="140" y2={y} stroke="currentColor" stroke-opacity="0.22" />
+                ))}
+                {gridX.map((x) => gridY.map((y) => <circle cx={x} cy={y} r="2.4" fill="currentColor" />))}
+                <circle class="m-dot m-dot--a" r="3.2" fill="#f59e42" />
+                <circle class="m-dot m-dot--b" r="3.2" fill="#f59e42" />
+            </>
+        )
+    }
+    {
+        kind === "ring" && (
+            <>
+                <g class="m-ring m-ring--1">
+                    <circle cx="80" cy="50" r="16" stroke="currentColor" stroke-opacity="0.5" stroke-dasharray="4 5" />
+                    <circle cx="96" cy="50" r="2.4" fill="currentColor" />
+                </g>
+                <g class="m-ring m-ring--2">
+                    <circle cx="80" cy="50" r="28" stroke="currentColor" stroke-opacity="0.35" stroke-dasharray="3 7" />
+                    <circle cx="80" cy="22" r="2.4" fill="currentColor" />
+                    <circle cx="80" cy="78" r="2.4" fill="currentColor" />
+                </g>
+                <g class="m-ring m-ring--3">
+                    <circle cx="80" cy="50" r="40" stroke="currentColor" stroke-opacity="0.22" stroke-dasharray="2 9" />
+                    <circle cx="120" cy="50" r="2.4" fill="currentColor" />
+                    <circle cx="40" cy="50" r="2.4" fill="currentColor" />
+                    <circle cx="80" cy="10" r="2.4" fill="currentColor" />
+                </g>
+                <circle class="m-core" cx="80" cy="50" r="4" fill="#f59e42" />
+            </>
+        )
+    }
+    {
+        kind === "cluster" && (
+            <>
+                <g class="m-orbit">
+                    {sat.map((s) => (
+                        <>
+                            <line x1="80" y1="50" x2={s.x} y2={s.y} stroke="currentColor" stroke-opacity="0.35" />
+                            <circle cx={s.x} cy={s.y} r="2.6" fill="currentColor" />
+                        </>
+                    ))}
+                </g>
+                <circle cx="72" cy="44" r="2.2" fill="currentColor" />
+                <circle cx="88" cy="42" r="2.2" fill="currentColor" />
+                <circle cx="86" cy="58" r="2.2" fill="currentColor" />
+                <circle cx="73" cy="57" r="2.2" fill="currentColor" />
+                <line x1="72" y1="44" x2="88" y2="42" stroke="currentColor" stroke-opacity="0.5" />
+                <line x1="88" y1="42" x2="86" y2="58" stroke="currentColor" stroke-opacity="0.5" />
+                <line x1="86" y1="58" x2="73" y2="57" stroke="currentColor" stroke-opacity="0.5" />
+                <line x1="73" y1="57" x2="72" y2="44" stroke="currentColor" stroke-opacity="0.5" />
+                <circle class="m-core" cx="80" cy="50" r="4.5" fill="#f59e42" />
+            </>
+        )
+    }
+</svg>
+
+<style>
+    .motif {
+        width: 100%;
+        height: auto;
+        display: block;
+        overflow: visible;
+    }
+    /* grid: two data pulses travel the middle rails */
+    .m-dot {
+        offset-rotate: 0deg;
+        animation: m-travel 3.2s linear infinite;
+    }
+    .m-dot--a {
+        offset-path: path("M 20 50 H 140");
+    }
+    .m-dot--b {
+        offset-path: path("M 100 80 V 20");
+        animation-delay: -1.4s;
+    }
+    @keyframes m-travel {
+        0% {
+            offset-distance: 0%;
+            opacity: 0;
+        }
+        12%,
+        88% {
+            opacity: 1;
+        }
+        100% {
+            offset-distance: 100%;
+            opacity: 0;
+        }
+    }
+    /* ring: concentric shields turning at different speeds */
+    .m-ring {
+        transform-origin: 80px 50px;
+        animation: m-spin 22s linear infinite;
+    }
+    .m-ring--2 {
+        animation-duration: 34s;
+        animation-direction: reverse;
+    }
+    .m-ring--3 {
+        animation-duration: 48s;
+    }
+    @keyframes m-spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+    /* cluster: satellites (the apps) orbit the pod core */
+    .m-orbit {
+        transform-origin: 80px 50px;
+        animation: m-spin 40s linear infinite;
+    }
+    .m-core {
+        transform-origin: 80px 50px;
+        animation: m-pulse 2.6s ease-in-out infinite;
+    }
+    @keyframes m-pulse {
+        0%,
+        100% {
+            transform: scale(1);
+            opacity: 1;
+        }
+        50% {
+            transform: scale(1.5);
+            opacity: 0.55;
+        }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .m-dot,
+        .m-ring,
+        .m-orbit,
+        .m-core {
+            animation: none;
+        }
+        .m-dot {
+            offset-distance: 50%;
+            opacity: 1;
+        }
+    }
+</style>

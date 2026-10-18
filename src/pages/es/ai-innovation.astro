@@ -1,0 +1,110 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Navbar from "../../components/Navbar.astro";
+import Footer from "../../components/Footer.astro";
+import AILab from "../../components/AILab.astro";
+import MiniCTA from "../../components/MiniCTA.astro";
+import Motif from "../../components/Motif.astro";
+import { getLangFromUrl, useTranslations } from "../../i18n/utils";
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang as any);
+const prefix = lang === "es" ? "/es" : "";
+
+const pageTitle = "AI Innovation — Nexus Digital Innovations";
+const pageDescription =
+    "AI Innovation Pods que diseñan, construyen y lanzan sistemas de IA y apps internas de nivel productivo que reemplazan SaaS externo. POC de construcción gratis de 15 días.";
+---
+
+<Layout title={pageTitle} description={pageDescription}>
+    <div class="relative min-h-screen overflow-x-clip">
+        <Navbar />
+
+        <main>
+            <section class="relative pt-40 pb-14 lg:pt-48 lg:pb-20 overflow-hidden">
+                <div
+                    class="absolute -top-20 right-[-8%] w-[46%] h-[46%] rounded-full blur-[140px] bg-nexus-amber/8 dark:bg-nexus-amber/10 pointer-events-none"
+                    aria-hidden="true"
+                >
+                </div>
+                <div
+                    class="relative max-w-7xl mx-auto px-6 lg:px-12 grid lg:grid-cols-[1.15fr_0.85fr] gap-10 lg:gap-14 items-center"
+                >
+                    <div>
+                        <div class="nx-kicker mb-5">{t("ailabpage.kicker")}</div>
+                        <h1
+                            class="font-display font-extrabold tracking-[-0.035em] leading-[0.96] text-5xl md:text-6xl lg:text-[4.4rem] text-slate-900 dark:text-white mb-6"
+                        >
+                            {t("ailabpage.title")}
+                        </h1>
+                        <p class="text-slate-500 dark:text-slate-400 text-base md:text-lg font-light leading-relaxed max-w-2xl mb-7">
+                            {t("ailabpage.lead")}
+                        </p>
+                        <div class="flex flex-wrap gap-2.5 mb-8">
+                            <span class="nx-offer-chip">{t("hero.offer.poc")}<i>{t("hero.offer.free")}</i></span>
+                            <span class="nx-offer-chip">{t("hero.offer.assessment")}<i>{t("hero.offer.free")}</i></span>
+                            <span class="nx-offer-chip">{t("hero.offer.case")}<i>{t("hero.offer.free")}</i></span>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-4">
+                            <a href={`${prefix}/#contact`} class="nx-cta">
+                                {t("ailabpage.cta")}
+                                <span class="material-symbols-outlined text-lg">arrow_right_alt</span>
+                            </a>
+                            <span class="nx-mono text-xs text-slate-400 dark:text-slate-500">{t("hero.cta_sub")}</span>
+                        </div>
+                    </div>
+                    <div class="pod-visual text-nexus-amber">
+                        <Motif kind="cluster" />
+                    </div>
+                </div>
+            </section>
+
+            <AILab />
+            <MiniCTA />
+        </main>
+
+        <Footer />
+    </div>
+</Layout>
+
+<style>
+    .pod-visual {
+        padding: 26px;
+        border-radius: 22px;
+        border: 1px solid rgba(100, 116, 139, 0.16);
+        background: linear-gradient(180deg, rgba(245, 158, 66, 0.08), rgba(99, 102, 241, 0.06));
+    }
+    .nx-offer-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 7px 8px 7px 13px;
+        border-radius: 999px;
+        border: 1px solid rgba(100, 116, 139, 0.2);
+        background: rgba(255, 255, 255, 0.55);
+        font-size: 0.78rem;
+        font-weight: 500;
+        color: #334155;
+    }
+    :global(.dark) .nx-offer-chip {
+        background: rgba(15, 23, 42, 0.5);
+        border-color: rgba(148, 163, 184, 0.18);
+        color: #cbd5e1;
+    }
+    .nx-offer-chip i {
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-style: normal;
+        font-size: 0.6rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-weight: 600;
+        color: #047857;
+        background: rgba(16, 185, 129, 0.16);
+        border-radius: 999px;
+        padding: 3px 8px;
+    }
+    :global(.dark) .nx-offer-chip i {
+        color: #6ee7b7;
+        background: rgba(16, 185, 129, 0.14);
+    }
+</style>

@@ -8,7 +8,7 @@ const t = useTranslations(lang as any);
 const isEs = lang === 'es';
 ---
 
-<nav class="fixed w-full z-50 backdrop-blur-xl bg-white/70 dark:bg-slate-950/80 border-b border-gray-100 dark:border-slate-800 transition-colors duration-300">
+<nav id="main-nav" class="fixed w-full z-50 backdrop-blur-xl bg-white/70 dark:bg-slate-950/80 border-b border-gray-100 dark:border-slate-800 transition-all duration-300">
     <div class="max-w-7xl mx-auto px-6 lg:px-12">
         <div class="flex items-center justify-between h-24">
             <a href={isEs ? '/es/' : '/'} class="flex-shrink-0 flex flex-col items-start cursor-pointer group" aria-label="Nexus Digital Innovations home">
@@ -24,8 +24,8 @@ const isEs = lang === 'es';
                     <a class="text-[0.8rem] uppercase tracking-widest font-semibold text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors" href={`${isEs ? '/es' : ''}/#services`}>
                         {t('nav.services')}
                     </a>
-                    <a class="text-[0.8rem] uppercase tracking-widest font-semibold text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors" href={`${isEs ? '/es' : ''}/#industries`}>
-                        {t('nav.industries')}
+                    <a class="text-[0.8rem] uppercase tracking-widest font-semibold text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors" href={`${isEs ? '/es' : ''}/ai-innovation`}>
+                        {t('nav.ai_innovation')}
                     </a>
                     <a class="text-[0.8rem] uppercase tracking-widest font-semibold text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors" href={`${isEs ? '/es' : ''}/#projects`}>
                         {t('nav.work')}
@@ -84,7 +84,7 @@ const isEs = lang === 'es';
                 </div>
             </div>
             <a class="text-lg uppercase tracking-widest font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors mobile-menu-link" href={`${isEs ? '/es' : ''}/#services`}>{t('nav.services')}</a>
-            <a class="text-lg uppercase tracking-widest font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors mobile-menu-link" href={`${isEs ? '/es' : ''}/#industries`}>{t('nav.industries')}</a>
+            <a class="text-lg uppercase tracking-widest font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors mobile-menu-link" href={`${isEs ? '/es' : ''}/ai-innovation`}>{t('nav.ai_innovation')}</a>
             <a class="text-lg uppercase tracking-widest font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors mobile-menu-link" href={`${isEs ? '/es' : ''}/#projects`}>{t('nav.work')}</a>
             <a class="text-lg uppercase tracking-widest font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors mobile-menu-link" href={`${isEs ? '/es' : ''}/#about`}>{t('nav.about')}</a>
             <a class="text-lg uppercase tracking-widest font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors mobile-menu-link" href={`${isEs ? '/es' : ''}/blog`}>{t('nav.insights')}</a>

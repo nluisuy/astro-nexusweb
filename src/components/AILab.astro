@@ -5,15 +5,14 @@ const lang = Astro.currentLocale || getLangFromUrl(Astro.url);
 const t = useTranslations(lang as any);
 ---
 
-<section class="py-24 bg-white dark:bg-slate-950 transition-colors duration-300" id="ai-lab">
-    <div class="max-w-7xl mx-auto px-6 lg:px-12">
-        <div class="mb-16 reveal">
-            <h2 class="text-sm font-bold tracking-[0.3em] uppercase text-nexus-purple mb-4">
-                {t('ailab.badge')}
-            </h2>
-            <p class="text-3xl md:text-4xl lg:text-5xl font-display font-medium text-slate-900 dark:text-white max-w-2xl transition-colors">
+<section class="relative py-24 lg:py-32 overflow-hidden" id="ai-lab">
+    <div class="nx-signal absolute top-0 inset-x-0 h-px" aria-hidden="true"></div>
+    <div class="relative max-w-7xl mx-auto px-6 lg:px-12">
+        <div class="mb-14 reveal max-w-3xl">
+            <div class="nx-kicker mb-5">{t('ailab.badge')}</div>
+            <h2 class="font-display font-extrabold tracking-[-0.035em] leading-[0.98] text-4xl md:text-5xl text-slate-900 dark:text-white">
                 {t('ailab.title')}
-            </p>
+            </h2>
         </div>
 
         <div class="grid lg:grid-cols-2 gap-12 items-start">
@@ -34,7 +33,7 @@ const t = useTranslations(lang as any);
                         { name: "Multi-Agent Systems", icon: "hub", color: "text-indigo-500" },
                         { name: "Guardrails & Safety", icon: "shield", color: "text-nexus-yellow" },
                     ].map((tech) => (
-                        <div class="group flex items-center gap-3 p-4 rounded-xl bg-nexus-gray-soft dark:bg-slate-900 border border-gray-100 dark:border-slate-800 hover:border-nexus-blue/30 dark:hover:border-nexus-blue/30 transition-all duration-300 hover:shadow-md cursor-default">
+                        <div class="tech-chip group flex items-center gap-3 p-4 rounded-xl bg-nexus-gray-soft dark:bg-slate-900 border border-gray-100 dark:border-slate-800 hover:border-nexus-blue/30 dark:hover:border-nexus-blue/30 transition-all duration-300 hover:shadow-md cursor-default">
                             <span class={`material-symbols-outlined text-xl ${tech.color}`}>
                                 {tech.icon}
                             </span>
@@ -48,13 +47,13 @@ const t = useTranslations(lang as any);
 
             <!-- Right: AI Agent Architecture Diagram -->
             <div class="reveal reveal-delay-2">
-                <div class="relative p-8 md:p-10 rounded-3xl bg-[#0a0a0f] border border-slate-800 overflow-hidden">
+                <div class="diagram-container relative p-8 md:p-10 rounded-3xl bg-[#0a0a0f] border border-slate-800 overflow-hidden">
                     <!-- Background glow -->
-                    <div class="absolute -top-20 -right-20 w-60 h-60 bg-nexus-purple/15 rounded-full blur-[80px]"></div>
-                    <div class="absolute -bottom-20 -left-20 w-60 h-60 bg-nexus-blue/15 rounded-full blur-[80px]"></div>
+                    <div class="parallax-blob absolute -top-20 -right-20 w-60 h-60 bg-nexus-purple/15 rounded-full blur-[80px]" data-speed="0.4"></div>
+                    <div class="parallax-blob absolute -bottom-20 -left-20 w-60 h-60 bg-nexus-blue/15 rounded-full blur-[80px]" data-speed="0.6"></div>
 
                     <div class="relative z-10">
-                        <h3 class="text-lg font-bold text-white mb-8 flex items-center gap-2">
+                        <h3 class="text-lg font-bold text-white mb-8 flex items-center gap-2 diagram-step">
                             <span class="material-symbols-outlined text-nexus-purple">architecture</span>
                             {t('ailab.diagram.title')}
                         </h3>
@@ -62,7 +61,7 @@ const t = useTranslations(lang as any);
                         <!-- Architecture Flow -->
                         <div class="space-y-4">
                             <!-- User Input -->
-                            <div class="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10">
+                            <div class="diagram-step flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10">
                                 <div class="w-8 h-8 rounded-lg bg-nexus-blue/20 flex items-center justify-center flex-shrink-0">
                                     <span class="material-symbols-outlined text-nexus-blue text-sm">person</span>
                                 </div>
@@ -70,12 +69,12 @@ const t = useTranslations(lang as any);
                             </div>
 
                             <!-- Arrow -->
-                            <div class="flex justify-center">
+                            <div class="diagram-step flex justify-center">
                                 <span class="material-symbols-outlined text-slate-600 text-lg">arrow_downward</span>
                             </div>
 
                             <!-- Orchestrator -->
-                            <div class="p-4 rounded-xl bg-nexus-purple/10 border border-nexus-purple/30">
+                            <div class="diagram-step p-4 rounded-xl bg-nexus-purple/10 border border-nexus-purple/30">
                                 <div class="flex items-center gap-2 mb-2">
                                     <span class="material-symbols-outlined text-nexus-purple text-sm">hub</span>
                                     <span class="text-sm font-bold text-nexus-purple">{t('ailab.diagram.step2.title')}</span>
@@ -84,12 +83,12 @@ const t = useTranslations(lang as any);
                             </div>
 
                             <!-- Arrow -->
-                            <div class="flex justify-center">
+                            <div class="diagram-step flex justify-center">
                                 <span class="material-symbols-outlined text-slate-600 text-lg">arrow_downward</span>
                             </div>
 
                             <!-- Agent Grid -->
-                            <div class="grid grid-cols-3 gap-2">
+                            <div class="diagram-step grid grid-cols-3 gap-2">
                                 {[
                                     { name: t('ailab.diagram.agent1'), icon: "search", color: "bg-nexus-blue/20 text-nexus-blue" },
                                     { name: t('ailab.diagram.agent2'), icon: "code", color: "bg-emerald-500/20 text-emerald-400" },
@@ -105,12 +104,12 @@ const t = useTranslations(lang as any);
                             </div>
 
                             <!-- Arrow -->
-                            <div class="flex justify-center">
+                            <div class="diagram-step flex justify-center">
                                 <span class="material-symbols-outlined text-slate-600 text-lg">arrow_downward</span>
                             </div>
 
                             <!-- Knowledge Layer -->
-                            <div class="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10">
+                            <div class="diagram-step flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10">
                                 <div class="w-8 h-8 rounded-lg bg-nexus-green/20 flex items-center justify-center flex-shrink-0">
                                     <span class="material-symbols-outlined text-nexus-green text-sm">database</span>
                                 </div>

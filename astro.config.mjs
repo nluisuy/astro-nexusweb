@@ -19,7 +19,6 @@ export default defineConfig({
         locales: ["en", "es"],
         routing: {
             prefixDefaultLocale: false,
-            strategy: "pathname",
         },
     },
 
@@ -59,7 +58,13 @@ export default defineConfig({
 
     integrations: [
         react(),
-        sitemap(),
+        sitemap({
+            // hreflang alternates in the sitemap for every page pair (/ ↔ /es/)
+            i18n: {
+                defaultLocale: "en",
+                locales: { en: "en", es: "es" },
+            },
+        }),
         partytown({
             config: {
                 forward: ["dataLayer.push"],
