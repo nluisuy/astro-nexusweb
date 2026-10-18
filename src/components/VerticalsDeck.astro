@@ -621,6 +621,11 @@ const aas = t("hero.aas") as string;
         const mouse = { x: -9999, y: -9999, active: false };
         let formation = "hub";
         const hub = { x: 0, y: 0 };
+        // Infra lattice geometry (set in layout("grid"))
+        let gridCols = 8,
+            gridDx = 0,
+            gridDy = 0,
+            gridDist = 0;
 
         const isDark = () => document.documentElement.classList.contains("dark");
         const meshRGB = () => (isDark() ? "99,130,246" : "124,92,246");
@@ -661,6 +666,15 @@ const aas = t("hero.aas") as string;
         // Each scene re-forms the mesh into a distinct shape.
         function layout(which: string, snap: boolean) {
             formation = which;
+            if (which === "grid") {
+                // A regular lattice sized to the viewport: orthogonal neighbours sit inside the
+                // link radius, diagonals stay outside, so it reads as racks/regions, not strings.
+                gridCols = W < 640 ? 5 : W < 1024 ? 7 : 8;
+                const rows = Math.max(2, Math.ceil(nodes.length / gridCols));
+                gridDx = (W * 0.84) / (gridCols - 1);
+                gridDy = (H * 0.7) / (rows - 1);
+                gridDist = Math.min(Math.max(gridDx, gridDy) * 1.12, Math.hypot(gridDx, gridDy) * 0.95);
+            }
             for (let i = 0; i < nodes.length; i++) {
                 const n = nodes[i];
                 const tn = i / nodes.length;
@@ -668,11 +682,10 @@ const aas = t("hero.aas") as string;
                     n.tx = hub.x + n.ox;
                     n.ty = hub.y + n.oy;
                 } else if (which === "grid") {
-                    const cols = 8;
-                    const col = i % cols;
-                    const row = Math.floor(i / cols);
-                    n.tx = W * (0.12 + (col / (cols - 1)) * 0.76) + (Math.random() - 0.5) * 22;
-                    n.ty = H * (0.2 + (row % 6) * 0.12) + (Math.random() - 0.5) * 16;
+                    const col = i % gridCols;
+                    const row = Math.floor(i / gridCols);
+                    n.tx = W * 0.08 + col * gridDx + (Math.random() - 0.5) * 5;
+                    n.ty = H * 0.16 + row * gridDy + (Math.random() - 0.5) * 5;
                 } else if (which === "ring") {
                     const a = tn * Math.PI * 2 * 3;
                     const ring = 0.2 + (i % 3) * 0.14;
@@ -712,11 +725,19 @@ const aas = t("hero.aas") as string;
 
         function spawnPulse() {
             if (nodes.length < 2) return;
-            const a = nodes[(Math.random() * nodes.length) | 0];
+            const ai = (Math.random() * nodes.length) | 0;
+            const a = nodes[ai];
             let ex: number, ey: number;
             if (formation === "hub" && Math.random() < 0.75) {
                 ex = hub.x;
                 ey = hub.y;
+            } else if (formation === "grid") {
+                // data runs along the lattice: to the right or downward neighbour
+                let bi = Math.random() < 0.5 ? ai + 1 : ai + gridCols;
+                if (bi >= nodes.length || (bi === ai + 1 && bi % gridCols === 0)) bi = ai - gridCols;
+                const b = nodes[bi] ?? nodes[(Math.random() * nodes.length) | 0];
+                ex = b.x;
+                ey = b.y;
             } else {
                 const b = nodes[(Math.random() * nodes.length) | 0];
                 ex = b.x;
@@ -743,7 +764,7 @@ const aas = t("hero.aas") as string;
                 }
             }
             ctx.clearRect(0, 0, W, H);
-            const DIST = Math.min(W, H) < 560 ? 104 : 136;
+            const DIST = formation === "grid" ? gridDist : Math.min(W, H) < 560 ? 104 : 136;
             const DIST2 = DIST * DIST;
 
             for (const n of nodes) {

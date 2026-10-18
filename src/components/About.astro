@@ -6,76 +6,60 @@ const t = useTranslations(lang as any);
 const isEs = lang === 'es';
 ---
 
-<section class="py-32 bg-white dark:bg-slate-950 transition-colors duration-300" id="about">
-    <div class="max-w-7xl mx-auto px-6 lg:px-12">
-        <div class="grid lg:grid-cols-2 gap-24 items-center">
+<section id="about" class="relative py-28 lg:py-36 overflow-hidden">
+    <div class="nx-signal absolute top-0 inset-x-0 h-px" aria-hidden="true"></div>
+    <div
+        class="absolute -top-40 left-[-10%] w-[44%] h-[44%] rounded-full blur-[140px] bg-nexus-purple/6 dark:bg-nexus-purple/10 pointer-events-none"
+        aria-hidden="true"
+    >
+    </div>
+    <div class="relative max-w-7xl mx-auto px-6 lg:px-12">
+        <div class="grid lg:grid-cols-[1.05fr_0.95fr] gap-14 lg:gap-20 items-center">
             <div class="order-2 lg:order-1 reveal">
+                <div class="nx-kicker mb-5">{t('nav.about')}</div>
                 <h2
-                    class="text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white mb-8 leading-tight transition-colors"
+                    class="font-display font-extrabold tracking-[-0.035em] leading-[0.98] text-4xl md:text-5xl lg:text-[3.6rem] text-slate-900 dark:text-white mb-5"
                 >
-                    {t('about.title1')} <span class="text-gradient">{t('about.title2')}</span>
+                    {t('about.title1')} <span class="accent-grad">{t('about.title2')}</span>
                 </h2>
-                <p class="text-lg text-slate-500 dark:text-slate-400 font-light leading-relaxed mb-8 transition-colors">
+                <p class="text-slate-500 dark:text-slate-400 text-base md:text-lg font-light leading-relaxed max-w-2xl mb-8">
                     {t('about.desc')}
                 </p>
 
-                <ul class="space-y-6 mb-12">
-                    <li class="flex items-start gap-4">
-                        <span class="material-symbols-outlined text-nexus-blue mt-1"
-                            >auto_awesome_motion</span
-                        >
-                        <span class="text-slate-700 dark:text-slate-300 font-medium transition-colors"
-                            >{t('about.point1')}</span
-                        >
+                <ul class="ab-list">
+                    <li>
+                        <span class="ab-icon"><span class="material-symbols-outlined text-[1.15rem]">auto_awesome_motion</span></span>
+                        <span>{t('about.point1')}</span>
                     </li>
-                    <li class="flex items-start gap-4">
-                        <span class="material-symbols-outlined text-nexus-purple mt-1"
-                            >shield_with_house</span
-                        >
-                        <span class="text-slate-700 dark:text-slate-300 font-medium transition-colors"
-                            >{t('about.point2')}</span
-                        >
+                    <li>
+                        <span class="ab-icon"><span class="material-symbols-outlined text-[1.15rem]">shield_with_house</span></span>
+                        <span>{t('about.point2')}</span>
                     </li>
-                    <li class="flex items-start gap-4">
-                        <span class="material-symbols-outlined text-nexus-green mt-1"
-                            >lightbulb_circle</span
-                        >
-                        <span class="text-slate-700 dark:text-slate-300 font-medium transition-colors"
-                            >{t('about.point3')}</span
-                        >
+                    <li>
+                        <span class="ab-icon"><span class="material-symbols-outlined text-[1.15rem]">lightbulb_circle</span></span>
+                        <span>{t('about.point3')}</span>
                     </li>
                 </ul>
 
-                <a
-                    href={`${isEs ? '/es' : ''}/manifesto`}
-                    class="inline-flex items-center gap-2 text-sm font-bold tracking-widest uppercase text-slate-900 dark:text-white border-b-2 border-slate-900 dark:border-white pb-1 hover:text-nexus-blue dark:hover:text-nexus-blue hover:border-nexus-blue dark:hover:border-nexus-blue transition-all"
-                >
+                <a href={`${isEs ? '/es' : ''}/manifesto`} class="ab-link nx-mono">
                     {t('about.link')}
+                    <span class="material-symbols-outlined text-[1rem]">arrow_right_alt</span>
                 </a>
             </div>
 
-            <div class="order-1 lg:order-2 relative group reveal reveal-delay-2 h-full min-h-[400px]">
-                <div class="absolute inset-0 rounded-[2.5rem] overflow-hidden bg-gradient-to-br from-slate-100 to-slate-200 dark:from-[#0a0f18] dark:to-[#1a2235] shadow-2xl shadow-slate-200/50 dark:shadow-none border border-slate-200/50 dark:border-slate-800/50">
-                    <canvas id="about-3d-canvas" class="w-full h-full object-cover"></canvas>
-                    
-                    <!-- Lighting overlay -->
+            <div class="order-1 lg:order-2 relative reveal reveal-delay-2 min-h-[380px] lg:min-h-[460px]">
+                <!-- the lazy-loaded three.js visual draws into this canvas (parent gives it its size) -->
+                <div class="ab-visual absolute inset-0 rounded-[1.75rem] overflow-hidden">
+                    <canvas id="about-3d-canvas" class="w-full h-full"></canvas>
                     <div class="absolute inset-0 bg-gradient-to-tr from-nexus-purple/10 to-transparent pointer-events-none"></div>
                 </div>
 
-                <!-- Floating Card -->
-                <div
-                    class="absolute -bottom-6 -left-6 md:-bottom-10 md:-left-10 w-72 p-6 rounded-3xl backdrop-blur-xl bg-white/70 dark:bg-[#0a0f18]/80 border border-white/50 dark:border-slate-700/50 shadow-[0_8px_32px_rgba(0,0,0,0.1)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.3)] animate-float z-10"
-                >
-                    <div class="flex items-center gap-3 mb-3">
-                        <span class="relative flex h-3 w-3">
-                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-nexus-green opacity-75"></span>
-                          <span class="relative inline-flex rounded-full h-3 w-3 bg-nexus-green"></span>
-                        </span>
-                        <span class="text-xs font-bold uppercase tracking-widest text-slate-900 dark:text-white"
-                            >{t('about.card.title')}</span
-                        >
+                <div class="ab-card absolute -bottom-6 -left-4 md:-bottom-8 md:-left-8 w-72 z-10">
+                    <div class="flex items-center gap-2.5 mb-2">
+                        <span class="ab-dot"></span>
+                        <span class="nx-kicker">{t('about.card.title')}</span>
                     </div>
-                    <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-medium">
+                    <p class="text-[0.82rem] text-slate-600 dark:text-slate-300 leading-relaxed">
                         {t('about.card.desc')}
                     </p>
                 </div>
@@ -83,6 +67,104 @@ const isEs = lang === 'es';
         </div>
     </div>
 </section>
+
+<style>
+    .ab-list {
+        list-style: none;
+        margin: 0 0 2rem;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        max-width: 34rem;
+    }
+    .ab-list li {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 0.95rem;
+        line-height: 1.45;
+        color: #334155;
+    }
+    :global(.dark) .ab-list li {
+        color: #cbd5e1;
+    }
+    .ab-icon {
+        flex-shrink: 0;
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: #6366f1;
+        background: rgba(99, 102, 241, 0.1);
+    }
+    .ab-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.7rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: #0f172a;
+        text-decoration: none;
+        border-bottom: 1px solid rgba(99, 102, 241, 0.5);
+        padding-bottom: 4px;
+        transition: color 0.2s, border-color 0.2s;
+    }
+    .ab-link:hover {
+        color: #6366f1;
+        border-color: #6366f1;
+    }
+    :global(.dark) .ab-link {
+        color: #f1f5f9;
+    }
+    .ab-visual {
+        border: 1px solid rgba(100, 116, 139, 0.18);
+        background: linear-gradient(160deg, rgba(99, 102, 241, 0.08), rgba(245, 158, 66, 0.06));
+    }
+    :global(.dark) .ab-visual {
+        border-color: rgba(148, 163, 184, 0.14);
+        background: linear-gradient(160deg, rgba(99, 102, 241, 0.14), rgba(15, 23, 42, 0.6));
+    }
+    .ab-card {
+        padding: 18px 20px;
+        border-radius: 16px;
+        border: 1px solid rgba(100, 116, 139, 0.18);
+        background: rgba(255, 255, 255, 0.78);
+        backdrop-filter: blur(14px);
+        box-shadow: 0 24px 50px -30px rgba(15, 23, 42, 0.35);
+    }
+    :global(.dark) .ab-card {
+        background: rgba(15, 23, 42, 0.7);
+        border-color: rgba(148, 163, 184, 0.16);
+        box-shadow: none;
+    }
+    .ab-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #10b981;
+        box-shadow: 0 0 10px #10b981;
+        animation: ab-pulse 2.6s ease-in-out infinite;
+        flex-shrink: 0;
+    }
+    @keyframes ab-pulse {
+        0%,
+        100% {
+            opacity: 1;
+        }
+        50% {
+            opacity: 0.4;
+        }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .ab-dot {
+            animation: none;
+        }
+    }
+</style>
 
 <script>
     // The 3D visual depends on three.js (~500 kB raw), so it is NOT part of the

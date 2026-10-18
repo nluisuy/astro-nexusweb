@@ -2,112 +2,62 @@
 import Layout from "../../layouts/Layout.astro";
 import Navbar from "../../components/Navbar.astro";
 import Footer from "../../components/Footer.astro";
+import PageHero from "../../components/PageHero.astro";
 
 const pageTitle = "Nuestro Manifiesto";
 const pageDescription = "El manifiesto de Nexus Digital Innovations — nuestros principios para construir el futuro de la tecnología empresarial con precisión, innovación e integridad.";
+
+const principles = [
+    { icon: "architecture", title: "Precisión antes que velocidad", desc: "No nos apresuramos al lanzar. Diseñamos con intención, construyendo sistemas que escalan elegantemente y superan la prueba de la demanda empresarial." },
+    { icon: "shield_with_house", title: "La seguridad es la base", desc: "La seguridad no es una adición tardía. Está integrada en cada decisión, cada despliegue, cada interacción." },
+    { icon: "neurology", title: "IA con propósito", desc: "Aprovechamos la IA generativa no porque esté de moda, sino porque desbloquea valor real con un ROI medible." },
+    { icon: "handshake", title: "Asociación, no proveedores", desc: "No vendemos servicios — invertimos en resultados. El éxito de nuestros clientes es nuestro éxito." },
+    { icon: "rocket_launch", title: "Innovación imparable", desc: "El entorno tecnológico nunca se detiene, y nosotros tampoco. Evolucionamos constantemente nuestras metodologías." },
+    { icon: "visibility", title: "Transparencia radical", desc: "Sin cajas negras. Sin agendas ocultas. Nos comunicamos abiertamente sobre plazos, desafíos y compromisos." },
+];
 ---
 
 <Layout title={pageTitle} description={pageDescription}>
-    <div class="relative min-h-screen overflow-x-hidden">
+    <div class="relative min-h-screen overflow-x-clip">
         <Navbar />
 
-        <main class="pt-40 pb-24">
-            <div class="max-w-5xl mx-auto px-6 lg:px-12 text-center mb-24">
-                <span class="text-sm font-bold tracking-[0.3em] uppercase text-nexus-blue mb-6 block">Nuestro Manifiesto</span>
-                <h1 class="text-5xl md:text-7xl lg:text-8xl font-display font-bold text-slate-900 dark:text-white mb-8 tracking-tighter leading-[1] transition-colors">
-                    Construimos lo que <span class="text-gradient">Importa</span>
-                </h1>
-                <p class="max-w-2xl mx-auto text-xl text-slate-500 dark:text-slate-400 font-light leading-relaxed transition-colors">
-                    En un mundo inundado de ruido, elegimos la substancia. Cada línea de arquitectura, cada protocolo de seguridad, cada modelo de IA que desplegamos existe para crear un impacto duradero.
-                </p>
-            </div>
+        <main>
+            <PageHero
+                kicker="Nuestro manifiesto"
+                title="Construimos lo que"
+                accent="importa."
+                lead="En un mundo inundado de ruido, elegimos la sustancia. Cada línea de arquitectura, cada protocolo de seguridad, cada modelo de IA que desplegamos existe para crear un impacto duradero."
+            />
 
-            <div class="max-w-5xl mx-auto px-6 lg:px-12">
-                <div class="grid md:grid-cols-2 gap-16 mb-24">
-                    <div class="space-y-8">
-                        <div class="group">
-                            <div class="flex items-start gap-6">
-                                <div class="w-16 h-16 rounded-2xl bg-nexus-blue/10 flex items-center justify-center flex-shrink-0 group-hover:bg-nexus-blue/20 transition-colors">
-                                    <span class="material-symbols-outlined text-nexus-blue" style="font-size: 28px;">architecture</span>
+            <section class="relative pb-24 lg:pb-32">
+                <div class="max-w-7xl mx-auto px-6 lg:px-12">
+                    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-14">
+                        {
+                            principles.map((p) => (
+                                <div class="nx-glass nx-glass--hover reveal p-6">
+                                    <span class="nx-icon-tile mb-4">
+                                        <span class="material-symbols-outlined text-[1.25rem]">{p.icon}</span>
+                                    </span>
+                                    <h3 class="font-display font-bold text-slate-900 dark:text-white text-[1.08rem] tracking-tight mb-2">{p.title}</h3>
+                                    <p class="text-[0.88rem] leading-relaxed text-slate-500 dark:text-slate-400 font-light">{p.desc}</p>
                                 </div>
-                                <div>
-                                    <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3 font-display transition-colors">Precisión Antes que Velocidad</h3>
-                                    <p class="text-slate-500 dark:text-slate-400 font-light leading-relaxed transition-colors">No nos apresuramos al lanzar. Diseñamos con intención, construyendo sistemas que escalan elegantemente y superan la prueba de la demanda empresarial.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="group">
-                            <div class="flex items-start gap-6">
-                                <div class="w-16 h-16 rounded-2xl bg-nexus-purple/10 flex items-center justify-center flex-shrink-0 group-hover:bg-nexus-purple/20 transition-colors">
-                                    <span class="material-symbols-outlined text-nexus-purple" style="font-size: 28px;">shield_with_house</span>
-                                </div>
-                                <div>
-                                    <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3 font-display transition-colors">La Seguridad es la Base</h3>
-                                    <p class="text-slate-500 dark:text-slate-400 font-light leading-relaxed transition-colors">La seguridad no es una adición tardía. Está integrada en cada decisión, cada despliegue, cada interacción.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="group">
-                            <div class="flex items-start gap-6">
-                                <div class="w-16 h-16 rounded-2xl bg-nexus-green/10 flex items-center justify-center flex-shrink-0 group-hover:bg-nexus-green/20 transition-colors">
-                                    <span class="material-symbols-outlined text-nexus-green" style="font-size: 28px;">neurology</span>
-                                </div>
-                                <div>
-                                    <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3 font-display transition-colors">IA con Propósito</h3>
-                                    <p class="text-slate-500 dark:text-slate-400 font-light leading-relaxed transition-colors">Aprovechamos la IA generativa no porque esté de moda, sino porque desbloquea valor real con un ROI medible.</p>
-                                </div>
-                            </div>
-                        </div>
+                            ))
+                        }
                     </div>
-                    <div class="space-y-8">
-                        <div class="group">
-                            <div class="flex items-start gap-6">
-                                <div class="w-16 h-16 rounded-2xl bg-nexus-yellow/10 flex items-center justify-center flex-shrink-0 group-hover:bg-nexus-yellow/20 transition-colors">
-                                    <span class="material-symbols-outlined text-nexus-yellow" style="font-size: 28px;">handshake</span>
-                                </div>
-                                <div>
-                                    <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3 font-display transition-colors">Asociación, No Proveedores</h3>
-                                    <p class="text-slate-500 dark:text-slate-400 font-light leading-relaxed transition-colors">No vendemos servicios — invertimos en resultados. El éxito de nuestros clientes es nuestro éxito.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="group">
-                            <div class="flex items-start gap-6">
-                                <div class="w-16 h-16 rounded-2xl bg-nexus-red/10 flex items-center justify-center flex-shrink-0 group-hover:bg-nexus-red/20 transition-colors">
-                                    <span class="material-symbols-outlined text-nexus-red" style="font-size: 28px;">rocket_launch</span>
-                                </div>
-                                <div>
-                                    <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3 font-display transition-colors">Innovación Imparable</h3>
-                                    <p class="text-slate-500 dark:text-slate-400 font-light leading-relaxed transition-colors">El entorno tecnológico nunca se detiene, y nosotros tampoco. Evolucionamos constantemente nuestras metodologías.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="group">
-                            <div class="flex items-start gap-6">
-                                <div class="w-16 h-16 rounded-2xl bg-nexus-blue/10 flex items-center justify-center flex-shrink-0 group-hover:bg-nexus-blue/20 transition-colors">
-                                    <span class="material-symbols-outlined text-nexus-blue" style="font-size: 28px;">visibility</span>
-                                </div>
-                                <div>
-                                    <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3 font-display transition-colors">Transparencia Radical</h3>
-                                    <p class="text-slate-500 dark:text-slate-400 font-light leading-relaxed transition-colors">Sin cajas negras. Sin agendas ocultas. Nos comunicamos abiertamente sobre plazos, desafíos y compromisos.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="text-center py-16 border-t border-gray-100 dark:border-slate-800 transition-colors">
-                    <blockquote class="text-2xl md:text-3xl font-display font-medium text-slate-900 dark:text-white max-w-3xl mx-auto leading-relaxed italic transition-colors">
-                        "Existimos en la intersección de la visión y la ejecución técnica refinada — donde cada solución es diseñada para definir nuevos estándares de excelencia digital."
-                    </blockquote>
-                    <div class="mt-10">
-                        <a href="/es/#contact" class="inline-flex items-center gap-3 px-10 py-5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-full font-bold text-sm uppercase tracking-widest hover:bg-slate-800 dark:hover:bg-gray-100 transition-all shadow-xl shadow-slate-200 dark:shadow-none hover:-translate-y-1">
-                            Iniciar la Conversación
-                            <span class="material-symbols-outlined">arrow_forward</span>
+                    <div class="relative nx-glass reveal p-8 md:p-12 overflow-hidden">
+                        <div class="nx-signal absolute top-0 inset-x-0 h-px" aria-hidden="true"></div>
+                        <div class="nx-kicker mb-5">Por qué existimos</div>
+                        <blockquote class="font-display font-extrabold tracking-[-0.03em] leading-[1.1] text-2xl md:text-[2.1rem] text-slate-900 dark:text-white max-w-3xl mb-8">
+                            Existimos en la intersección de la visión y la ejecución técnica refinada — donde cada solución se diseña para definir nuevos estándares de excelencia digital.
+                        </blockquote>
+                        <a href="/es/#contact" class="nx-cta">
+                            Iniciar la conversación
+                            <span class="material-symbols-outlined text-lg">arrow_right_alt</span>
                         </a>
                     </div>
                 </div>
-            </div>
+            </section>
         </main>
 
         <Footer />

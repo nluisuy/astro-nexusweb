@@ -1,0 +1,172 @@
+---
+// InsightsFeed — the Insights page body in the deck's language: header, article cards,
+// newsletter band. Pages pass their localized posts and labels.
+export interface InsightPost {
+    slug: string;
+    title: string;
+    excerpt: string;
+    category: string;
+    date: string;
+    readTime: string;
+}
+interface Props {
+    posts: InsightPost[];
+    kicker: string;
+    title: string;
+    lead: string;
+    soon: string;
+    nlTitle: string;
+    nlDesc: string;
+    nlPlaceholder: string;
+    nlBtn: string;
+}
+const { posts, kicker, title, lead, soon, nlTitle, nlDesc, nlPlaceholder, nlBtn } = Astro.props;
+---
+
+<section class="relative pt-40 pb-20 lg:pt-48 lg:pb-24 overflow-hidden">
+    <div
+        class="absolute -top-20 right-[-8%] w-[44%] h-[44%] rounded-full blur-[140px] bg-nexus-purple/6 dark:bg-nexus-purple/10 pointer-events-none"
+        aria-hidden="true"
+    >
+    </div>
+    <div class="relative max-w-7xl mx-auto px-6 lg:px-12">
+        <div class="mb-14 lg:mb-16 max-w-3xl">
+            <div class="nx-kicker mb-5">{kicker}</div>
+            <h1
+                class="font-display font-extrabold tracking-[-0.035em] leading-[0.96] text-5xl md:text-6xl lg:text-[4.4rem] text-slate-900 dark:text-white mb-5"
+            >
+                {title}
+            </h1>
+            <p class="text-slate-500 dark:text-slate-400 text-base md:text-lg font-light leading-relaxed max-w-2xl">
+                {lead}
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {
+                posts.map((post) => (
+                    <article class="icard group reveal">
+                        <div class="flex flex-wrap items-center gap-x-3 gap-y-2 mb-4">
+                            <span class="nx-kicker icard-chip">{post.category}</span>
+                            <span class="nx-mono icard-meta">{post.date} · {post.readTime}</span>
+                        </div>
+                        <h2 class="font-display font-bold text-slate-900 dark:text-white text-[1.2rem] tracking-tight leading-snug mb-3">
+                            {post.title}
+                        </h2>
+                        <p class="text-[0.9rem] leading-relaxed text-slate-500 dark:text-slate-400 font-light mb-5">
+                            {post.excerpt}
+                        </p>
+                        <span class="icard-soon nx-mono">
+                            {soon}
+                            <span class="material-symbols-outlined text-[1rem]">arrow_right_alt</span>
+                        </span>
+                    </article>
+                ))
+            }
+        </div>
+
+        <div class="nl-band reveal">
+            <div class="min-w-0">
+                <div class="nx-kicker mb-2">Newsletter</div>
+                <p class="font-display font-extrabold tracking-[-0.02em] text-slate-900 dark:text-white text-xl md:text-2xl leading-tight mb-1.5">
+                    {nlTitle}
+                </p>
+                <p class="text-[0.9rem] text-slate-500 dark:text-slate-400 font-light leading-relaxed max-w-xl">{nlDesc}</p>
+            </div>
+            <form class="nl-form" onsubmit="return false">
+                <label class="sr-only" for="nl-email">{nlPlaceholder}</label>
+                <input id="nl-email" type="email" placeholder={nlPlaceholder} autocomplete="email" />
+                <button type="submit" class="nx-cta">
+                    {nlBtn}
+                    <span class="material-symbols-outlined text-lg">arrow_right_alt</span>
+                </button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<style>
+    .icard {
+        display: flex;
+        flex-direction: column;
+        padding: 22px 22px 20px;
+        border-radius: 16px;
+        border: 1px solid rgba(100, 116, 139, 0.16);
+        background: rgba(255, 255, 255, 0.62);
+        backdrop-filter: blur(10px);
+        transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    :global(.dark) .icard {
+        background: rgba(15, 23, 42, 0.5);
+        border-color: rgba(148, 163, 184, 0.14);
+    }
+    .icard:hover {
+        transform: translateY(-3px);
+        border-color: rgba(99, 102, 241, 0.5);
+        box-shadow: 0 26px 50px -30px rgba(99, 102, 241, 0.4);
+    }
+    .icard-chip {
+        padding: 3px 9px;
+        border-radius: 999px;
+        border: 1px solid rgba(99, 102, 241, 0.3);
+        color: #6366f1;
+    }
+    .icard-meta {
+        font-size: 0.66rem;
+        letter-spacing: 0.08em;
+        color: #94a3b8;
+    }
+    .icard-soon {
+        margin-top: auto;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.68rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: #6366f1;
+    }
+    .nl-band {
+        margin-top: 3.5rem;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px 28px;
+        padding: 24px 26px;
+        border-radius: 20px;
+        border: 1px solid rgba(245, 158, 66, 0.35);
+        background: linear-gradient(100deg, rgba(99, 102, 241, 0.08), rgba(245, 158, 66, 0.1));
+        backdrop-filter: blur(10px);
+    }
+    :global(.dark) .nl-band {
+        background: linear-gradient(100deg, rgba(99, 102, 241, 0.14), rgba(245, 158, 66, 0.12));
+        border-color: rgba(245, 158, 66, 0.3);
+    }
+    .nl-form {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+    }
+    .nl-form input {
+        min-width: 240px;
+        padding: 13px 16px;
+        border-radius: 999px;
+        border: 1px solid rgba(100, 116, 139, 0.25);
+        background: rgba(255, 255, 255, 0.8);
+        color: #0f172a;
+        font: inherit;
+        font-size: 0.88rem;
+        outline: none;
+    }
+    .nl-form input:focus {
+        border-color: #6366f1;
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.18);
+    }
+    :global(.dark) .nl-form input {
+        background: rgba(15, 23, 42, 0.6);
+        color: #f1f5f9;
+        border-color: rgba(148, 163, 184, 0.25);
+    }
+</style>

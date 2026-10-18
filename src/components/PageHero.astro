@@ -1,0 +1,42 @@
+---
+// PageHero — the header of a secondary page in the deck's language:
+// mono kicker, left-anchored extrabold title (optionally with an accent-gradient tail), lead.
+interface Props {
+    kicker: string;
+    title: string;
+    accent?: string;
+    lead?: string;
+    size?: "lg" | "md";
+}
+const { kicker, title, accent, lead, size = "lg" } = Astro.props;
+const titleClass =
+    size === "lg"
+        ? "text-5xl md:text-6xl lg:text-[4.4rem]"
+        : "text-4xl md:text-5xl lg:text-[3.6rem]";
+---
+
+<header class="relative pt-40 pb-12 lg:pt-48 lg:pb-16 overflow-hidden">
+    <div
+        class="absolute -top-20 right-[-8%] w-[44%] h-[44%] rounded-full blur-[140px] bg-nexus-purple/6 dark:bg-nexus-purple/10 pointer-events-none"
+        aria-hidden="true"
+    >
+    </div>
+    <div class="relative max-w-7xl mx-auto px-6 lg:px-12">
+        <div class="max-w-3xl">
+            <div class="nx-kicker mb-5">{kicker}</div>
+            <h1
+                class={`font-display font-extrabold tracking-[-0.035em] leading-[0.96] text-slate-900 dark:text-white mb-5 ${titleClass}`}
+            >
+                {title}{accent && <> <span class="accent-grad">{accent}</span></>}
+            </h1>
+            {
+                lead && (
+                    <p class="text-slate-500 dark:text-slate-400 text-base md:text-lg font-light leading-relaxed max-w-2xl">
+                        {lead}
+                    </p>
+                )
+            }
+        </div>
+        <slot />
+    </div>
+</header>
