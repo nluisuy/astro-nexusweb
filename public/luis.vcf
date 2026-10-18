@@ -1,0 +1,12 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Nuñez;Luis;;;
+FN:Luis Nuñez
+ORG:NexusInnova
+TITLE:Founder
+TEL;TYPE=CELL,VOICE:+14847958589
+EMAIL;TYPE=INTERNET,WORK:luis@nexusinnova.com
+URL:https://nexusinnova.com
+X-SOCIALPROFILE;TYPE=linkedin:https://www.linkedin.com/in/lrnuy
+ADR;TYPE=WORK:;;;Philadelphia;PA;;USA
+END:VCARD
