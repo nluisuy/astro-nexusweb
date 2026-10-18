@@ -1,182 +1,190 @@
 ---
-import type { ProjectItem } from "../types";
+// Projects — compact case studies in the deck's language: icon + mesh motif, vertical chip,
+// one-line outcome, the metric, the stack. No photography.
+import Motif from "./Motif.astro";
 import { getLangFromUrl, useTranslations } from "../i18n/utils";
 
 const lang = Astro.currentLocale || getLangFromUrl(Astro.url);
 const t = useTranslations(lang as any);
-const isEs = lang === 'es';
 
-const projects: ProjectItem[] = [
-    {
-        id: "p6",
-        category: "AI Agents",
-        title: t('projects.p1.title') as string,
-        description: t('projects.p1.desc') as string,
-        imageUrl: "/images/ai-agents-project.png",
-        colorClass: "text-nexus-purple",
-        metric: t('projects.p1.metric') as string,
-        techStack: ["LangChain", "GPT-4", "Vector DB"],
-    },
-    {
-        id: "p2",
-        category: "AI & ML",
-        title: t('projects.p2.title') as string,
-        description: t('projects.p2.desc') as string,
-        imageUrl: "/images/ai-dev-teams.png",
-        colorClass: "text-nexus-red",
-        metric: t('projects.p2.metric') as string,
-        techStack: ["Copilot", "Claude", "CI/CD"],
-    },
-    {
-        id: "p1",
-        category: "Infrastructure",
-        title: t('projects.p3.title') as string,
-        description: t('projects.p3.desc') as string,
-        imageUrl: "/images/cloud-migration.png",
-        colorClass: "text-nexus-blue",
-        metric: t('projects.p3.metric') as string,
-        techStack: ["AWS", "Terraform", "K8s"],
-    },
-    {
-        id: "p3",
-        category: "Security",
-        title: t('projects.p4.title') as string,
-        description: t('projects.p4.desc') as string,
-        imageUrl: "/images/security-assessment.png",
-        colorClass: "text-nexus-green",
-        metric: t('projects.p4.metric') as string,
-        techStack: ["Pentest", "SIEM", "WAF"],
-    },
-    {
-        id: "p4",
-        category: "Compliance",
-        title: t('projects.p5.title') as string,
-        description: t('projects.p5.desc') as string,
-        imageUrl: "/images/iso-pci-project.png",
-        colorClass: "text-nexus-yellow",
-        metric: t('projects.p5.metric') as string,
-        techStack: ["ISO 27001", "PCI DSS"],
-    },
-    {
-        id: "p5",
-        category: "DRP",
-        title: t('projects.p6.title') as string,
-        description: t('projects.p6.desc') as string,
-        imageUrl: "/images/drp-project.png",
-        colorClass: "text-nexus-green",
-        metric: t('projects.p6.metric') as string,
-        techStack: ["Multi-region", "AWS", "RTO<1h"],
-    },
+type Vertical = "infra" | "security" | "pod";
+const motifFor: Record<Vertical, "grid" | "ring" | "cluster"> = {
+    infra: "grid",
+    security: "ring",
+    pod: "cluster",
+};
+const colorFor: Record<Vertical, string> = {
+    infra: "text-nexus-blue",
+    security: "text-nexus-purple",
+    pod: "text-nexus-amber",
+};
+
+const projects: { key: string; vertical: Vertical; icon: string; stack: string[] }[] = [
+    { key: "p1", vertical: "pod", icon: "smart_toy", stack: ["LangChain", "GPT-4", "Vector DB"] },
+    { key: "p2", vertical: "pod", icon: "terminal", stack: ["Copilot", "Claude", "CI/CD"] },
+    { key: "p3", vertical: "infra", icon: "cloud_sync", stack: ["AWS", "Terraform", "K8s"] },
+    { key: "p4", vertical: "security", icon: "shield", stack: ["Pentest", "SIEM", "WAF"] },
+    { key: "p5", vertical: "security", icon: "verified", stack: ["ISO 27001", "PCI DSS"] },
+    { key: "p6", vertical: "security", icon: "sync_alt", stack: ["Multi-region", "AWS", "RTO<1h"] },
 ];
 ---
 
-<section class="py-32 bg-nexus-gray-soft dark:bg-slate-950 transition-colors duration-300" id="projects">
-    <div class="max-w-7xl mx-auto px-6 lg:px-12">
-        <div class="mb-16 flex justify-between items-end reveal">
-            <div>
-                <h2 class="text-sm font-bold tracking-[0.3em] uppercase text-nexus-purple mb-4">
-                    {t('projects.badge')}
+<section id="projects" class="relative py-28 lg:py-36 overflow-hidden">
+    <div class="nx-signal absolute top-0 inset-x-0 h-px" aria-hidden="true"></div>
+    <div
+        class="absolute -bottom-40 left-[-10%] w-[44%] h-[44%] rounded-full blur-[140px] bg-nexus-blue/6 dark:bg-nexus-blue/10 pointer-events-none"
+        aria-hidden="true"
+    >
+    </div>
+
+    <div class="relative max-w-7xl mx-auto px-6 lg:px-12">
+        <div class="reveal mb-12 lg:mb-14 flex flex-wrap items-end justify-between gap-6">
+            <div class="max-w-2xl">
+                <div class="nx-kicker mb-5">{t("projects.badge")}</div>
+                <h2
+                    class="font-display font-extrabold tracking-[-0.035em] leading-[0.98] text-4xl md:text-5xl text-slate-900 dark:text-white mb-4"
+                >
+                    {t("projects.title")}
                 </h2>
-                <p class="text-3xl md:text-4xl font-display font-medium text-slate-900 dark:text-white transition-colors">
-                    {t('projects.title')}
+                <p class="text-slate-500 dark:text-slate-400 text-base md:text-lg font-light leading-relaxed">
+                    {t("projects.lead")}
                 </p>
-            </div>
-            <div class="hidden md:flex gap-4">
-                <button
-                    id="scroll-left"
-                    aria-label="Scroll projects left"
-                    class="w-12 h-12 rounded-full border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-400 dark:text-slate-500 hover:border-slate-900 dark:hover:border-white hover:text-slate-900 dark:hover:text-white transition-all cursor-pointer"
-                >
-                    <span class="material-symbols-outlined">west</span>
-                </button>
-                <button
-                    id="scroll-right"
-                    aria-label="Scroll projects right"
-                    class="w-12 h-12 rounded-full border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-400 dark:text-slate-500 hover:border-slate-900 dark:hover:border-white hover:text-slate-900 dark:hover:text-white transition-all cursor-pointer"
-                >
-                    <span class="material-symbols-outlined">east</span>
-                </button>
             </div>
         </div>
 
-        <div id="projects-scroll" class="overflow-x-auto hide-scrollbar snap-x snap-mandatory">
-            <div class="flex gap-6">
-                {
-                    projects.map((project) => (
-                        <div class="snap-center flex-shrink-0 w-[260px] md:w-[320px] bg-white dark:bg-slate-900 rounded-2xl overflow-hidden shadow-sm dark:shadow-none border border-gray-100 dark:border-slate-800 group hover:shadow-xl dark:hover:border-nexus-blue/30 transition-all duration-500">
-                            <div class="relative h-[180px] md:h-[200px] overflow-hidden">
-                                <img
-                                    src={project.imageUrl}
-                                    alt={project.title}
-                                    loading="lazy"
-                                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                                />
-                                {/* Metric badge */}
-                                {project.metric && (
-                                    <div class="absolute top-3 right-3 px-3 py-1.5 bg-black/70 backdrop-blur-sm rounded-full">
-                                        <span class="text-[0.65rem] font-bold text-white uppercase tracking-wider">
-                                            {project.metric}
-                                        </span>
-                                    </div>
-                                )}
-                                {/* Hover overlay */}
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-5">
-                                    <span class={`text-[0.65rem] uppercase tracking-widest font-bold ${project.colorClass} mb-1.5 block`}>
-                                        {project.category}
-                                    </span>
-                                    <h3 class="text-base font-bold text-white mb-2 leading-snug">
-                                        {project.title}
-                                    </h3>
-                                    <p class="text-xs text-slate-300 font-light leading-relaxed mb-3">
-                                        {project.description}
-                                    </p>
-                                    {project.techStack && (
-                                        <div class="flex flex-wrap gap-1.5">
-                                            {project.techStack.map((tech) => (
-                                                <span class="px-2 py-0.5 bg-white/10 backdrop-blur-sm rounded text-[0.6rem] text-white/80 font-medium">
-                                                    {tech}
-                                                </span>
-                                            ))}
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                            <div class="p-5">
-                                <span
-                                    class={`text-[0.65rem] uppercase tracking-widest font-bold ${project.colorClass} mb-1.5 block`}
-                                >
-                                    {project.category}
-                                </span>
-                                <h3 class="text-base font-bold text-slate-900 dark:text-white tracking-tight transition-colors leading-snug">
-                                    {project.title}
-                                </h3>
-                            </div>
+        <div id="bento-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {
+                projects.map((p) => (
+                    <article class="bento-card pcard group">
+                        <div class="pcard-top">
+                            <span class={`pcard-icon ${colorFor[p.vertical]}`}>
+                                <span class="material-symbols-outlined text-[1.35rem]">{p.icon}</span>
+                            </span>
+                            <span class={`pcard-motif ${colorFor[p.vertical]}`}>
+                                <Motif kind={motifFor[p.vertical]} />
+                            </span>
                         </div>
-                    ))
-                }
-            </div>
+                        <span class="nx-kicker pcard-chip">{t(`hero.intent.${p.vertical}` as any)}</span>
+                        <h3 class="font-display font-bold text-slate-900 dark:text-white text-[1.12rem] tracking-tight leading-snug mt-2 mb-2">
+                            {t(`projects.${p.key}.title` as any)}
+                        </h3>
+                        <p class="text-[0.86rem] leading-relaxed text-slate-500 dark:text-slate-400 font-light mb-4">
+                            {t(`projects.${p.key}.desc` as any)}
+                        </p>
+                        <div class="pcard-foot">
+                            <span class="pcard-metric">
+                                <span class="material-symbols-outlined text-[1rem]">trending_up</span>
+                                {t(`projects.${p.key}.metric` as any)}
+                            </span>
+                            <span class="pcard-tags">
+                                {p.stack.map((s) => (
+                                    <i>{s}</i>
+                                ))}
+                            </span>
+                        </div>
+                    </article>
+                ))
+            }
         </div>
     </div>
 </section>
 
-<script>
-    const scrollContainer = document.getElementById("projects-scroll");
-    const scrollLeft = document.getElementById("scroll-left");
-    const scrollRight = document.getElementById("scroll-right");
-
-    if (scrollContainer && scrollLeft && scrollRight) {
-        scrollLeft.addEventListener("click", () => {
-            scrollContainer.scrollTo({
-                left: scrollContainer.scrollLeft - scrollContainer.clientWidth,
-                behavior: "smooth",
-            });
-        });
-
-        scrollRight.addEventListener("click", () => {
-            scrollContainer.scrollTo({
-                left: scrollContainer.scrollLeft + scrollContainer.clientWidth,
-                behavior: "smooth",
-            });
-        });
+<style>
+    .pcard {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        padding: 18px 18px 16px;
+        border-radius: 16px;
+        border: 1px solid rgba(100, 116, 139, 0.16);
+        background: rgba(255, 255, 255, 0.62);
+        backdrop-filter: blur(10px);
+        transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
     }
-</script>
+    :global(.dark) .pcard {
+        background: rgba(15, 23, 42, 0.5);
+        border-color: rgba(148, 163, 184, 0.14);
+    }
+    .pcard:hover {
+        transform: translateY(-3px);
+        border-color: rgba(99, 102, 241, 0.5);
+        box-shadow: 0 26px 50px -30px rgba(99, 102, 241, 0.4);
+    }
+    .pcard-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 12px;
+    }
+    .pcard-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(99, 102, 241, 0.1);
+        flex-shrink: 0;
+    }
+    .pcard-motif {
+        width: 110px;
+        opacity: 0.85;
+        transition: opacity 0.3s ease, transform 0.4s ease;
+    }
+    .pcard:hover .pcard-motif {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+    .pcard-chip {
+        align-self: flex-start;
+        padding: 3px 9px;
+        border-radius: 999px;
+        border: 1px solid rgba(99, 102, 241, 0.3);
+        color: #6366f1;
+    }
+    .pcard-foot {
+        margin-top: auto;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px 12px;
+        padding-top: 12px;
+        border-top: 1px solid rgba(100, 116, 139, 0.14);
+    }
+    .pcard-metric {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #0f172a;
+        font-variant-numeric: tabular-nums;
+    }
+    :global(.dark) .pcard-metric {
+        color: #f1f5f9;
+    }
+    .pcard-metric .material-symbols-outlined {
+        color: #10b981;
+    }
+    .pcard-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+    .pcard-tags i {
+        font-style: normal;
+        font-size: 0.66rem;
+        font-weight: 500;
+        padding: 3px 8px;
+        border-radius: 999px;
+        background: rgba(100, 116, 139, 0.1);
+        color: #475569;
+    }
+    :global(.dark) .pcard-tags i {
+        background: rgba(148, 163, 184, 0.12);
+        color: #cbd5e1;
+    }
+</style>

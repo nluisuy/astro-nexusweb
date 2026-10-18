@@ -3,178 +3,703 @@ import { getLangFromUrl, useTranslations } from "../i18n/utils";
 
 const lang = Astro.currentLocale || getLangFromUrl(Astro.url);
 const t = useTranslations(lang as any);
-const isEs = lang === 'es';
+
+// Default pillar = infra (rendered server-side for first paint + SEO)
+const defaultWord = t("hero.word.infra") as string;
+const aasWords = (t("hero.aas") as string).split(" ");
 ---
 
-<section class="relative pt-40 pb-24 lg:pt-64 lg:pb-56 overflow-hidden">
-    <!-- Particle Canvas Background -->
-    <canvas id="hero-particles" class="absolute inset-0 w-full h-full pointer-events-none z-0"></canvas>
+<section
+    id="hero-section"
+    class="relative pt-36 pb-20 lg:pt-48 lg:pb-28 overflow-hidden"
+>
+    <!-- Interactive service mesh (cursor conducts it; re-forms per pillar) -->
+    <canvas
+        id="hero-mesh"
+        class="absolute inset-0 w-full h-full pointer-events-none z-0"></canvas>
 
+    <!-- Ambient glow blobs with parallax -->
     <div class="absolute inset-0 pointer-events-none z-0 overflow-hidden">
         <div
-            class="absolute top-[20%] right-[10%] w-[50%] h-[50%] bg-blue-500/5 dark:bg-blue-600/5 rounded-full blur-[120px] animate-pulse-slow"
+            class="parallax-blob absolute top-[12%] right-[6%] w-[48%] h-[48%] bg-nexus-purple/6 dark:bg-nexus-purple/10 rounded-full blur-[130px]"
+            data-speed="0.3"
         >
         </div>
         <div
-            class="absolute bottom-[20%] left-[15%] w-[40%] h-[40%] bg-nexus-purple/5 rounded-full blur-[100px] animate-pulse-slow"
-            style="animation-delay: 2s;"
+            class="parallax-blob absolute bottom-[14%] left-[8%] w-[38%] h-[38%] bg-nexus-blue/6 dark:bg-nexus-blue/10 rounded-full blur-[110px]"
+            data-speed="0.6"
         >
         </div>
     </div>
 
-    <div class="relative max-w-7xl mx-auto px-6 lg:px-12 z-10 text-center">
-        <div class="inline-block mb-8 animate-slide-up">
-            <span
-                class="px-4 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-full text-[0.65rem] font-bold text-slate-400 tracking-[0.3em] uppercase transition-colors"
+    <div
+        id="hero-content"
+        class="relative max-w-7xl mx-auto px-6 lg:px-12 z-10 grid lg:grid-cols-[1.15fr_0.85fr] gap-10 lg:gap-14 items-center"
+    >
+        <!-- ── Left: headline + offers + pillars + CTA ── -->
+        <div>
+            <div
+                id="hero-badge"
+                class="inline-flex items-center gap-2.5 mb-7 px-3.5 py-2 rounded-full border border-nexus-amber/30 bg-nexus-amber/10 opacity-0"
             >
-                {t('hero.badge')}
-            </span>
-        </div>
-
-        <h1
-            class="text-5xl md:text-8xl lg:text-9xl font-display font-bold tracking-tighter text-slate-900 dark:text-white mb-12 leading-[1] animate-slide-up transition-colors"
-            style="animation-delay: 0.1s;"
-        >
-            <span class="text-gradient block">{t('hero.title2')}</span>
-        </h1>
-
-        <p
-            class="max-w-3xl mx-auto text-lg md:text-xl text-slate-500 dark:text-slate-400 font-light leading-relaxed mb-16 px-4 animate-slide-up transition-colors"
-            style="animation-delay: 0.2s;"
-        >
-            {t('hero.paragraph')}
-        </p>
-
-        <div
-            class="flex flex-col sm:flex-row gap-6 justify-center items-center animate-slide-up"
-            style="animation-delay: 0.3s;"
-        >
-            <button
-                id="hero-planner-btn"
-                class="group relative px-10 py-5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-full overflow-hidden transition-all hover:bg-slate-800 dark:hover:bg-slate-200 shadow-2xl shadow-slate-200 dark:shadow-none active:scale-95 cursor-pointer"
-            >
+                <span class="nx-live-dot nx-live-dot--amber"></span>
                 <span
-                    class="relative z-10 text-sm font-bold tracking-widest uppercase flex items-center gap-3"
+                    class="nx-mono text-[0.64rem] md:text-[0.68rem] tracking-[0.12em] uppercase text-amber-600 dark:text-amber-300"
                 >
-                    {t('hero.btn1')}
-                    <span
-                        class="material-symbols-outlined text-lg transition-transform group-hover:translate-x-1"
-                    >
-                        arrow_right_alt
+                    {t("hero.badge")}
+                </span>
+            </div>
+
+            <h1
+                id="hero-title"
+                class="font-display font-extrabold tracking-[-0.035em] leading-[0.95] text-5xl md:text-7xl lg:text-[4.8rem] mb-6"
+                style="perspective:600px;"
+            >
+                <span class="block">
+                    <span class="hero-word inline-block opacity-0" style="will-change:transform,opacity;">
+                        <span id="accent-word" class="accent-grad">{defaultWord}</span>
                     </span>
                 </span>
-            </button>
+                <span class="block text-slate-900 dark:text-white transition-colors">
+                    {
+                        aasWords.map((word) => (
+                            <span class="hero-word inline-block opacity-0" style="will-change:transform,opacity;">
+                                {word}&nbsp;
+                            </span>
+                        ))
+                    }
+                </span>
+            </h1>
 
-            <a
-                href={`${isEs ? '/es' : ''}/#projects`}
-                class="px-10 py-5 text-sm font-bold tracking-widest uppercase text-slate-900 dark:text-white bg-white dark:bg-transparent border border-slate-200 dark:border-slate-700 rounded-full hover:border-slate-400 dark:hover:border-slate-500 transition-all flex items-center gap-2 group shadow-sm active:scale-95"
+            <p
+                id="hero-paragraph"
+                class="max-w-xl text-base md:text-lg text-slate-500 dark:text-slate-400 font-light leading-relaxed mb-7 opacity-0 transition-colors"
             >
-                {t('hero.btn2')}
-                <span
-                    class="material-symbols-outlined text-lg transition-transform group-hover:translate-x-1"
-                    >arrow_right_alt</span
+                {t("hero.paragraph")}
+            </p>
+
+            <!-- Aggressive free offers -->
+            <div
+                class="flex flex-wrap gap-2.5 mb-7"
+                aria-label={t("hero.offers_label")}
+            >
+                <span class="nx-offer">
+                    {t("hero.offer.poc")}
+                    <i class="nx-offer-free">{t("hero.offer.free")}</i>
+                </span>
+                <span class="nx-offer">
+                    {t("hero.offer.assessment")}
+                    <i class="nx-offer-free">{t("hero.offer.free")}</i>
+                </span>
+                <span class="nx-offer">
+                    {t("hero.offer.case")}
+                    <i class="nx-offer-free">{t("hero.offer.free")}</i>
+                </span>
+            </div>
+
+            <!-- Pillar switch — re-forms the mesh + swaps the panel -->
+            <div
+                id="hero-intents"
+                class="inline-flex flex-wrap gap-1.5 p-1.5 mb-8 rounded-full border border-slate-200 dark:border-slate-800 bg-white/60 dark:bg-slate-900/50 backdrop-blur"
+                role="group"
+                aria-label={t("hero.intents_label")}
+            >
+                <button
+                    class="nx-intent nx-mono"
+                    data-intent="infra"
+                    aria-pressed="true"
+                    type="button">{t("hero.intent.infra")}</button
                 >
-            </a>
+                <button
+                    class="nx-intent nx-mono"
+                    data-intent="security"
+                    aria-pressed="false"
+                    type="button">{t("hero.intent.security")}</button
+                >
+                <button
+                    class="nx-intent nx-mono"
+                    data-intent="pod"
+                    aria-pressed="false"
+                    type="button">{t("hero.intent.pod")}</button
+                >
+            </div>
+
+            <div id="hero-ctas" class="flex flex-wrap items-center gap-4 opacity-0">
+                <button
+                    id="hero-planner-btn"
+                    class="group relative px-7 py-4 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-full overflow-hidden transition-all hover:bg-slate-800 dark:hover:bg-slate-200 shadow-xl shadow-slate-200/60 dark:shadow-none active:scale-95 cursor-pointer"
+                >
+                    <span
+                        class="relative z-10 text-sm font-bold tracking-wide flex items-center gap-2.5"
+                    >
+                        {t("hero.btn1")}
+                        <span
+                            class="material-symbols-outlined text-lg transition-transform group-hover:translate-x-1"
+                        >
+                            arrow_right_alt
+                        </span>
+                    </span>
+                </button>
+                <span class="nx-mono text-xs text-slate-400 dark:text-slate-500"
+                    >{t("hero.cta_sub")}</span
+                >
+            </div>
         </div>
+
+        <!-- ── Right: pillar detail panel (changes per pillar) ── -->
+        <aside
+            id="hero-panel"
+            class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/55 backdrop-blur-xl p-6"
+        >
+            <div class="flex items-center justify-between mb-5">
+                <span
+                    id="panel-title"
+                    class="font-display font-bold text-lg text-slate-900 dark:text-white"
+                    >{t("hero.p.infra.title")}</span
+                >
+                <span
+                    class="nx-mono inline-flex items-center gap-2 text-[0.66rem] text-nexus-green"
+                >
+                    <span class="nx-live-dot nx-live-dot--green"></span>
+                    <span id="panel-managed">{t("hero.panel.managed")}</span>
+                </span>
+            </div>
+
+            <ul class="nx-panel-list">
+                <li><i class="nx-check"></i><span id="panel-b1">{t("hero.p.infra.b1")}</span></li>
+                <li><i class="nx-check"></i><span id="panel-b2">{t("hero.p.infra.b2")}</span></li>
+                <li><i class="nx-check"></i><span id="panel-b3">{t("hero.p.infra.b3")}</span></li>
+            </ul>
+
+            <div class="nx-panel-metric">
+                <span class="nx-metric-v" id="panel-metric">{t("hero.p.infra.metric")}</span>
+                <span class="nx-metric-l" id="panel-metriclabel"
+                    >{t("hero.p.infra.metriclabel")}</span
+                >
+            </div>
+
+            <div class="nx-panel-free" id="panel-free">
+                <span class="material-symbols-outlined text-[1.05rem]">bolt</span>
+                <span id="panel-free-text">{t("hero.p.infra.free")}</span>
+            </div>
+        </aside>
     </div>
 
     <!-- Scroll indicator -->
     <div
-        class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 opacity-30 animate-float"
+        id="scroll-indicator"
+        class="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 opacity-40"
     >
-        <span class="text-[0.6rem] font-bold uppercase tracking-widest text-slate-400">Scroll</span>
-        <div class="w-px h-12 bg-gradient-to-b from-slate-400 to-transparent"></div>
+        <span class="nx-mono text-[0.6rem] uppercase tracking-[0.3em] text-slate-400"
+            >{t("hero.cue")}</span
+        >
+        <div class="w-px h-9 bg-gradient-to-b from-slate-400 to-transparent"></div>
     </div>
 </section>
 
-<script>
-    // Neural network particle animation
-    const canvas = document.getElementById('hero-particles') as HTMLCanvasElement;
-    if (canvas) {
-        const ctx = canvas.getContext('2d');
-        if (ctx) {
-            let animationId: number;
-            let particles: Array<{x: number; y: number; vx: number; vy: number; size: number; opacity: number}> = [];
+<style>
+    .nx-mono {
+        font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
 
-            function resize() {
-                canvas.width = canvas.offsetWidth * window.devicePixelRatio;
-                canvas.height = canvas.offsetHeight * window.devicePixelRatio;
-                ctx!.scale(window.devicePixelRatio, window.devicePixelRatio);
-            }
+    .accent-grad {
+        background: linear-gradient(100deg, #a99bff, #6366f1 52%, #f59e42);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        color: transparent;
+    }
 
-            function createParticles() {
-                const count = Math.min(80, Math.floor(canvas.offsetWidth * canvas.offsetHeight / 15000));
-                particles = [];
-                for (let i = 0; i < count; i++) {
-                    particles.push({
-                        x: Math.random() * canvas.offsetWidth,
-                        y: Math.random() * canvas.offsetHeight,
-                        vx: (Math.random() - 0.5) * 0.4,
-                        vy: (Math.random() - 0.5) * 0.4,
-                        size: Math.random() * 2 + 1,
-                        opacity: Math.random() * 0.5 + 0.1
-                    });
-                }
-            }
-
-            function isDark() {
-                return document.documentElement.classList.contains('dark');
-            }
-
-            function draw() {
-                ctx!.clearRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
-                const dark = isDark();
-                const nodeColor = dark ? '148, 163, 184' : '100, 116, 139';
-                const lineColor = dark ? '148, 163, 184' : '148, 163, 184';
-
-                // Update and draw particles
-                for (const p of particles) {
-                    p.x += p.vx;
-                    p.y += p.vy;
-
-                    if (p.x < 0 || p.x > canvas.offsetWidth) p.vx *= -1;
-                    if (p.y < 0 || p.y > canvas.offsetHeight) p.vy *= -1;
-
-                    ctx!.beginPath();
-                    ctx!.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                    ctx!.fillStyle = `rgba(${nodeColor}, ${p.opacity})`;
-                    ctx!.fill();
-                }
-
-                // Draw connections
-                for (let i = 0; i < particles.length; i++) {
-                    for (let j = i + 1; j < particles.length; j++) {
-                        const dx = particles[i].x - particles[j].x;
-                        const dy = particles[i].y - particles[j].y;
-                        const dist = Math.sqrt(dx * dx + dy * dy);
-
-                        if (dist < 150) {
-                            ctx!.beginPath();
-                            ctx!.moveTo(particles[i].x, particles[i].y);
-                            ctx!.lineTo(particles[j].x, particles[j].y);
-                            ctx!.strokeStyle = `rgba(${lineColor}, ${0.08 * (1 - dist / 150)})`;
-                            ctx!.lineWidth = 0.5;
-                            ctx!.stroke();
-                        }
-                    }
-                }
-
-                animationId = requestAnimationFrame(draw);
-            }
-
-            resize();
-            createParticles();
-            draw();
-
-            window.addEventListener('resize', () => {
-                resize();
-                createParticles();
-            });
-
-            // Cleanup on navigation
-            document.addEventListener('astro:before-swap', () => {
-                cancelAnimationFrame(animationId);
-            });
+    .nx-live-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #6366f1;
+        box-shadow: 0 0 10px #6366f1;
+        animation: nx-pulse 2.6s ease-in-out infinite;
+        flex-shrink: 0;
+    }
+    .nx-live-dot--green {
+        width: 6px;
+        height: 6px;
+        background: #10b981;
+        box-shadow: 0 0 8px #10b981;
+    }
+    .nx-live-dot--amber {
+        background: #f59e42;
+        box-shadow: 0 0 10px #f59e42;
+    }
+    @keyframes nx-pulse {
+        0%,
+        100% {
+            opacity: 1;
+        }
+        50% {
+            opacity: 0.4;
         }
     }
+
+    /* Free offer chips */
+    .nx-offer {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 7px 8px 7px 13px;
+        border-radius: 999px;
+        border: 1px solid rgba(100, 116, 139, 0.2);
+        background: rgba(255, 255, 255, 0.5);
+        font-size: 0.78rem;
+        font-weight: 500;
+        color: #334155;
+    }
+    :global(.dark) .nx-offer {
+        background: rgba(15, 23, 42, 0.45);
+        border-color: rgba(148, 163, 184, 0.18);
+        color: #cbd5e1;
+    }
+    .nx-offer-free {
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-style: normal;
+        font-size: 0.6rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-weight: 600;
+        color: #047857;
+        background: rgba(16, 185, 129, 0.16);
+        border-radius: 999px;
+        padding: 3px 8px;
+    }
+    :global(.dark) .nx-offer-free {
+        color: #6ee7b7;
+        background: rgba(16, 185, 129, 0.14);
+    }
+
+    /* Pillar switch */
+    .nx-intent {
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        color: #64748b;
+        font-size: 0.72rem;
+        letter-spacing: 0.03em;
+        font-weight: 500;
+        padding: 7px 14px;
+        border-radius: 999px;
+        transition: all 0.25s ease;
+    }
+    :global(.dark) .nx-intent {
+        color: #94a3b8;
+    }
+    .nx-intent[aria-pressed="true"] {
+        background: #6366f1;
+        color: #fff;
+    }
+
+    /* Pillar panel */
+    .nx-panel-list {
+        list-style: none;
+        margin: 0 0 18px;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 11px;
+    }
+    .nx-panel-list li {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        font-size: 0.86rem;
+        line-height: 1.4;
+        color: #475569;
+    }
+    :global(.dark) .nx-panel-list li {
+        color: #cbd5e1;
+    }
+    .nx-check {
+        margin-top: 3px;
+        width: 14px;
+        height: 14px;
+        flex-shrink: 0;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        position: relative;
+    }
+    .nx-check::after {
+        content: "";
+        position: absolute;
+        left: 4.5px;
+        top: 2px;
+        width: 3px;
+        height: 6px;
+        border: solid #fff;
+        border-width: 0 1.6px 1.6px 0;
+        transform: rotate(45deg);
+    }
+    .nx-panel-metric {
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+        padding-top: 16px;
+        border-top: 1px solid rgba(100, 116, 139, 0.16);
+    }
+    .nx-metric-v {
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-size: 1.7rem;
+        font-weight: 600;
+        line-height: 1;
+        color: #0f172a;
+        font-variant-numeric: tabular-nums;
+    }
+    :global(.dark) .nx-metric-v {
+        color: #f1f5f9;
+    }
+    .nx-metric-l {
+        font-size: 0.78rem;
+        color: #64748b;
+    }
+    :global(.dark) .nx-metric-l {
+        color: #94a3b8;
+    }
+    .nx-panel-free {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        margin-top: 16px;
+        padding: 11px 14px;
+        border-radius: 12px;
+        background: linear-gradient(100deg, rgba(99, 102, 241, 0.12), rgba(245, 158, 66, 0.14));
+        border: 1px solid rgba(245, 158, 66, 0.3);
+        color: #0f172a;
+        font-size: 0.82rem;
+        font-weight: 600;
+    }
+    :global(.dark) .nx-panel-free {
+        color: #f8fafc;
+    }
+    .nx-panel-free .material-symbols-outlined {
+        color: #f59e42;
+    }
+
+    @media (max-width: 1023px) {
+        #hero-panel {
+            max-width: 30rem;
+        }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .nx-live-dot {
+            animation: none;
+        }
+    }
+</style>
+
+<script>
+    const canvas = document.getElementById("hero-mesh") as HTMLCanvasElement | null;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (canvas) {
+        const ctx = canvas.getContext("2d")!;
+        const DPR = Math.min(window.devicePixelRatio || 1, 2);
+        let W = 0,
+            H = 0,
+            N = 0;
+        let nodes: {
+            x: number;
+            y: number;
+            tx: number;
+            ty: number;
+            vx: number;
+            vy: number;
+            r: number;
+        }[] = [];
+        let pulses: { a: number; b: number; t: number; sp: number }[] = [];
+        const mouse = { x: -9999, y: -9999, active: false };
+        let intent = "infra";
+
+        const isDark = () => document.documentElement.classList.contains("dark");
+        const meshRGB = () => (isDark() ? "59,130,246" : "139,92,246");
+        let rgb = meshRGB();
+
+        function build() {
+            nodes = [];
+            for (let i = 0; i < N; i++) {
+                nodes.push({
+                    x: Math.random() * W,
+                    y: Math.random() * H,
+                    tx: 0,
+                    ty: 0,
+                    vx: (Math.random() - 0.5) * 0.1,
+                    vy: (Math.random() - 0.5) * 0.1,
+                    r: 1.1 + Math.random() * 1.8,
+                });
+            }
+        }
+
+        // Each pillar re-forms the mesh into a distinct shape.
+        function layout(which: string, snap: boolean) {
+            intent = which;
+            for (let i = 0; i < nodes.length; i++) {
+                const n = nodes[i];
+                const tn = i / nodes.length;
+                if (which === "infra") {
+                    // layered grid — stacks / regions
+                    const cols = 8;
+                    const col = i % cols;
+                    const row = Math.floor(i / cols);
+                    n.tx = W * (0.12 + (col / (cols - 1)) * 0.76) + (Math.random() - 0.5) * 22;
+                    n.ty = H * (0.2 + (row % 6) * 0.12) + (Math.random() - 0.5) * 16;
+                } else if (which === "security") {
+                    // shield rings
+                    const a = tn * Math.PI * 2 * 3;
+                    const ring = 0.2 + (i % 3) * 0.14;
+                    n.tx = W * 0.5 + Math.cos(a) * W * ring * 0.52;
+                    n.ty = H * 0.52 + Math.sin(a) * H * ring;
+                } else {
+                    // innovation pod: dense core + orbiting app-nodes
+                    if (i % 3 === 0) {
+                        const a = tn * Math.PI * 2 * 2;
+                        const rr = 0.3 + Math.random() * 0.12;
+                        n.tx = W * 0.5 + Math.cos(a) * W * rr * 0.6;
+                        n.ty = H * 0.5 + Math.sin(a) * H * rr;
+                    } else {
+                        n.tx = W * 0.5 + (Math.random() - 0.5) * W * 0.2;
+                        n.ty = H * 0.5 + (Math.random() - 0.5) * H * 0.26;
+                    }
+                }
+                if (snap) {
+                    n.x = n.tx;
+                    n.y = n.ty;
+                }
+            }
+        }
+
+        function resize() {
+            const parent = canvas!.parentElement;
+            if (!parent) return;
+            W = parent.clientWidth;
+            H = parent.clientHeight;
+            canvas!.width = Math.round(W * DPR);
+            canvas!.height = Math.round(H * DPR);
+            ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+            N = Math.max(32, Math.min(72, Math.round((W * H) / 16000)));
+            build();
+            layout(intent, true);
+        }
+
+        function spawnPulse() {
+            if (nodes.length < 2) return;
+            const a = (Math.random() * nodes.length) | 0;
+            const b = (Math.random() * nodes.length) | 0;
+            if (a === b) return;
+            pulses.push({ a, b, t: 0, sp: 0.012 + Math.random() * 0.02 });
+        }
+
+        let last = 0;
+        let raf = 0;
+
+        function frame(now: number) {
+            const dt = Math.min(2, (now - last) / 16.67 || 1);
+            last = now;
+            ctx.clearRect(0, 0, W, H);
+            const DIST = Math.min(W, H) < 560 ? 104 : 136;
+            const DIST2 = DIST * DIST;
+
+            for (let i = 0; i < nodes.length; i++) {
+                const n = nodes[i];
+                n.x += (n.tx - n.x) * 0.02 * dt + n.vx * dt;
+                n.y += (n.ty - n.y) * 0.02 * dt + n.vy * dt;
+                // gentle breathing so every formation stays alive
+                n.vx += (Math.random() - 0.5) * 0.012;
+                n.vy += (Math.random() - 0.5) * 0.012;
+                n.vx *= 0.9;
+                n.vy *= 0.9;
+                if (mouse.active) {
+                    const mdx = mouse.x - n.x;
+                    const mdy = mouse.y - n.y;
+                    const md2 = mdx * mdx + mdy * mdy;
+                    if (md2 < 26000) {
+                        const f = (1 - md2 / 26000) * 0.6;
+                        n.x += mdx * 0.012 * f * dt;
+                        n.y += mdy * 0.012 * f * dt;
+                    }
+                }
+            }
+
+            for (let a = 0; a < nodes.length; a++) {
+                const na = nodes[a];
+                for (let b = a + 1; b < nodes.length; b++) {
+                    const nb = nodes[b];
+                    const dx = na.x - nb.x;
+                    const dy = na.y - nb.y;
+                    const d2 = dx * dx + dy * dy;
+                    if (d2 < DIST2) {
+                        let o = (1 - d2 / DIST2) * 0.42;
+                        if (mouse.active) {
+                            const mx = (na.x + nb.x) / 2 - mouse.x;
+                            const my = (na.y + nb.y) / 2 - mouse.y;
+                            if (mx * mx + my * my < 30000) o = Math.min(0.8, o + 0.4);
+                        }
+                        ctx.strokeStyle = `rgba(${rgb},${o.toFixed(3)})`;
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(na.x, na.y);
+                        ctx.lineTo(nb.x, nb.y);
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            ctx.fillStyle = `rgba(${rgb},0.85)`;
+            for (let k = 0; k < nodes.length; k++) {
+                const nn = nodes[k];
+                ctx.beginPath();
+                ctx.arc(nn.x, nn.y, nn.r, 0, 6.2832);
+                ctx.fill();
+            }
+
+            for (let p = pulses.length - 1; p >= 0; p--) {
+                const pl = pulses[p];
+                pl.t += pl.sp * dt;
+                if (pl.t >= 1) {
+                    pulses.splice(p, 1);
+                    continue;
+                }
+                const na = nodes[pl.a];
+                const nb = nodes[pl.b];
+                if (!na || !nb) {
+                    pulses.splice(p, 1);
+                    continue;
+                }
+                const px = na.x + (nb.x - na.x) * pl.t;
+                const py = na.y + (nb.y - na.y) * pl.t;
+                ctx.beginPath();
+                ctx.fillStyle = `rgba(245,158,66,${(1 - Math.abs(0.5 - pl.t) * 2).toFixed(3)})`;
+                ctx.arc(px, py, 2.4, 0, 6.2832);
+                ctx.fill();
+            }
+            if (!reduce && pulses.length < 12 && Math.random() < 0.13) spawnPulse();
+
+            raf = requestAnimationFrame(frame);
+        }
+
+        const parent = canvas.parentElement!;
+        parent.addEventListener(
+            "pointermove",
+            (e) => {
+                const r = canvas.getBoundingClientRect();
+                mouse.x = e.clientX - r.left;
+                mouse.y = e.clientY - r.top;
+                mouse.active = true;
+            },
+            { passive: true }
+        );
+        parent.addEventListener("pointerleave", () => {
+            mouse.active = false;
+            mouse.x = -9999;
+            mouse.y = -9999;
+        });
+        window.addEventListener("resize", resize, { passive: true });
+
+        const themeObserver = new MutationObserver(() => {
+            rgb = meshRGB();
+        });
+        themeObserver.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ["class"],
+        });
+
+        resize();
+        if (reduce) {
+            for (let s = 0; s < 40; s++)
+                for (let i = 0; i < nodes.length; i++) {
+                    nodes[i].x += (nodes[i].tx - nodes[i].x) * 0.3;
+                    nodes[i].y += (nodes[i].ty - nodes[i].y) * 0.3;
+                }
+            last = performance.now();
+            frame(last + 16);
+            cancelAnimationFrame(raf);
+        } else {
+            last = performance.now();
+            raf = requestAnimationFrame(frame);
+        }
+
+        // ── Pillar switch → headline word, mesh shape, detail panel ──
+        const i18n = (document.getElementById("hero-i18n")?.dataset ?? {}) as Record<
+            string,
+            string
+        >;
+        const accentWord = document.getElementById("accent-word");
+        const el = (id: string) => document.getElementById(id);
+        const set = (id: string, v?: string) => {
+            const n = el(id);
+            if (n && v) n.textContent = v;
+        };
+
+        const PILLARS: Record<string, string> = {
+            infra: "infra",
+            security: "security",
+            pod: "pod",
+        };
+
+        const intentBtns = document.querySelectorAll<HTMLButtonElement>(".nx-intent");
+        intentBtns.forEach((btn) => {
+            btn.addEventListener("click", () => {
+                const p = btn.getAttribute("data-intent") || "infra";
+                if (!PILLARS[p]) return;
+                intentBtns.forEach((b) =>
+                    b.setAttribute("aria-pressed", b === btn ? "true" : "false")
+                );
+                layout(p, false);
+                if (accentWord && i18n["word" + cap(p)])
+                    accentWord.textContent = i18n["word" + cap(p)];
+                set("panel-title", i18n[p + "Title"]);
+                set("panel-b1", i18n[p + "B1"]);
+                set("panel-b2", i18n[p + "B2"]);
+                set("panel-b3", i18n[p + "B3"]);
+                set("panel-metric", i18n[p + "Metric"]);
+                set("panel-metriclabel", i18n[p + "Metriclabel"]);
+                set("panel-free-text", i18n[p + "Free"]);
+            });
+        });
+
+        function cap(s: string) {
+            return s.charAt(0).toUpperCase() + s.slice(1);
+        }
+
+        document.addEventListener("astro:before-swap", () => {
+            cancelAnimationFrame(raf);
+            themeObserver.disconnect();
+            window.removeEventListener("resize", resize);
+        });
+    }
 </script>
+
+<!-- i18n payload for the client script (per-locale pillar copy) -->
+<div
+    id="hero-i18n"
+    hidden
+    data-word-infra={t("hero.word.infra")}
+    data-word-security={t("hero.word.security")}
+    data-word-pod={t("hero.word.pod")}
+    data-infra-title={t("hero.p.infra.title")}
+    data-infra-b1={t("hero.p.infra.b1")}
+    data-infra-b2={t("hero.p.infra.b2")}
+    data-infra-b3={t("hero.p.infra.b3")}
+    data-infra-metric={t("hero.p.infra.metric")}
+    data-infra-metriclabel={t("hero.p.infra.metriclabel")}
+    data-infra-free={t("hero.p.infra.free")}
+    data-security-title={t("hero.p.security.title")}
+    data-security-b1={t("hero.p.security.b1")}
+    data-security-b2={t("hero.p.security.b2")}
+    data-security-b3={t("hero.p.security.b3")}
+    data-security-metric={t("hero.p.security.metric")}
+    data-security-metriclabel={t("hero.p.security.metriclabel")}
+    data-security-free={t("hero.p.security.free")}
+    data-pod-title={t("hero.p.pod.title")}
+    data-pod-b1={t("hero.p.pod.b1")}
+    data-pod-b2={t("hero.p.pod.b2")}
+    data-pod-b3={t("hero.p.pod.b3")}
+    data-pod-metric={t("hero.p.pod.metric")}
+    data-pod-metriclabel={t("hero.p.pod.metriclabel")}
+    data-pod-free={t("hero.p.pod.free")}
+>
+</div>

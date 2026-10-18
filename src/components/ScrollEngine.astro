@@ -1,0 +1,367 @@
+---
+// ScrollEngine.astro — Central GSAP + ScrollTrigger orchestrator
+// Manages all scroll-driven animations site-wide
+---
+
+<!-- Scroll Progress Bar (lives outside nav for z-index simplicity) -->
+<div id="scroll-progress" class="fixed top-0 left-0 w-full h-[3px] z-[60] pointer-events-none">
+    <div id="scroll-progress-bar" class="h-full w-full origin-left bg-gradient-to-r from-nexus-purple via-nexus-blue to-cyan-400 scale-x-0"></div>
+</div>
+
+<script>
+    import gsap from 'gsap';
+    import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    // ─── Scroll Progress Bar ───
+    gsap.to('#scroll-progress-bar', {
+        scaleX: 1,
+        ease: 'none',
+        scrollTrigger: {
+            trigger: document.documentElement,
+            start: 'top top',
+            end: 'bottom bottom',
+            scrub: 0.3,
+        },
+    });
+
+    // ─── Navbar Shrink on Scroll ───
+    const nav = document.querySelector('#main-nav') as HTMLElement;
+    if (nav) {
+        ScrollTrigger.create({
+            start: 'top -80',
+            onUpdate: (self) => {
+                if (self.direction === 1 && self.scroll() > 80) {
+                    nav.classList.add('nav-scrolled');
+                } else if (self.scroll() <= 80) {
+                    nav.classList.remove('nav-scrolled');
+                }
+            },
+        });
+    }
+
+    // ─── Universal Section Reveals (replaces IntersectionObserver) ───
+    gsap.utils.toArray<HTMLElement>('.reveal').forEach((el) => {
+        // Get stagger delay from class
+        let delay = 0;
+        for (let i = 1; i <= 6; i++) {
+            if (el.classList.contains(`reveal-delay-${i}`)) {
+                delay = i * 0.1;
+                break;
+            }
+        }
+
+        gsap.fromTo(
+            el,
+            {
+                opacity: 0,
+                y: 40,
+            },
+            {
+                opacity: 1,
+                y: 0,
+                duration: 1,
+                delay: delay,
+                ease: 'power3.out',
+                scrollTrigger: {
+                    trigger: el,
+                    start: 'top 88%',
+                    toggleActions: 'play none none none',
+                },
+            }
+        );
+    });
+
+    // ─── Stats Counter Animation ───
+    document.querySelectorAll<HTMLElement>('[data-count-to]').forEach((el) => {
+        const raw = el.getAttribute('data-count-to') || '0';
+        const isFloat = raw.includes('.');
+        const suffix = el.getAttribute('data-count-suffix') || '';
+        const prefix = el.getAttribute('data-count-prefix') || '';
+        const target = parseFloat(raw);
+
+        const obj = { val: 0 };
+        gsap.to(obj, {
+            val: target,
+            duration: 2.5,
+            ease: 'power2.out',
+            scrollTrigger: {
+                trigger: el,
+                start: 'top 85%',
+                toggleActions: 'play none none none',
+            },
+            onUpdate: () => {
+                el.textContent = prefix + (isFloat ? obj.val.toFixed(1) : Math.round(obj.val).toString()) + suffix;
+            },
+        });
+    });
+
+    // ─── Services Cards Stagger ───
+    const serviceCards = gsap.utils.toArray<HTMLElement>('.service-tile');
+    if (serviceCards.length > 0) {
+        gsap.fromTo(
+            serviceCards,
+            {
+                opacity: 0,
+                y: 60,
+                rotateX: 8,
+            },
+            {
+                opacity: 1,
+                y: 0,
+                rotateX: 0,
+                duration: 0.8,
+                stagger: 0.12,
+                ease: 'power3.out',
+                scrollTrigger: {
+                    trigger: serviceCards[0].parentElement,
+                    start: 'top 80%',
+                    toggleActions: 'play none none none',
+                },
+            }
+        );
+    }
+
+    // ─── Projects Bento Grid Stagger ───
+    const bentoCards = gsap.utils.toArray<HTMLElement>('.bento-card');
+    if (bentoCards.length > 0) {
+        gsap.fromTo(
+            bentoCards,
+            { opacity: 0, y: 50, scale: 0.9 },
+            {
+                opacity: 1,
+                y: 0,
+                scale: 1,
+                duration: 0.7,
+                stagger: {
+                    each: 0.1,
+                    from: 'start',
+                },
+                ease: 'power3.out',
+                scrollTrigger: {
+                    trigger: '#bento-grid',
+                    start: 'top 80%',
+                    toggleActions: 'play none none none',
+                },
+            }
+        );
+    }
+
+    // ─── Industry Cards Stagger ───
+    const industryCards = gsap.utils.toArray<HTMLElement>('.industry-card');
+    if (industryCards.length > 0) {
+        gsap.fromTo(
+            industryCards,
+            { opacity: 0, scale: 0.9, y: 30 },
+            {
+                opacity: 1,
+                scale: 1,
+                y: 0,
+                duration: 0.7,
+                stagger: {
+                    each: 0.1,
+                    from: 'center',
+                },
+                ease: 'power3.out',
+                scrollTrigger: {
+                    trigger: industryCards[0].parentElement,
+                    start: 'top 80%',
+                    toggleActions: 'play none none none',
+                },
+            }
+        );
+    }
+
+    // ─── AILab Diagram Build-Up ───
+    const diagramSteps = gsap.utils.toArray<HTMLElement>('.diagram-step');
+    if (diagramSteps.length > 0) {
+        const tl = gsap.timeline({
+            scrollTrigger: {
+                trigger: '.diagram-container',
+                start: 'top 75%',
+                toggleActions: 'play none none none',
+            },
+        });
+
+        diagramSteps.forEach((step, i) => {
+            tl.fromTo(
+                step,
+                { opacity: 0, y: 20, scale: 0.95 },
+                { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: 'power2.out' },
+                i * 0.2
+            );
+        });
+    }
+
+    // ─── AILab Tech Chips Stagger ───
+    const techChips = gsap.utils.toArray<HTMLElement>('.tech-chip');
+    if (techChips.length > 0) {
+        gsap.fromTo(
+            techChips,
+            { opacity: 0, x: -20, scale: 0.9 },
+            {
+                opacity: 1,
+                x: 0,
+                scale: 1,
+                duration: 0.4,
+                stagger: 0.06,
+                ease: 'back.out(1.5)',
+                scrollTrigger: {
+                    trigger: techChips[0].parentElement,
+                    start: 'top 80%',
+                    toggleActions: 'play none none none',
+                },
+            }
+        );
+    }
+
+    // ─── MiniCTA Curtain Reveal ───
+    const miniCta = document.querySelector('#mini-cta-banner') as HTMLElement;
+    if (miniCta) {
+        gsap.fromTo(
+            miniCta,
+            { scaleX: 0, transformOrigin: 'left center' },
+            {
+                scaleX: 1,
+                duration: 1,
+                ease: 'power4.out',
+                scrollTrigger: {
+                    trigger: miniCta,
+                    start: 'top 85%',
+                    toggleActions: 'play none none none',
+                },
+            }
+        );
+    }
+
+    // ─── Bookingsession Cascade Cards ───
+    const bookingCards = gsap.utils.toArray<HTMLElement>('.booking-glass-card');
+    if (bookingCards.length > 0) {
+        gsap.fromTo(
+            bookingCards,
+            { opacity: 0, y: 40, x: 30 },
+            {
+                opacity: 1,
+                y: 0,
+                x: 0,
+                duration: 0.8,
+                stagger: 0.25,
+                ease: 'power3.out',
+                scrollTrigger: {
+                    trigger: bookingCards[0].parentElement,
+                    start: 'top 75%',
+                    toggleActions: 'play none none none',
+                },
+            }
+        );
+    }
+
+    // ─── Section Parallax Decorative Layers ───
+    gsap.utils.toArray<HTMLElement>('.parallax-blob').forEach((blob) => {
+        const speed = parseFloat(blob.getAttribute('data-speed') || '0.5');
+        gsap.to(blob, {
+            y: () => -100 * speed,
+            ease: 'none',
+            scrollTrigger: {
+                trigger: blob.parentElement,
+                start: 'top bottom',
+                end: 'bottom top',
+                scrub: true,
+            },
+        });
+    });
+
+    // ─── Hero Scroll Fade ───
+    const heroSection = document.querySelector('#hero-section') as HTMLElement;
+    const heroContent = document.querySelector('#hero-content') as HTMLElement;
+    const scrollIndicator = document.querySelector('#scroll-indicator') as HTMLElement;
+
+    if (heroSection && heroContent) {
+        gsap.to(heroContent, {
+            y: -80,
+            opacity: 0,
+            ease: 'none',
+            scrollTrigger: {
+                trigger: heroSection,
+                start: 'top top',
+                end: '60% top',
+                scrub: true,
+            },
+        });
+    }
+
+    if (scrollIndicator) {
+        gsap.to(scrollIndicator, {
+            opacity: 0,
+            y: 20,
+            ease: 'none',
+            scrollTrigger: {
+                trigger: heroSection,
+                start: 'top top',
+                end: '15% top',
+                scrub: true,
+            },
+        });
+    }
+
+    // ─── Hero Text Reveal ───
+    const heroTitle = document.querySelector('#hero-title') as HTMLElement;
+    const heroBadge = document.querySelector('#hero-badge') as HTMLElement;
+    const heroParagraph = document.querySelector('#hero-paragraph') as HTMLElement;
+    const heroCtas = document.querySelector('#hero-ctas') as HTMLElement;
+
+    if (heroTitle) {
+        const heroTl = gsap.timeline({ delay: 0.2 });
+
+        if (heroBadge) {
+            heroTl.fromTo(
+                heroBadge,
+                { opacity: 0, y: 20 },
+                { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' },
+                0
+            );
+        }
+
+        // Split title into words and animate
+        const words = heroTitle.querySelectorAll('.hero-word');
+        if (words.length > 0) {
+            heroTl.fromTo(
+                words,
+                { opacity: 0, y: 40, rotateX: 15 },
+                {
+                    opacity: 1,
+                    y: 0,
+                    rotateX: 0,
+                    duration: 0.8,
+                    stagger: 0.08,
+                    ease: 'power3.out',
+                },
+                0.15
+            );
+        }
+
+        if (heroParagraph) {
+            heroTl.fromTo(
+                heroParagraph,
+                { opacity: 0, y: 20 },
+                { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' },
+                0.6
+            );
+        }
+
+        if (heroCtas) {
+            heroTl.fromTo(
+                heroCtas,
+                { opacity: 0, y: 20 },
+                { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' },
+                0.8
+            );
+        }
+    }
+
+    // ─── Cleanup on Astro page transitions ───
+    document.addEventListener('astro:before-swap', () => {
+        ScrollTrigger.getAll().forEach((t) => t.kill());
+    });
+</script>

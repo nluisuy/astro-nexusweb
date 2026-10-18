@@ -1,121 +1,251 @@
 ---
-import type { ServiceItem } from "../types";
+// Services — "Areas of Excellence" continued in the deck's language:
+// the three verticals (with their mesh motif) + the other services on the mesh.
+import Motif from "./Motif.astro";
 import { getLangFromUrl, useTranslations } from "../i18n/utils";
 
 const lang = Astro.currentLocale || getLangFromUrl(Astro.url);
 const t = useTranslations(lang as any);
+const aas = t("hero.aas") as string;
 
-const services: ServiceItem[] = [
-    {
-        id: "ai",
-        title: t('services.item.ai.title') as string,
-        description: t('services.item.ai.desc') as string,
-        icon: "neurology",
-        color: "text-nexus-red",
-    },
-    {
-        id: "devpods",
-        title: t('services.item.devpods.title') as string,
-        description: t('services.item.devpods.desc') as string,
-        icon: "group_work",
-        color: "text-orange-500",
-    },
-    {
-        id: "infra",
-        title: t('services.item.infra.title') as string,
-        description: t('services.item.infra.desc') as string,
-        icon: "dns",
-        color: "text-nexus-blue",
-    },
-    {
-        id: "cyber",
-        title: t('services.item.cyber.title') as string,
-        description: t('services.item.cyber.desc') as string,
-        icon: "admin_panel_settings",
-        color: "text-nexus-purple",
-    },
-    {
-        id: "cto",
-        title: t('services.item.cto.title') as string,
-        description: t('services.item.cto.desc') as string,
-        icon: "manage_accounts",
-        color: "text-nexus-blue",
-    },
-    {
-        id: "ciso",
-        title: t('services.item.ciso.title') as string,
-        description: t('services.item.ciso.desc') as string,
-        icon: "verified_user",
-        color: "text-nexus-green",
-    },
-];
+const verticals = [
+    { key: "infra", n: "01", kind: "grid", color: "text-nexus-blue" },
+    { key: "security", n: "02", kind: "ring", color: "text-nexus-purple" },
+    { key: "pod", n: "03", kind: "cluster", color: "text-nexus-amber" },
+] as const;
+
+const also = [
+    { key: "ai", icon: "neurology" },
+    { key: "devpods", icon: "group_work" },
+    { key: "cto", icon: "manage_accounts" },
+    { key: "ciso", icon: "verified_user" },
+] as const;
 ---
 
-<section class="py-32 bg-nexus-gray-soft dark:bg-slate-950 transition-colors duration-300" id="services">
-    <div class="max-w-7xl mx-auto px-6 lg:px-12">
-        <div class="mb-24 reveal">
-            <h2 class="text-sm font-bold tracking-[0.3em] uppercase text-nexus-blue mb-4">
-                {t('services.badge')}
-            </h2>
-            <p
-                class="text-3xl md:text-4xl lg:text-5xl font-display font-medium text-slate-900 dark:text-white max-w-xl transition-colors"
+<section id="services" class="relative py-28 lg:py-36 overflow-hidden">
+    <!-- the mesh's signal thread continues out of the deck -->
+    <div class="nx-signal absolute top-0 inset-x-0 h-px" aria-hidden="true"></div>
+    <div
+        class="absolute -top-40 right-[-10%] w-[46%] h-[46%] rounded-full blur-[140px] bg-nexus-purple/6 dark:bg-nexus-purple/10 pointer-events-none"
+        aria-hidden="true"
+    >
+    </div>
+
+    <div class="relative max-w-7xl mx-auto px-6 lg:px-12">
+        <div class="reveal mb-16 lg:mb-20 max-w-3xl">
+            <div class="nx-kicker mb-5">{t("services.kicker")}</div>
+            <h2
+                class="font-display font-extrabold tracking-[-0.035em] leading-[0.98] text-4xl md:text-5xl lg:text-[3.6rem] text-slate-900 dark:text-white mb-5"
             >
-                {t('services.title')}
+                {t("services.title")}
+            </h2>
+            <p class="text-slate-500 dark:text-slate-400 text-base md:text-lg font-light leading-relaxed max-w-2xl">
+                {t("services.lead")}
             </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- The three verticals -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
             {
-                services.map((service) => (
-                    <div
-                        class={`service-tile group reveal p-8 rounded-2xl bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 cursor-default transition-all duration-300 hover:shadow-2xl hover:shadow-slate-200/50 dark:hover:shadow-none hover:border-nexus-blue/20 dark:hover:border-nexus-blue/30 ${service.id === 'ai' || service.id === 'devpods' ? 'ring-1 ring-nexus-blue/10 dark:ring-nexus-blue/20 hover:bg-gradient-to-br hover:from-nexus-purple/5 hover:to-nexus-blue/10 dark:hover:from-nexus-purple/10 dark:hover:to-nexus-blue/20' : 'hover:bg-slate-50 dark:hover:bg-slate-800/50'}`}
-                        style={`transition-delay: ${0.1 * (services.indexOf(service) + 1)}s; transform-style: preserve-3d; will-change: transform;`}
-                    >
-                        <div class="pointer-events-none" style="transform: translateZ(20px);">
-                            <div class="w-14 h-14 rounded-2xl bg-nexus-gray-soft dark:bg-slate-800 flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-300">
-                                <span class={`material-symbols-outlined text-3xl ${service.color}`}>
-                                    {service.icon}
-                                </span>
-                            </div>
-                            <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-4 tracking-tight transition-colors">
-                                {service.title}
-                                {(service.id === 'ai' || service.id === 'devpods') && (
-                                    <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-[0.6rem] font-bold tracking-wider uppercase bg-nexus-blue/10 text-nexus-blue dark:bg-nexus-blue/20">
-                                        AI-Powered
-                                    </span>
-                                )}
-                            </h3>
-                            <p class="text-slate-500 dark:text-slate-400 font-light leading-relaxed transition-colors">
-                                {service.description}
-                            </p>
+                verticals.map((v) => (
+                    <article class="service-tile vcard group">
+                        <div class={`vcard-motif ${v.color}`}>
+                            <Motif kind={v.kind} />
                         </div>
-                    </div>
+                        <div class="nx-kicker mb-3">
+                            {v.n} · {t(`hero.p.${v.key}.title` as any)}
+                        </div>
+                        <h3 class="font-display font-extrabold tracking-[-0.03em] leading-[1.02] text-[1.75rem] lg:text-[1.95rem] mb-5">
+                            <span class="accent-grad">{t(`hero.word.${v.key}` as any)}</span>
+                            <br />
+                            <span class="text-slate-900 dark:text-white">{aas}</span>
+                        </h3>
+                        <ul class="vcard-list">
+                            <li>
+                                <i class="nx-check" />
+                                <span>{t(`hero.p.${v.key}.b1` as any)}</span>
+                            </li>
+                            <li>
+                                <i class="nx-check" />
+                                <span>{t(`hero.p.${v.key}.b2` as any)}</span>
+                            </li>
+                            <li>
+                                <i class="nx-check" />
+                                <span>{t(`hero.p.${v.key}.b3` as any)}</span>
+                            </li>
+                        </ul>
+                        <div class="vcard-foot">
+                            <span class="nx-mono vcard-metric">
+                                {t(`hero.p.${v.key}.metric` as any)}
+                                <small>{t(`hero.p.${v.key}.metriclabel` as any)}</small>
+                            </span>
+                            <button type="button" class="nx-free js-open-planner">
+                                <span class="material-symbols-outlined text-[1rem]">bolt</span>
+                                {t(`hero.p.${v.key}.free` as any)}
+                            </button>
+                        </div>
+                    </article>
                 ))
             }
+        </div>
+
+        <!-- Also on the mesh -->
+        <div class="reveal mt-14 lg:mt-16">
+            <div class="nx-kicker mb-5">{t("services.also")}</div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                {
+                    also.map((s) => (
+                        <div class="acard group">
+                            <span class="acard-icon">
+                                <span class="material-symbols-outlined text-[1.25rem]">{s.icon}</span>
+                            </span>
+                            <div class="min-w-0">
+                                <h4 class="font-display font-bold text-slate-900 dark:text-white text-[0.98rem] tracking-tight mb-1">
+                                    {t(`services.item.${s.key}.title` as any)}
+                                </h4>
+                                <p class="text-[0.84rem] leading-relaxed text-slate-500 dark:text-slate-400 font-light">
+                                    {t(`services.item.${s.key}.desc` as any)}
+                                </p>
+                            </div>
+                        </div>
+                    ))
+                }
+            </div>
         </div>
     </div>
 </section>
 
+<style>
+    .vcard {
+        position: relative;
+        padding: 26px 26px 24px;
+        border-radius: 20px;
+        border: 1px solid rgba(100, 116, 139, 0.18);
+        background: rgba(255, 255, 255, 0.66);
+        backdrop-filter: blur(10px);
+        transition: transform 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+        will-change: transform;
+    }
+    :global(.dark) .vcard {
+        background: rgba(15, 23, 42, 0.55);
+        border-color: rgba(148, 163, 184, 0.16);
+    }
+    .vcard:hover {
+        border-color: rgba(99, 102, 241, 0.55);
+        box-shadow: 0 30px 60px -30px rgba(99, 102, 241, 0.45);
+    }
+    .vcard-motif {
+        height: 118px;
+        margin: -4px -4px 14px;
+        padding: 6px 10px;
+        border-radius: 14px;
+        background: linear-gradient(180deg, rgba(99, 102, 241, 0.07), transparent);
+        display: flex;
+        align-items: center;
+        transition: transform 0.4s ease;
+    }
+    .vcard:hover .vcard-motif {
+        transform: translateY(-2px) scale(1.03);
+    }
+    .vcard-list {
+        list-style: none;
+        margin: 0 0 18px;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    .vcard-list li {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        font-size: 0.9rem;
+        line-height: 1.42;
+        color: #475569;
+    }
+    :global(.dark) .vcard-list li {
+        color: #cbd5e1;
+    }
+    .vcard-foot {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px 14px;
+        padding-top: 16px;
+        border-top: 1px solid rgba(100, 116, 139, 0.16);
+    }
+    .vcard-metric {
+        display: flex;
+        align-items: baseline;
+        gap: 7px;
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #0f172a;
+        font-variant-numeric: tabular-nums;
+    }
+    :global(.dark) .vcard-metric {
+        color: #f1f5f9;
+    }
+    .vcard-metric small {
+        font-family: "Inter", system-ui, sans-serif;
+        font-size: 0.74rem;
+        font-weight: 400;
+        color: #64748b;
+    }
+    :global(.dark) .vcard-metric small {
+        color: #94a3b8;
+    }
+
+    .acard {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        padding: 16px;
+        border-radius: 14px;
+        border: 1px solid rgba(100, 116, 139, 0.14);
+        background: rgba(255, 255, 255, 0.5);
+        transition: border-color 0.3s ease, transform 0.3s ease;
+    }
+    :global(.dark) .acard {
+        background: rgba(15, 23, 42, 0.45);
+        border-color: rgba(148, 163, 184, 0.12);
+    }
+    .acard:hover {
+        border-color: rgba(99, 102, 241, 0.45);
+        transform: translateY(-2px);
+    }
+    .acard-icon {
+        flex-shrink: 0;
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: #6366f1;
+        background: rgba(99, 102, 241, 0.1);
+    }
+</style>
+
 <script>
-    // 3D Tilt effect for service tiles
-    document.querySelectorAll('.service-tile').forEach((tile) => {
-        const el = tile as HTMLElement;
+    // Free-POC hooks open the AI planner (index.astro listens for this event).
+    document.querySelectorAll<HTMLElement>("#services .js-open-planner").forEach((b) =>
+        b.addEventListener("click", () => window.dispatchEvent(new Event("openPlanner")))
+    );
 
-        el.addEventListener('mousemove', (e: MouseEvent) => {
-            const rect = el.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
-
-            const rotateX = ((y - centerY) / centerY) * -8;
-            const rotateY = ((x - centerX) / centerX) * 8;
-
-            el.style.transform = `perspective(600px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+    // Light 3D tilt on the vertical cards (desktop pointers only).
+    if (window.matchMedia("(hover: hover) and (prefers-reduced-motion: no-preference)").matches) {
+        document.querySelectorAll<HTMLElement>("#services .service-tile").forEach((el) => {
+            el.addEventListener("mousemove", (e) => {
+                const r = el.getBoundingClientRect();
+                const rx = ((e.clientY - r.top) / r.height - 0.5) * -6;
+                const ry = ((e.clientX - r.left) / r.width - 0.5) * 6;
+                el.style.transform = `perspective(700px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-3px)`;
+            });
+            el.addEventListener("mouseleave", () => {
+                el.style.transform = "";
+            });
         });
-
-        el.addEventListener('mouseleave', () => {
-            el.style.transform = 'perspective(600px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
-        });
-    });
+    }
 </script>

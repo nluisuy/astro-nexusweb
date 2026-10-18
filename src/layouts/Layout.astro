@@ -1,6 +1,18 @@
 ---
 import Analytics from '@vercel/analytics/astro';
+import ScrollEngine from '../components/ScrollEngine.astro';
+import { getLangFromUrl } from "../i18n/utils";
 import "../styles/global.css";
+
+// Locale of this page (from the URL) + its alternate in the other language, for hreflang / og:locale
+const lang = getLangFromUrl(Astro.url);
+const path = Astro.url.pathname;
+const enPath = lang === "es" ? path.replace(/^\/es(?=\/|$)/, "") || "/" : path;
+const esPath = lang === "es" ? path : path === "/" ? "/es/" : `/es${path}`;
+const enUrl = new URL(enPath, Astro.site);
+const esUrl = new URL(esPath, Astro.site);
+const ogLocale = lang === "es" ? "es_LA" : "en_US";
+const ogLocaleAlt = lang === "es" ? "en_US" : "es_LA";
 
 interface Props {
     title?: string;
@@ -81,7 +93,7 @@ const organizationSchema = {
 ---
 
 <!doctype html>
-<html lang="en" class="scroll-smooth">
+<html lang={lang} class="scroll-smooth">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -100,11 +112,14 @@ const organizationSchema = {
             name="robots"
             content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
         />
-        <meta name="language" content="English" />
+        <meta name="language" content={lang === "es" ? "Spanish" : "English"} />
         <meta name="revisit-after" content="7 days" />
 
-        <!-- Canonical URL -->
+        <!-- Canonical URL + language alternates (English is the x-default) -->
         <link rel="canonical" href={canonicalURL} />
+        <link rel="alternate" hreflang="en" href={enUrl} />
+        <link rel="alternate" hreflang="es" href={esUrl} />
+        <link rel="alternate" hreflang="x-default" href={enUrl} />
 
         <!-- Favicon -->
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -118,7 +133,8 @@ const organizationSchema = {
         <meta property="og:image" content={imageUrl} />
         <meta property="og:image:alt" content={title} />
         <meta property="og:site_name" content="Nexus Innova" />
-        <meta property="og:locale" content="en_US" />
+        <meta property="og:locale" content={ogLocale} />
+        <meta property="og:locale:alternate" content={ogLocaleAlt} />
         {
             article && publishedTime && (
                 <meta property="article:published_time" content={publishedTime} />
@@ -161,7 +177,7 @@ const organizationSchema = {
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
-            href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;500;600;700;800&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Outfit:wght@400;500;600;700;800&display=swap"
             rel="stylesheet"
         />
 
@@ -173,12 +189,10 @@ const organizationSchema = {
 
         <script is:inline>
             // Initialize theme to prevent flash of incorrect theme
+            // Light by default on first visit; the toggle's choice is remembered.
             const theme = (() => {
                 if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
                     return localStorage.getItem('theme');
-                }
-                if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                    return 'dark';
                 }
                 return 'light';
             })();
@@ -198,28 +212,7 @@ const organizationSchema = {
         <!-- End Google Tag Manager (noscript) -->
         
         <slot />
+        <ScrollEngine />
         <Analytics />
-
-        <!-- Scroll-triggered reveal animations -->
-        <script is:inline>
-            document.addEventListener('DOMContentLoaded', () => {
-                const revealElements = document.querySelectorAll('.reveal');
-                if (revealElements.length === 0) return;
-
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            entry.target.classList.add('active');
-                            observer.unobserve(entry.target);
-                        }
-                    });
-                }, {
-                    threshold: 0.1,
-                    rootMargin: '0px 0px -50px 0px'
-                });
-
-                revealElements.forEach(el => observer.observe(el));
-            });
-        </script>
     </body>
 </html>

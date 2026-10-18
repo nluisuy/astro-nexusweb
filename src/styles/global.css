@@ -5,6 +5,11 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* Entrance deck: scenes snap into place; "proximity" frees normal scrolling after it */
+html {
+    scroll-snap-type: y proximity;
+}
+
 @theme {
     /* Custom Colors */
     --color-primary: #6366f1;
@@ -15,6 +20,7 @@
     --color-nexus-blue: #3b82f6;
     --color-nexus-green: #10b981;
     --color-nexus-yellow: #eab308;
+    --color-nexus-amber: #f59e42;
     --color-nexus-red: #ef4444;
 
     /* Custom Font Families */
@@ -24,7 +30,6 @@
     /* Custom Animations */
     --animate-pulse-slow: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
     --animate-float: float 6s ease-in-out infinite;
-    --animate-slide-up: slideUp 0.8s ease-out forwards;
 
     /* Custom Keyframes */
     @keyframes float {
@@ -38,23 +43,99 @@
             transform: translateY(-20px);
         }
     }
-
-    @keyframes slideUp {
-        0% {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-
-        100% {
-            opacity: 1;
-            transform: translateY(0px);
-        }
-    }
 }
 
 @layer utilities {
+    /* ── Nexus shared design language (entrance deck + sections below) ── */
+    .nx-mono {
+        font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+    .nx-kicker {
+        font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.66rem;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: #94a3b8;
+    }
+    .dark .nx-kicker {
+        color: #64748b;
+    }
+    .accent-grad {
+        background: linear-gradient(100deg, #a99bff, #6366f1 52%, #f59e42);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        color: transparent;
+    }
+    .nx-check {
+        margin-top: 4px;
+        width: 15px;
+        height: 15px;
+        flex-shrink: 0;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        position: relative;
+        display: inline-block;
+    }
+    .nx-check::after {
+        content: "";
+        position: absolute;
+        left: 5px;
+        top: 2.5px;
+        width: 3px;
+        height: 6.5px;
+        border: solid #fff;
+        border-width: 0 1.6px 1.6px 0;
+        transform: rotate(45deg);
+    }
+    .nx-free {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 9px 12px;
+        border-radius: 11px;
+        background: linear-gradient(100deg, rgba(99, 102, 241, 0.12), rgba(245, 158, 66, 0.14));
+        border: 1px solid rgba(245, 158, 66, 0.32);
+        color: #0f172a;
+        font-size: 0.78rem;
+        font-weight: 600;
+        cursor: pointer;
+        font-family: inherit;
+        transition: transform 0.15s;
+    }
+    .nx-free:hover {
+        transform: translateY(-1px);
+    }
+    .dark .nx-free {
+        color: #f8fafc;
+    }
+    .nx-free .material-symbols-outlined {
+        color: #f59e42;
+    }
+    /* a thin animated thread: the mesh's signal running between sections */
+    .nx-signal {
+        background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.55), rgba(245, 158, 66, 0.6), rgba(99, 102, 241, 0.55), transparent);
+        background-size: 200% 100%;
+        animation: nx-signal 9s linear infinite;
+        opacity: 0.7;
+    }
+    @keyframes nx-signal {
+        from {
+            background-position: 200% 0;
+        }
+        to {
+            background-position: -200% 0;
+        }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .nx-signal {
+            animation: none;
+        }
+    }
+
+    /* Refined gradient — purple to blue to cyan (no rainbow) */
     .text-gradient {
-        background: linear-gradient(to right, #8b5cf6, #3b82f6, #10b981, #eab308, #ef4444);
+        background: linear-gradient(135deg, #8b5cf6, #3b82f6, #06b6d4);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
@@ -124,7 +205,7 @@
         background: #64748b;
     }
 
-    /* Scroll-triggered reveal animations */
+    /* Scroll-triggered reveal animations (GSAP-driven, CSS as fallback) */
     .reveal {
         opacity: 0;
         transform: translateY(30px);
@@ -161,4 +242,41 @@
     .reveal-delay-6 {
         transition-delay: 0.6s;
     }
+}
+
+/* ─── Navbar scroll behavior ─── */
+#main-nav {
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#main-nav.nav-scrolled {
+    backdrop-filter: blur(20px) saturate(1.2);
+    background: rgba(255, 255, 255, 0.85);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+#main-nav.nav-scrolled .flex.items-center.justify-between {
+    height: 4rem;
+}
+
+:is(.dark) #main-nav.nav-scrolled {
+    background: rgba(2, 6, 23, 0.9);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* ─── Section dividers ─── */
+.section-divider {
+    height: 120px;
+    background: linear-gradient(to bottom, transparent, var(--tw-gradient-to, #f9fafb));
+    pointer-events: none;
+}
+
+.dark .section-divider {
+    background: linear-gradient(to bottom, transparent, #020617);
+}
+
+/* ─── Bento grid card transitions ─── */
+.bento-card {
+    transform-origin: center;
+    will-change: transform, opacity;
 }

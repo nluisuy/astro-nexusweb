@@ -3,26 +3,43 @@ import { getLangFromUrl, useTranslations } from "../i18n/utils";
 
 const lang = Astro.currentLocale || getLangFromUrl(Astro.url);
 const t = useTranslations(lang as any);
+
+// Parse stat values for counter animation
+const stats = [
+    { raw: t('stats.item1.title') as string, desc: t('stats.item1.desc') as string },
+    { raw: t('stats.item2.title') as string, desc: t('stats.item2.desc') as string },
+    { raw: t('stats.item3.title') as string, desc: t('stats.item3.desc') as string },
+    { raw: t('stats.item4.title') as string, desc: t('stats.item4.desc') as string },
+];
+
+// Extract numeric value, prefix, and suffix from stat strings like "99.9%", "$2M+", "150+"
+function parseStatValue(raw: string) {
+    const match = raw.match(/^([^0-9]*)([0-9.]+)(.*)$/);
+    if (match) {
+        return { prefix: match[1], value: match[2], suffix: match[3] };
+    }
+    return { prefix: '', value: '0', suffix: raw };
+}
 ---
 <section class="py-20 bg-black border-y border-gray-900">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-x divide-gray-800/50 reveal">
-            <div class="px-4">
-                <div class="text-4xl font-display font-bold text-white mb-1">{t('stats.item1.title')}</div>
-                <div class="text-sm font-medium text-gray-500 uppercase tracking-wider">{t('stats.item1.desc')}</div>
-            </div>
-            <div class="px-4">
-                <div class="text-4xl font-display font-bold text-white mb-1">{t('stats.item2.title')}</div>
-                <div class="text-sm font-medium text-gray-500 uppercase tracking-wider">{t('stats.item2.desc')}</div>
-            </div>
-            <div class="px-4">
-                <div class="text-4xl font-display font-bold text-white mb-1">{t('stats.item3.title')}</div>
-                <div class="text-sm font-medium text-gray-500 uppercase tracking-wider">{t('stats.item3.desc')}</div>
-            </div>
-            <div class="px-4">
-                <div class="text-4xl font-display font-bold text-white mb-1">{t('stats.item4.title')}</div>
-                <div class="text-sm font-medium text-gray-500 uppercase tracking-wider">{t('stats.item4.desc')}</div>
-            </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-x divide-gray-800/50">
+            {stats.map((stat) => {
+                const parsed = parseStatValue(stat.raw);
+                return (
+                    <div class="px-4 reveal">
+                        <div
+                            class="text-4xl font-display font-bold text-white mb-1"
+                            data-count-to={parsed.value}
+                            data-count-suffix={parsed.suffix}
+                            data-count-prefix={parsed.prefix}
+                        >
+                            {parsed.prefix}0{parsed.suffix}
+                        </div>
+                        <div class="text-sm font-medium text-gray-500 uppercase tracking-wider">{stat.desc}</div>
+                    </div>
+                );
+            })}
         </div>
     </div>
 </section>

@@ -7,10 +7,10 @@ const t = useTranslations(lang as any);
 
 <section class="py-12 bg-nexus-gray-soft dark:bg-slate-950 transition-colors duration-300">
     <div class="max-w-7xl mx-auto px-6 lg:px-12">
-        <div class="relative rounded-2xl overflow-hidden bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 p-8 md:p-12 reveal">
+        <div id="mini-cta-banner" class="relative rounded-2xl overflow-hidden bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 p-8 md:p-12">
             <!-- Background particles -->
-            <div class="absolute -top-16 -right-16 w-48 h-48 bg-nexus-blue/20 rounded-full blur-[60px] animate-pulse-slow"></div>
-            <div class="absolute -bottom-16 -left-16 w-48 h-48 bg-nexus-purple/20 rounded-full blur-[60px] animate-pulse-slow" style="animation-delay: 1.5s;"></div>
+            <div class="parallax-blob absolute -top-16 -right-16 w-48 h-48 bg-nexus-blue/20 rounded-full blur-[60px]" data-speed="0.4"></div>
+            <div class="parallax-blob absolute -bottom-16 -left-16 w-48 h-48 bg-nexus-purple/20 rounded-full blur-[60px]" data-speed="0.6"></div>
 
             <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
                 <div class="flex items-center gap-4">

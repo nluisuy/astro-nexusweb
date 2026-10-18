@@ -1,7 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Navbar from "../components/Navbar.astro";
-import Hero from "../components/Hero.astro";
+import VerticalsDeck from "../components/VerticalsDeck.astro";
 import Services from "../components/Services.astro";
 import MiniCTA from "../components/MiniCTA.astro";
 import Projects from "../components/Projects.astro";
@@ -24,11 +24,12 @@ const pageDescription =
 ---
 
 <Layout title={pageTitle} description={pageDescription}>
-    <div class="relative min-h-screen overflow-x-hidden">
+    <!-- overflow-x-clip (not hidden): keeps the deck's sticky stage working -->
+    <div class="relative min-h-screen overflow-x-clip">
         <Navbar />
 
         <main>
-            <Hero />
+            <VerticalsDeck />
             <Services />
             <MiniCTA />
             <Industry />

@@ -1,0 +1,952 @@
+---
+// VerticalsDeck — full-screen scrollytelling entrance.
+// Scene 0: the NE✕US brand (the X is the hub the mesh converges into).
+// Scenes 1-3: the three verticals; the mesh re-forms per scene.
+// SEO: all copy is server-rendered (H1 on brand, H2 per vertical).
+// Perf: canvas 2D only, paused when off-screen / tab hidden, DPR + node caps,
+// initialised after first paint, prefers-reduced-motion respected.
+import { getLangFromUrl, useTranslations } from "../i18n/utils";
+
+const lang = Astro.currentLocale || getLangFromUrl(Astro.url);
+const t = useTranslations(lang as any);
+
+const verticals = [
+    { key: "infra", n: "01", formation: "grid" },
+    { key: "security", n: "02", formation: "ring" },
+    { key: "pod", n: "03", formation: "pod" },
+] as const;
+
+const aas = t("hero.aas") as string;
+---
+
+<div id="verticals-deck" class="deck relative">
+    <!-- Sticky stage: mesh + scene dots. Stays pinned while the scenes pass over it. -->
+    <div class="deck-stage sticky top-0 h-svh w-full z-0 overflow-hidden">
+        <canvas
+            id="deck-mesh"
+            class="absolute inset-0 w-full h-full"
+            aria-hidden="true"></canvas>
+        <div class="deck-vignette absolute inset-0 pointer-events-none"></div>
+
+        <nav class="deck-dots" aria-label={t("hero.explore")}>
+            <button type="button" data-go="scene-brand" aria-label="Nexus" aria-current="true"
+                ><i></i><span>Nexus</span></button
+            >
+            {
+                verticals.map((v) => (
+                    <button type="button" data-go={`scene-${v.key}`} aria-label={t(`hero.intent.${v.key}` as any)}>
+                        <i />
+                        <span>{t(`hero.intent.${v.key}` as any)}</span>
+                    </button>
+                ))
+            }
+        </nav>
+    </div>
+
+    <!-- Scenes overlay (one viewport each, CSS scroll-snap) -->
+    <div class="deck-scenes relative z-10">
+        <!-- ── Scene 0 · Brand ── -->
+        <section class="deck-scene" id="scene-brand" data-formation="hub">
+            <div class="scene-inner text-center items-center">
+                <div
+                    class="inline-flex items-center gap-2.5 mb-8 px-3.5 py-2 rounded-full border border-nexus-amber/30 bg-nexus-amber/10"
+                >
+                    <span class="nx-dot nx-dot--amber"></span>
+                    <span
+                        class="nx-mono text-[0.62rem] md:text-[0.68rem] tracking-[0.12em] uppercase text-amber-600 dark:text-amber-300"
+                        >{t("hero.badge")}</span
+                    >
+                </div>
+
+                <div class="brandmark" role="img" aria-label="Nexus">
+                    <span class="bm-letters">NE</span>
+                    <span class="bm-x" id="bm-x">
+                        <svg viewBox="0 0 100 100" aria-hidden="true">
+                            <defs>
+                                <linearGradient id="bm-xg" x1="0" y1="0" x2="1" y2="1">
+                                    <stop offset="0" stop-color="#a99bff"></stop>
+                                    <stop offset="0.55" stop-color="#6366f1"></stop>
+                                    <stop offset="1" stop-color="#f59e42"></stop>
+                                </linearGradient>
+                            </defs>
+                            <line x1="18" y1="18" x2="82" y2="82" stroke="url(#bm-xg)" stroke-width="14" stroke-linecap="round"></line>
+                            <line x1="82" y1="18" x2="18" y2="82" stroke="url(#bm-xg)" stroke-width="14" stroke-linecap="round"></line>
+                            <circle class="bm-core-halo" cx="50" cy="50" r="14" fill="#fff"></circle>
+                            <circle class="bm-core" cx="50" cy="50" r="7.5" fill="#fff"></circle>
+                        </svg>
+                    </span>
+                    <span class="bm-letters">US</span>
+                </div>
+
+                <h1
+                    class="font-display font-semibold text-slate-800 dark:text-slate-100 text-xl md:text-2xl lg:text-[1.7rem] leading-snug tracking-tight max-w-3xl mx-auto mt-7 mb-9 text-balance"
+                >
+                    {t("hero.tagline")}
+                </h1>
+
+                <div class="flex flex-wrap items-center justify-center gap-4">
+                    <button type="button" class="nx-cta js-open-planner">
+                        {t("hero.btn1")}
+                        <span class="material-symbols-outlined text-lg">arrow_right_alt</span>
+                    </button>
+                    <span class="nx-mono text-xs text-slate-400 dark:text-slate-500"
+                        >{t("hero.cta_sub")}</span
+                    >
+                </div>
+
+                <a href="#scene-infra" class="scroll-cue nx-mono">
+                    {t("hero.explore")}
+                    <span class="scroll-cue-line"></span>
+                </a>
+            </div>
+        </section>
+
+        <!-- ── Scenes 1-3 · Verticals ── -->
+        {
+            verticals.map((v) => (
+                <section class="deck-scene" id={`scene-${v.key}`} data-formation={v.formation}>
+                    <span class="scene-num" aria-hidden="true">{v.n}</span>
+                    <div class="scene-inner">
+                        <div class="nx-mono text-[0.66rem] tracking-[0.22em] uppercase text-slate-400 dark:text-slate-500 mb-5">
+                            {t("hero.verticals_eyebrow")} · {v.n} · {t(`hero.p.${v.key}.title` as any)}
+                        </div>
+
+                        <h2 class="font-display font-extrabold tracking-[-0.035em] leading-[0.95] text-5xl md:text-7xl lg:text-[5rem] mb-7">
+                            <span class="accent-grad">{t(`hero.word.${v.key}` as any)}</span>
+                            <br />
+                            <span class="text-slate-900 dark:text-white">{aas}</span>
+                        </h2>
+
+                        <ul class="scene-list">
+                            <li><i class="nx-check" /><span>{t(`hero.p.${v.key}.b1` as any)}</span></li>
+                            <li><i class="nx-check" /><span>{t(`hero.p.${v.key}.b2` as any)}</span></li>
+                            <li><i class="nx-check" /><span>{t(`hero.p.${v.key}.b3` as any)}</span></li>
+                        </ul>
+
+                        <div class="scene-foot">
+                            <div class="scene-metric">
+                                <span class="nx-mono scene-metric-v">{t(`hero.p.${v.key}.metric` as any)}</span>
+                                <span class="scene-metric-l">{t(`hero.p.${v.key}.metriclabel` as any)}</span>
+                            </div>
+                            <button type="button" class="scene-free js-open-planner">
+                                <span class="material-symbols-outlined text-[1.05rem]">bolt</span>
+                                {t(`hero.p.${v.key}.free` as any)}
+                            </button>
+                        </div>
+
+                        {v.key === "pod" && (
+                            <div class="pod-offers">
+                                <span class="nx-offer">{t("hero.offer.poc")}<i>{t("hero.offer.free")}</i></span>
+                                <span class="nx-offer">{t("hero.offer.assessment")}<i>{t("hero.offer.free")}</i></span>
+                                <span class="nx-offer">{t("hero.offer.case")}<i>{t("hero.offer.free")}</i></span>
+                                <button type="button" class="nx-cta js-open-planner">
+                                    {t("hero.btn1")}
+                                    <span class="material-symbols-outlined text-lg">arrow_right_alt</span>
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                </section>
+            ))
+        }
+    </div>
+</div>
+
+<style>
+    .nx-mono {
+        font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+
+    /* Stage and scenes share one grid cell: the deck is as tall as the scenes
+       (each can grow past one viewport), and the sticky stage is contained by the
+       deck's real bottom, so it never spills over the next section. */
+    .deck {
+        display: grid;
+    }
+    .deck-stage {
+        grid-area: 1 / 1;
+        align-self: start;
+    }
+    .deck-scenes {
+        grid-area: 1 / 1;
+    }
+    /* Empty areas fall through to the stage (scene dots); real content stays clickable. */
+    .deck-scenes,
+    .deck-scene {
+        pointer-events: none;
+    }
+    .deck-scene {
+        min-height: 100svh;
+        scroll-snap-align: start;
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+    .deck-scene > * {
+        pointer-events: auto;
+    }
+    .scene-inner {
+        width: 100%;
+        max-width: 72rem;
+        margin: 0 auto;
+        padding: 6.5rem 1.5rem 4rem;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    @media (min-width: 1024px) {
+        .scene-inner {
+            padding: 7rem 3rem 4rem;
+        }
+    }
+
+    /* Legibility over the mesh */
+    .deck-vignette {
+        background:
+            radial-gradient(70% 60% at 50% 45%, rgba(255, 255, 255, 0.55), transparent 70%),
+            linear-gradient(180deg, rgba(255, 255, 255, 0.35), transparent 30%, transparent 70%, rgba(255, 255, 255, 0.4));
+    }
+    :global(.dark) .deck-vignette {
+        background:
+            radial-gradient(70% 60% at 50% 45%, rgba(2, 6, 23, 0.55), transparent 70%),
+            linear-gradient(180deg, rgba(2, 6, 23, 0.5), transparent 30%, transparent 70%, rgba(2, 6, 23, 0.6));
+    }
+
+    /* ── Brand ── */
+    .brandmark {
+        display: inline-flex;
+        align-items: center;
+        font-family: "Outfit", sans-serif;
+        font-weight: 800;
+        font-size: clamp(3.6rem, 13vw, 10rem);
+        letter-spacing: -0.05em;
+        line-height: 1;
+        color: #0f172a;
+    }
+    :global(.dark) .brandmark {
+        color: #fff;
+    }
+    .bm-x {
+        display: inline-block;
+        width: 1.12em;
+        height: 1.12em;
+        margin: 0 -0.02em;
+        filter: drop-shadow(0 0 18px rgba(99, 102, 241, 0.45));
+    }
+    .bm-x svg {
+        width: 100%;
+        height: 100%;
+        display: block;
+        overflow: visible;
+    }
+    .bm-core-halo {
+        opacity: 0.25;
+        transform-origin: 50px 50px;
+        animation: bm-halo 2.8s ease-in-out infinite;
+    }
+    .bm-core {
+        transform-origin: 50px 50px;
+        animation: bm-core 2.8s ease-in-out infinite;
+    }
+    @keyframes bm-halo {
+        0%,
+        100% {
+            transform: scale(1);
+            opacity: 0.22;
+        }
+        50% {
+            transform: scale(1.7);
+            opacity: 0.06;
+        }
+    }
+    @keyframes bm-core {
+        0%,
+        100% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.18);
+        }
+    }
+
+    .scroll-cue {
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        margin-top: 3.2rem;
+        font-size: 0.62rem;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: #94a3b8;
+        text-decoration: none;
+    }
+    .scroll-cue-line {
+        width: 1px;
+        height: 34px;
+        background: linear-gradient(180deg, #94a3b8, transparent);
+        animation: cue 1.8s ease-in-out infinite;
+    }
+    @keyframes cue {
+        0%,
+        100% {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        50% {
+            transform: translateY(6px);
+            opacity: 0.4;
+        }
+    }
+
+    /* ── Verticals ── */
+    .accent-grad {
+        background: linear-gradient(100deg, #a99bff, #6366f1 52%, #f59e42);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        color: transparent;
+    }
+    .scene-num {
+        position: absolute;
+        right: 4vw;
+        top: 50%;
+        transform: translateY(-50%);
+        font-family: "Outfit", sans-serif;
+        font-weight: 800;
+        font-size: clamp(8rem, 28vw, 24rem);
+        line-height: 1;
+        letter-spacing: -0.06em;
+        color: rgba(99, 102, 241, 0.07);
+        user-select: none;
+        pointer-events: none;
+    }
+    :global(.dark) .scene-num {
+        color: rgba(148, 163, 184, 0.06);
+    }
+    .scene-list {
+        list-style: none;
+        margin: 0 0 1.6rem;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        max-width: 34rem;
+    }
+    .scene-list li {
+        display: flex;
+        align-items: flex-start;
+        gap: 11px;
+        font-size: 1rem;
+        line-height: 1.45;
+        color: #475569;
+    }
+    :global(.dark) .scene-list li {
+        color: #cbd5e1;
+    }
+    .nx-check {
+        margin-top: 4px;
+        width: 15px;
+        height: 15px;
+        flex-shrink: 0;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        position: relative;
+    }
+    .nx-check::after {
+        content: "";
+        position: absolute;
+        left: 5px;
+        top: 2.5px;
+        width: 3px;
+        height: 6.5px;
+        border: solid #fff;
+        border-width: 0 1.6px 1.6px 0;
+        transform: rotate(45deg);
+    }
+    .scene-foot {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 14px 22px;
+    }
+    .scene-metric {
+        display: flex;
+        align-items: baseline;
+        gap: 9px;
+    }
+    .scene-metric-v {
+        font-size: 1.9rem;
+        font-weight: 600;
+        line-height: 1;
+        color: #0f172a;
+        font-variant-numeric: tabular-nums;
+    }
+    :global(.dark) .scene-metric-v {
+        color: #f1f5f9;
+    }
+    .scene-metric-l {
+        font-size: 0.82rem;
+        color: #64748b;
+    }
+    :global(.dark) .scene-metric-l {
+        color: #94a3b8;
+    }
+    .scene-free {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 14px;
+        border-radius: 12px;
+        background: linear-gradient(100deg, rgba(99, 102, 241, 0.12), rgba(245, 158, 66, 0.14));
+        border: 1px solid rgba(245, 158, 66, 0.32);
+        color: #0f172a;
+        font-size: 0.82rem;
+        font-weight: 600;
+        cursor: pointer;
+        font-family: inherit;
+        transition: transform 0.15s;
+    }
+    .scene-free:hover {
+        transform: translateY(-1px);
+    }
+    :global(.dark) .scene-free {
+        color: #f8fafc;
+    }
+    .scene-free .material-symbols-outlined {
+        color: #f59e42;
+    }
+
+    .pod-offers {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
+        margin-top: 1.6rem;
+        padding-top: 1.4rem;
+        border-top: 1px solid rgba(100, 116, 139, 0.18);
+        max-width: 48rem;
+    }
+    .nx-offer {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 7px 8px 7px 13px;
+        border-radius: 999px;
+        border: 1px solid rgba(100, 116, 139, 0.2);
+        background: rgba(255, 255, 255, 0.55);
+        font-size: 0.78rem;
+        font-weight: 500;
+        color: #334155;
+    }
+    :global(.dark) .nx-offer {
+        background: rgba(15, 23, 42, 0.5);
+        border-color: rgba(148, 163, 184, 0.18);
+        color: #cbd5e1;
+    }
+    .nx-offer i {
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-style: normal;
+        font-size: 0.6rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-weight: 600;
+        color: #047857;
+        background: rgba(16, 185, 129, 0.16);
+        border-radius: 999px;
+        padding: 3px 8px;
+    }
+    :global(.dark) .nx-offer i {
+        color: #6ee7b7;
+        background: rgba(16, 185, 129, 0.14);
+    }
+
+    .nx-cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 15px 26px;
+        border-radius: 999px;
+        border: none;
+        background: #0f172a;
+        color: #fff;
+        font-family: inherit;
+        font-size: 0.86rem;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        cursor: pointer;
+        box-shadow: 0 18px 40px -18px rgba(15, 23, 42, 0.5);
+        transition: transform 0.15s, background 0.2s;
+    }
+    .nx-cta:hover {
+        transform: translateY(-2px);
+    }
+    :global(.dark) .nx-cta {
+        background: #fff;
+        color: #0f172a;
+        box-shadow: none;
+    }
+
+    .nx-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #6366f1;
+        box-shadow: 0 0 10px #6366f1;
+        animation: nx-pulse 2.6s ease-in-out infinite;
+        flex-shrink: 0;
+    }
+    .nx-dot--amber {
+        background: #f59e42;
+        box-shadow: 0 0 10px #f59e42;
+    }
+    @keyframes nx-pulse {
+        0%,
+        100% {
+            opacity: 1;
+        }
+        50% {
+            opacity: 0.4;
+        }
+    }
+
+    /* ── Scene dots (right rail) ── */
+    .deck-dots {
+        position: absolute;
+        right: max(14px, 2vw);
+        top: 50%;
+        transform: translateY(-50%);
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        z-index: 2;
+    }
+    .deck-dots button {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-direction: row-reverse;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 8px 6px; /* generous hit area around the 8px dot */
+        min-height: 24px;
+        color: #64748b;
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-size: 0.62rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+    .deck-dots button i {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        border: 1.5px solid #94a3b8;
+        transition: all 0.25s;
+    }
+    .deck-dots button span {
+        opacity: 0;
+        transform: translateX(6px);
+        transition: all 0.25s;
+    }
+    .deck-dots button:hover span,
+    .deck-dots button[aria-current="true"] span {
+        opacity: 1;
+        transform: none;
+    }
+    .deck-dots button[aria-current="true"] i {
+        background: #6366f1;
+        border-color: #6366f1;
+        box-shadow: 0 0 10px rgba(99, 102, 241, 0.7);
+    }
+    @media (max-width: 767px) {
+        .deck-dots button span {
+            display: none;
+        }
+    }
+
+    /* Scene entrance (JS-enhanced only; content is fully visible without it) */
+    .deck.deck--js .scene-inner {
+        transition: opacity 0.45s ease, transform 0.45s ease;
+    }
+    .deck.deck--js .deck-scene:not(.is-active) .scene-inner {
+        opacity: 0.45;
+        transform: translateY(12px);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .bm-core,
+        .bm-core-halo,
+        .scroll-cue-line,
+        .nx-dot {
+            animation: none;
+        }
+        .deck.deck--js .scene-inner {
+            transition: none;
+        }
+        .deck.deck--js .deck-scene:not(.is-active) .scene-inner {
+            opacity: 1;
+            transform: none;
+        }
+    }
+</style>
+
+<script>
+    const deck = document.getElementById("verticals-deck");
+    const canvas = document.getElementById("deck-mesh") as HTMLCanvasElement | null;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    // Any CTA in the deck opens the AI planner (index.astro listens for this event).
+    document.querySelectorAll<HTMLElement>("#verticals-deck .js-open-planner").forEach((b) =>
+        b.addEventListener("click", () => window.dispatchEvent(new Event("openPlanner")))
+    );
+
+    // Scene dots → scroll to scene
+    document.querySelectorAll<HTMLButtonElement>(".deck-dots button").forEach((b) =>
+        b.addEventListener("click", () => {
+            document.getElementById(b.dataset.go || "")?.scrollIntoView({ behavior: "smooth" });
+        })
+    );
+
+    if (deck && canvas) {
+        deck.classList.add("deck--js");
+        const ctx = canvas.getContext("2d")!;
+        const DPR = Math.min(window.devicePixelRatio || 1, 1.5);
+        let W = 0,
+            H = 0,
+            N = 0;
+        type Node = { x: number; y: number; tx: number; ty: number; vx: number; vy: number; r: number; ox: number; oy: number };
+        let nodes: Node[] = [];
+        let pulses: { sx: number; sy: number; ex: number; ey: number; t: number; sp: number }[] = [];
+        const mouse = { x: -9999, y: -9999, active: false };
+        let formation = "hub";
+        const hub = { x: 0, y: 0 };
+
+        const isDark = () => document.documentElement.classList.contains("dark");
+        const meshRGB = () => (isDark() ? "99,130,246" : "124,92,246");
+        let rgb = meshRGB();
+
+        const xEl = document.getElementById("bm-x");
+        function refreshHub() {
+            if (!xEl) {
+                hub.x = W / 2;
+                hub.y = H / 2;
+                return;
+            }
+            const r = xEl.getBoundingClientRect();
+            const c = canvas!.getBoundingClientRect();
+            hub.x = r.left + r.width / 2 - c.left;
+            hub.y = r.top + r.height / 2 - c.top;
+        }
+
+        function build() {
+            nodes = [];
+            for (let i = 0; i < N; i++) {
+                const ang = Math.random() * Math.PI * 2;
+                const rad = Math.pow(Math.random(), 0.55) * Math.min(W, H) * 0.5;
+                nodes.push({
+                    x: Math.random() * W,
+                    y: Math.random() * H,
+                    tx: 0,
+                    ty: 0,
+                    vx: 0,
+                    vy: 0,
+                    r: 1.1 + Math.random() * 1.8,
+                    ox: Math.cos(ang) * rad * 1.35,
+                    oy: Math.sin(ang) * rad,
+                });
+            }
+        }
+
+        // Each scene re-forms the mesh into a distinct shape.
+        function layout(which: string, snap: boolean) {
+            formation = which;
+            for (let i = 0; i < nodes.length; i++) {
+                const n = nodes[i];
+                const tn = i / nodes.length;
+                if (which === "hub") {
+                    n.tx = hub.x + n.ox;
+                    n.ty = hub.y + n.oy;
+                } else if (which === "grid") {
+                    const cols = 8;
+                    const col = i % cols;
+                    const row = Math.floor(i / cols);
+                    n.tx = W * (0.12 + (col / (cols - 1)) * 0.76) + (Math.random() - 0.5) * 22;
+                    n.ty = H * (0.2 + (row % 6) * 0.12) + (Math.random() - 0.5) * 16;
+                } else if (which === "ring") {
+                    const a = tn * Math.PI * 2 * 3;
+                    const ring = 0.2 + (i % 3) * 0.14;
+                    n.tx = W * 0.5 + Math.cos(a) * W * ring * 0.52;
+                    n.ty = H * 0.52 + Math.sin(a) * H * ring;
+                } else {
+                    if (i % 3 === 0) {
+                        const a = tn * Math.PI * 2 * 2;
+                        const rr = 0.3 + Math.random() * 0.12;
+                        n.tx = W * 0.5 + Math.cos(a) * W * rr * 0.6;
+                        n.ty = H * 0.5 + Math.sin(a) * H * rr;
+                    } else {
+                        n.tx = W * 0.5 + (Math.random() - 0.5) * W * 0.2;
+                        n.ty = H * 0.5 + (Math.random() - 0.5) * H * 0.26;
+                    }
+                }
+                if (snap) {
+                    n.x = n.tx;
+                    n.y = n.ty;
+                }
+            }
+        }
+
+        function resize() {
+            const parent = canvas!.parentElement;
+            if (!parent) return;
+            W = parent.clientWidth;
+            H = parent.clientHeight;
+            canvas!.width = Math.round(W * DPR);
+            canvas!.height = Math.round(H * DPR);
+            ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+            N = Math.max(30, Math.min(64, Math.round((W * H) / 17000)));
+            build();
+            refreshHub();
+            layout(formation, true);
+        }
+
+        function spawnPulse() {
+            if (nodes.length < 2) return;
+            const a = nodes[(Math.random() * nodes.length) | 0];
+            let ex: number, ey: number;
+            if (formation === "hub" && Math.random() < 0.75) {
+                ex = hub.x;
+                ey = hub.y;
+            } else {
+                const b = nodes[(Math.random() * nodes.length) | 0];
+                ex = b.x;
+                ey = b.y;
+            }
+            pulses.push({ sx: a.x, sy: a.y, ex, ey, t: 0, sp: 0.012 + Math.random() * 0.02 });
+        }
+
+        let last = 0;
+        let raf = 0;
+        let running = false;
+        let tick = 0;
+
+        function frame(now: number) {
+            if (!running) return;
+            const dt = Math.min(2, (now - last) / 16.67 || 1);
+            last = now;
+            tick++;
+            if (formation === "hub" && tick % 20 === 0) {
+                refreshHub();
+                for (const n of nodes) {
+                    n.tx = hub.x + n.ox;
+                    n.ty = hub.y + n.oy;
+                }
+            }
+            ctx.clearRect(0, 0, W, H);
+            const DIST = Math.min(W, H) < 560 ? 104 : 136;
+            const DIST2 = DIST * DIST;
+
+            for (const n of nodes) {
+                n.x += (n.tx - n.x) * 0.022 * dt + n.vx * dt;
+                n.y += (n.ty - n.y) * 0.022 * dt + n.vy * dt;
+                n.vx += (Math.random() - 0.5) * 0.012;
+                n.vy += (Math.random() - 0.5) * 0.012;
+                n.vx *= 0.9;
+                n.vy *= 0.9;
+                if (mouse.active) {
+                    const mdx = mouse.x - n.x;
+                    const mdy = mouse.y - n.y;
+                    const md2 = mdx * mdx + mdy * mdy;
+                    if (md2 < 26000) {
+                        const f = (1 - md2 / 26000) * 0.6;
+                        n.x += mdx * 0.012 * f * dt;
+                        n.y += mdy * 0.012 * f * dt;
+                    }
+                }
+            }
+
+            // In the brand scene every node is also tied to the X: the hub.
+            if (formation === "hub") {
+                const HR = Math.min(W, H) * 0.42;
+                const HR2 = HR * HR;
+                for (const n of nodes) {
+                    const dx = n.x - hub.x;
+                    const dy = n.y - hub.y;
+                    const d2 = dx * dx + dy * dy;
+                    if (d2 < HR2) {
+                        const o = (1 - d2 / HR2) * 0.32;
+                        ctx.strokeStyle = `rgba(${rgb},${o.toFixed(3)})`;
+                        ctx.lineWidth = 0.8;
+                        ctx.beginPath();
+                        ctx.moveTo(n.x, n.y);
+                        ctx.lineTo(hub.x, hub.y);
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            for (let a = 0; a < nodes.length; a++) {
+                const na = nodes[a];
+                for (let b = a + 1; b < nodes.length; b++) {
+                    const nb = nodes[b];
+                    const dx = na.x - nb.x;
+                    const dy = na.y - nb.y;
+                    const d2 = dx * dx + dy * dy;
+                    if (d2 < DIST2) {
+                        let o = (1 - d2 / DIST2) * 0.4;
+                        if (mouse.active) {
+                            const mx = (na.x + nb.x) / 2 - mouse.x;
+                            const my = (na.y + nb.y) / 2 - mouse.y;
+                            if (mx * mx + my * my < 30000) o = Math.min(0.8, o + 0.4);
+                        }
+                        ctx.strokeStyle = `rgba(${rgb},${o.toFixed(3)})`;
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(na.x, na.y);
+                        ctx.lineTo(nb.x, nb.y);
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            ctx.fillStyle = `rgba(${rgb},0.85)`;
+            for (const n of nodes) {
+                ctx.beginPath();
+                ctx.arc(n.x, n.y, n.r, 0, 6.2832);
+                ctx.fill();
+            }
+
+            for (let p = pulses.length - 1; p >= 0; p--) {
+                const pl = pulses[p];
+                pl.t += pl.sp * dt;
+                if (pl.t >= 1) {
+                    pulses.splice(p, 1);
+                    continue;
+                }
+                const px = pl.sx + (pl.ex - pl.sx) * pl.t;
+                const py = pl.sy + (pl.ey - pl.sy) * pl.t;
+                ctx.beginPath();
+                ctx.fillStyle = `rgba(245,158,66,${(1 - Math.abs(0.5 - pl.t) * 2).toFixed(3)})`;
+                ctx.arc(px, py, 2.4, 0, 6.2832);
+                ctx.fill();
+            }
+            if (!reduce && pulses.length < 12 && Math.random() < 0.14) spawnPulse();
+
+            raf = requestAnimationFrame(frame);
+        }
+
+        function start() {
+            if (running || reduce) return;
+            running = true;
+            last = performance.now();
+            raf = requestAnimationFrame(frame);
+        }
+        function stop() {
+            running = false;
+            cancelAnimationFrame(raf);
+        }
+
+        // Static single frame for reduced motion.
+        function staticFrame() {
+            for (let s = 0; s < 40; s++)
+                for (const n of nodes) {
+                    n.x += (n.tx - n.x) * 0.3;
+                    n.y += (n.ty - n.y) * 0.3;
+                }
+            running = true;
+            last = performance.now();
+            frame(last + 16);
+            stop();
+        }
+
+        const stage = canvas.parentElement!;
+        stage.addEventListener(
+            "pointermove",
+            (e) => {
+                const r = canvas.getBoundingClientRect();
+                mouse.x = e.clientX - r.left;
+                mouse.y = e.clientY - r.top;
+                mouse.active = true;
+            },
+            { passive: true }
+        );
+        stage.addEventListener("pointerleave", () => {
+            mouse.active = false;
+        });
+        // The scenes overlay sits above the stage; mirror pointer movement from it too.
+        deck.addEventListener(
+            "pointermove",
+            (e) => {
+                const r = canvas.getBoundingClientRect();
+                mouse.x = e.clientX - r.left;
+                mouse.y = e.clientY - r.top;
+                mouse.active = true;
+            },
+            { passive: true }
+        );
+        deck.addEventListener("pointerleave", () => {
+            mouse.active = false;
+        });
+
+        window.addEventListener("resize", resize, { passive: true });
+        const themeObserver = new MutationObserver(() => {
+            rgb = meshRGB();
+        });
+        themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+
+        // Active scene → formation + dots + entrance class
+        const dots = document.querySelectorAll<HTMLButtonElement>(".deck-dots button");
+        const scenes = document.querySelectorAll<HTMLElement>(".deck-scene");
+        const sceneIO = new IntersectionObserver(
+            (entries) => {
+                for (const en of entries) {
+                    if (!en.isIntersecting) continue;
+                    const el = en.target as HTMLElement;
+                    scenes.forEach((s) => s.classList.toggle("is-active", s === el));
+                    dots.forEach((d) =>
+                        d.setAttribute("aria-current", d.dataset.go === el.id ? "true" : "false")
+                    );
+                    const f = el.dataset.formation || "hub";
+                    if (f !== formation) {
+                        if (f === "hub") refreshHub();
+                        layout(f, false);
+                    }
+                }
+            },
+            { threshold: 0.4 }
+        );
+        scenes.forEach((s) => sceneIO.observe(s));
+
+        // Only animate while the deck is on screen and the tab is visible.
+        const deckIO = new IntersectionObserver(
+            (entries) => {
+                const vis = entries.some((e) => e.isIntersecting);
+                if (vis && !document.hidden) start();
+                else stop();
+            },
+            { threshold: 0 }
+        );
+        deckIO.observe(deck);
+        document.addEventListener("visibilitychange", () => {
+            if (document.hidden) stop();
+            else if (deck.getBoundingClientRect().bottom > 0) start();
+        });
+
+        // Init after first paint so the brand text (LCP) is never blocked.
+        const init = () => {
+            resize();
+            if (reduce) staticFrame();
+            else start();
+        };
+        if ("requestIdleCallback" in window) (window as any).requestIdleCallback(init, { timeout: 600 });
+        else setTimeout(init, 60);
+
+        document.addEventListener("astro:before-swap", () => {
+            stop();
+            themeObserver.disconnect();
+            sceneIO.disconnect();
+            deckIO.disconnect();
+            window.removeEventListener("resize", resize);
+        });
+    }
+</script>

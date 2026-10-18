@@ -8,7 +8,7 @@ const t = useTranslations(lang as any);
 const isEs = lang === 'es';
 ---
 
-<nav class="fixed w-full z-50 backdrop-blur-xl bg-white/70 dark:bg-slate-950/80 border-b border-gray-100 dark:border-slate-800 transition-colors duration-300">
+<nav id="main-nav" class="fixed w-full z-50 backdrop-blur-xl bg-white/70 dark:bg-slate-950/80 border-b border-gray-100 dark:border-slate-800 transition-all duration-300">
     <div class="max-w-7xl mx-auto px-6 lg:px-12">
         <div class="flex items-center justify-between h-24">
             <a href={isEs ? '/es/' : '/'} class="flex-shrink-0 flex flex-col items-start cursor-pointer group" aria-label="Nexus Digital Innovations home">
