@@ -220,17 +220,25 @@ html {
         scrollbar-width: none;
     }
 
+    /* Page backdrop: no grid. Two soft brand glows (indigo top-left, amber
+       bottom-right) that fade into the page colour, so content and the mesh
+       canvas are the only texture. Fixed so it does not scroll with the page. */
     .blueprint-bg {
+        background-color: #ffffff;
         background-image:
-            linear-gradient(rgba(229, 231, 235, 0.2) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(229, 231, 235, 0.2) 1px, transparent 1px);
-        background-size: 40px 40px;
+            radial-gradient(60% 50% at 8% -10%, rgba(99, 102, 241, 0.16), transparent 70%),
+            radial-gradient(45% 40% at 100% 110%, rgba(245, 158, 66, 0.13), transparent 70%),
+            radial-gradient(35% 30% at 85% 15%, rgba(169, 155, 255, 0.1), transparent 70%);
+        background-attachment: fixed;
+        background-repeat: no-repeat;
     }
 
     .dark .blueprint-bg {
+        background-color: #020617;
         background-image:
-            linear-gradient(rgba(30, 41, 59, 0.4) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(30, 41, 59, 0.4) 1px, transparent 1px);
+            radial-gradient(60% 50% at 8% -10%, rgba(99, 102, 241, 0.22), transparent 70%),
+            radial-gradient(45% 40% at 100% 110%, rgba(245, 158, 66, 0.12), transparent 70%),
+            radial-gradient(35% 30% at 85% 15%, rgba(59, 130, 246, 0.14), transparent 70%);
     }
 
     /* Custom scrollbar styling */

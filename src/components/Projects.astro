@@ -20,16 +20,17 @@ const colorFor: Record<Vertical, string> = {
     pod: "text-nexus-amber",
 };
 
+// Grid order (3 per row on desktop): leadership + AI, then products + cloud, then security.
 const cases: { key: string; vertical: Vertical; icon: string; stack: string[]; tag?: string }[] = [
-    { key: "c1", vertical: "infra", icon: "cloud_done", stack: ["AWS MAP", "Landing Zone", "Terraform"] },
-    { key: "c2", vertical: "infra", icon: "cloud_sync", stack: ["Azure", "AWS", "Kubernetes"] },
     { key: "c3", vertical: "pod", icon: "manage_accounts", stack: ["Roadmap", "Architecture", "Teams"], tag: "cases.c3.tag" },
-    { key: "c4", vertical: "security", icon: "health_and_safety", stack: ["Resilience", "Impact tolerances", "Testing"] },
-    { key: "c5", vertical: "security", icon: "sync_alt", stack: ["DRP", "BCP", "Multi-region"] },
     { key: "c6", vertical: "pod", icon: "smart_toy", stack: ["AI migration", "Refactoring", "Test generation"] },
-    { key: "c7", vertical: "pod", icon: "rocket_launch", stack: ["Innovation Pod", "15-day POC"] },
     { key: "c8", vertical: "pod", icon: "neurology", stack: ["LangChain", "Vector DB"] },
+    { key: "c7", vertical: "pod", icon: "rocket_launch", stack: ["Innovation Pod", "15-day POC"] },
+    { key: "c2", vertical: "infra", icon: "cloud_sync", stack: ["Azure", "AWS", "Kubernetes"] },
+    { key: "c1", vertical: "infra", icon: "cloud_done", stack: ["AWS MAP", "Landing Zone", "Terraform"] },
     { key: "c9", vertical: "security", icon: "verified", stack: ["ISO 27001", "PCI DSS"] },
+    { key: "c5", vertical: "security", icon: "sync_alt", stack: ["DRP", "BCP", "Multi-region"] },
+    { key: "c4", vertical: "security", icon: "health_and_safety", stack: ["Resilience", "Impact tolerances", "Testing"] },
 ];
 ---
 
@@ -114,6 +115,57 @@ const cases: { key: string; vertical: Vertical; icon: string; stack: string[]; t
         transform: translateY(-3px);
         border-color: rgba(99, 102, 241, 0.5);
         box-shadow: 0 26px 50px -30px rgba(99, 102, 241, 0.4);
+    }
+    /* "Lit" tiles: switched on one after another when the pointer enters the section */
+    .pcard::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.18), rgba(245, 158, 66, 0.12));
+        opacity: 0;
+        transition: opacity 0.4s ease;
+        pointer-events: none;
+    }
+    .pcard.is-lit,
+    .pcard:hover {
+        border-color: rgba(99, 102, 241, 0.85);
+        box-shadow:
+            0 0 0 1px rgba(99, 102, 241, 0.25),
+            0 0 28px rgba(99, 102, 241, 0.28),
+            0 18px 40px -22px rgba(99, 102, 241, 0.6);
+    }
+    .pcard.is-lit::before,
+    .pcard:hover::before {
+        opacity: 1;
+    }
+    .pcard.is-lit .pcard-icon,
+    .pcard:hover .pcard-icon {
+        background: rgba(99, 102, 241, 0.28);
+        box-shadow: 0 0 22px rgba(99, 102, 241, 0.55);
+    }
+    .pcard.is-lit .pcard-chip,
+    .pcard:hover .pcard-chip {
+        background: #6366f1;
+        border-color: #6366f1;
+        color: #fff;
+    }
+    .pcard-chip {
+        transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    }
+    .pcard.is-lit .pcard-motif {
+        opacity: 1;
+    }
+    .pcard-icon,
+    .pcard-motif {
+        transition: background 0.35s ease, box-shadow 0.35s ease, opacity 0.3s ease, transform 0.4s ease;
+    }
+    :global(.dark) .pcard.is-lit,
+    :global(.dark) .pcard:hover {
+        border-color: rgba(129, 140, 248, 0.9);
+        box-shadow:
+            0 0 0 1px rgba(129, 140, 248, 0.3),
+            0 0 32px rgba(99, 102, 241, 0.4);
     }
     .pcard-top {
         display: flex;
@@ -203,3 +255,32 @@ const cases: { key: string; vertical: Vertical; icon: string; stack: string[]; t
         color: #cbd5e1;
     }
 </style>
+
+<script>
+    // Tiles stay white. When the pointer enters the section a wave runs through them in
+    // reading order (each tile lights for a moment, then goes back to white); after that
+    // only the tile under the pointer is coloured (plain CSS :hover). Touch: nothing.
+    const section = document.getElementById("projects");
+    const tiles = Array.from(document.querySelectorAll<HTMLElement>("#bento-grid .pcard"));
+    const STEP = 110; // ms between tiles
+    const HOLD = 420; // ms each tile stays lit
+    let timers: number[] = [];
+
+    function clear() {
+        timers.forEach((t) => clearTimeout(t));
+        timers = [];
+        tiles.forEach((t) => t.classList.remove("is-lit"));
+    }
+    function wave() {
+        clear();
+        tiles.forEach((tile, i) => {
+            timers.push(window.setTimeout(() => tile.classList.add("is-lit"), i * STEP));
+            timers.push(window.setTimeout(() => tile.classList.remove("is-lit"), i * STEP + HOLD));
+        });
+    }
+
+    if (section && tiles.length && window.matchMedia("(hover: hover)").matches) {
+        section.addEventListener("pointerenter", wave);
+        section.addEventListener("pointerleave", clear);
+    }
+</script>

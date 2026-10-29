@@ -245,7 +245,7 @@ const AIProjectPlanner = ({ onClose, isOpen = false }: AIProjectPlannerProps) =>
                         Encrypted Session
                     </p>
                     <p className="text-[0.6rem] text-slate-500 dark:text-slate-400 uppercase tracking-widest font-bold">
-                        © 2024 Nexus AI
+                        © {new Date().getFullYear()} Nexus AI
                     </p>
                 </div>
             </div>

@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { pocOptions } from "../data/pocOptions";
+
+type Lang = "en" | "es";
+type Intent = "contact" | "poc";
 
 interface ContactModalProps {
-    isOpen: boolean;
-    onClose: () => void;
+    lang?: Lang;
 }
 
 interface FormData {
@@ -19,82 +22,147 @@ interface FormErrors {
     message?: string;
 }
 
-const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
-    // Use the provided onClose or fallback to global closeContactModal
-    const handleClose = () => {
-        if (onClose) {
-            onClose();
-        } else if (typeof window !== "undefined" && (window as any).closeContactModal) {
-            (window as any).closeContactModal();
-        }
-    };
+// Detail of the `openContactModal` event (see lib/book.ts)
+export interface OpenDetail {
+    mode?: Intent;
+    poc?: string;
+}
 
-    const [formData, setFormData] = useState<FormData>({
-        name: "",
-        email: "",
-        phone: "",
-        subject: "General Inquiry",
+const T = {
+    en: {
+        contactTitle: "Start your digital transformation",
+        contactSub: "Reply within 24h · no commitment",
+        pocTitle: "Start your free POC",
+        pocSub: "Free · on your stack · you own the code",
+        name: "Full Name",
+        email: "Email Address",
+        phone: "Phone",
+        optional: "(Optional)",
+        service: "Service Interest",
+        which: "Which POC?",
+        message: "Message",
+        messagePh: "Tell us about your project goals and challenges...",
+        pocMessagePh: "What would you like the POC to prove? Context, systems involved, success criteria...",
+        send: "Send Message",
+        sendPoc: "Request my POC",
+        sending: "Sending...",
+        errName: "Full name is required",
+        errEmail: "Email is required",
+        errEmailFmt: "Please enter a valid email address",
+        errMessage: "Message is required",
+        errGeneric: "An unexpected error occurred. Please try again.",
+        trust: ["24h response", "No commitment", "Secure & private"],
+        contactOptions: ["General Inquiry", "Cloud Architecture", "AI Solutions", "Cybersecurity", "Digital Transformation"],
+    },
+    es: {
+        contactTitle: "Inicia tu transformación digital",
+        contactSub: "Respuesta en 24h · sin compromiso",
+        pocTitle: "Inicia tu POC gratis",
+        pocSub: "Gratis · en tu stack · el código es tuyo",
+        name: "Nombre completo",
+        email: "Email",
+        phone: "Teléfono",
+        optional: "(Opcional)",
+        service: "Área de interés",
+        which: "¿Qué POC?",
+        message: "Mensaje",
+        messagePh: "Contanos sobre los objetivos y desafíos de tu proyecto...",
+        pocMessagePh: "¿Qué querés que demuestre el POC? Contexto, sistemas involucrados, criterios de éxito...",
+        send: "Enviar mensaje",
+        sendPoc: "Pedir mi POC",
+        sending: "Enviando...",
+        errName: "El nombre es obligatorio",
+        errEmail: "El email es obligatorio",
+        errEmailFmt: "Ingresá un email válido",
+        errMessage: "El mensaje es obligatorio",
+        errGeneric: "Ocurrió un error inesperado. Intentá de nuevo.",
+        trust: ["Respuesta en 24h", "Sin compromiso", "Seguro y privado"],
+        contactOptions: ["Consulta general", "Arquitectura cloud", "Soluciones de IA", "Ciberseguridad", "Transformación digital"],
+    },
+} as const;
+
+// The Nexus X (same mark as the wordmark)
+const NexusX = () => (
+    <svg viewBox="0 0 100 100" className="w-7 h-7" aria-hidden="true">
+        <defs>
+            <linearGradient id="cm-xg" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stopColor="#a99bff" />
+                <stop offset="0.55" stopColor="#6366f1" />
+                <stop offset="1" stopColor="#f59e42" />
+            </linearGradient>
+        </defs>
+        <line x1="18" y1="18" x2="82" y2="82" stroke="url(#cm-xg)" strokeWidth="14" strokeLinecap="round" />
+        <line x1="82" y1="18" x2="18" y2="82" stroke="url(#cm-xg)" strokeWidth="14" strokeLinecap="round" />
+        <circle cx="50" cy="50" r="14" fill="#fff" opacity="0.25" />
+        <circle cx="50" cy="50" r="7.5" fill="#fff" />
+    </svg>
+);
+
+const INPUT =
+    "w-full px-4 py-3 rounded-xl border focus:ring-2 focus:border-transparent text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-slate-800 focus:bg-white dark:focus:bg-slate-900 transition-all outline-none text-sm";
+const OK = "border-slate-200 dark:border-slate-700 focus:ring-nexus-blue";
+const BAD = "border-nexus-red focus:ring-nexus-red";
+const LABEL = "block text-[0.62rem] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1.5";
+
+const ContactModal = ({ lang = "en" }: ContactModalProps) => {
+    const t = T[lang];
+    const [intent, setIntent] = useState<Intent>("contact");
+    const [formData, setFormData] = useState<FormData>({ name: "", email: "", phone: "", subject: "", message: "" });
+    const [errors, setErrors] = useState<FormErrors>({});
+    const [loading, setLoading] = useState(false);
+    const [submitStatus, setSubmitStatus] = useState<{ type: "success" | "error" | null; message: string }>({
+        type: null,
         message: "",
     });
 
-    const [errors, setErrors] = useState<FormErrors>({});
-    const [loading, setLoading] = useState(false);
-    const [submitStatus, setSubmitStatus] = useState<{
-        type: "success" | "error" | null;
-        message: string;
-    }>({ type: null, message: "" });
+    const handleClose = () => {
+        if (typeof window !== "undefined" && (window as any).closeContactModal) (window as any).closeContactModal();
+    };
 
-    // Handle Escape key press
+    const reset = () => {
+        setFormData({ name: "", email: "", phone: "", subject: "", message: "" });
+        setErrors({});
+        setSubmitStatus({ type: null, message: "" });
+    };
+
+    // Opened by lib/book.ts: pick the mode and preselect the POC the CTA referred to.
     useEffect(() => {
-        const handleEscape = (e: KeyboardEvent) => {
-            if (e.key === "Escape" && isOpen) {
-                handleClose();
-            }
+        const onOpen = (e: Event) => {
+            const d = ((e as CustomEvent<OpenDetail>).detail || {}) as OpenDetail;
+            const mode: Intent = d.mode === "poc" ? "poc" : "contact";
+            setIntent(mode);
+            setErrors({});
+            setSubmitStatus({ type: null, message: "" });
+            setFormData((prev) => ({
+                ...prev,
+                subject:
+                    mode === "poc"
+                        ? pocOptions.some((o) => o.key === d.poc)
+                            ? (d.poc as string)
+                            : "undecided"
+                        : t.contactOptions[0],
+            }));
         };
-
-        if (isOpen) {
-            document.addEventListener("keydown", handleEscape);
-        }
-
+        const onKey = (e: KeyboardEvent) => {
+            if (e.key === "Escape") handleClose();
+        };
+        const onClosed = () => setTimeout(reset, 300);
+        window.addEventListener("openContactModal", onOpen);
+        window.addEventListener("contactModalClosed", onClosed);
+        document.addEventListener("keydown", onKey);
         return () => {
-            document.removeEventListener("keydown", handleEscape);
+            window.removeEventListener("openContactModal", onOpen);
+            window.removeEventListener("contactModalClosed", onClosed);
+            document.removeEventListener("keydown", onKey);
         };
-    }, [isOpen, onClose]);
-
-    // Reset form when modal closes
-    useEffect(() => {
-        if (!isOpen) {
-            setTimeout(() => {
-                setFormData({
-                    name: "",
-                    email: "",
-                    phone: "",
-                    subject: "General Inquiry",
-                    message: "",
-                });
-                setErrors({});
-                setSubmitStatus({ type: null, message: "" });
-            }, 300);
-        }
-    }, [isOpen]);
+    }, [lang]);
 
     const validateForm = (): boolean => {
         const newErrors: FormErrors = {};
-
-        if (!formData.name.trim()) {
-            newErrors.name = "Full name is required";
-        }
-
-        if (!formData.email.trim()) {
-            newErrors.email = "Email is required";
-        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-            newErrors.email = "Please enter a valid email address";
-        }
-
-        if (!formData.message.trim()) {
-            newErrors.message = "Message is required";
-        }
-
+        if (!formData.name.trim()) newErrors.name = t.errName;
+        if (!formData.email.trim()) newErrors.email = t.errEmail;
+        else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) newErrors.email = t.errEmailFmt;
+        if (!formData.message.trim()) newErrors.message = t.errMessage;
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
@@ -102,255 +170,196 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
     const handleSubmit: React.ComponentProps<"form">["onSubmit"] = async (e) => {
         e.preventDefault();
         setSubmitStatus({ type: null, message: "" });
-
-        if (!validateForm()) {
-            return;
-        }
-
+        if (!validateForm()) return;
         setLoading(true);
-
         try {
-            const formDataToSend = new FormData();
-            formDataToSend.append("name", formData.name);
-            formDataToSend.append("email", formData.email);
-            formDataToSend.append("phone", formData.phone);
-            formDataToSend.append("subject", formData.subject);
-            formDataToSend.append("message", formData.message);
-
-            const response = await fetch("/api/contact", {
-                method: "POST",
-                body: formDataToSend,
-            });
-
-            const result = await response.json();
-
-            if (result.success) {
-                setSubmitStatus({
-                    type: "success",
-                    message: result.message,
-                });
-
-                // Close modal after 3 seconds on success
-                setTimeout(() => {
-                    handleClose();
-                }, 3000);
+            const fd = new FormData();
+            fd.append("name", formData.name);
+            fd.append("email", formData.email);
+            fd.append("phone", formData.phone);
+            fd.append("intent", intent);
+            if (intent === "poc") {
+                const opt = pocOptions.find((o) => o.key === formData.subject);
+                fd.append("subject", opt ? opt.en : formData.subject);
+                fd.append("poc", formData.subject);
             } else {
-                setSubmitStatus({
-                    type: "error",
-                    message: result.message,
-                });
+                fd.append("subject", formData.subject || t.contactOptions[0]);
             }
-        } catch (error) {
-            setSubmitStatus({
-                type: "error",
-                message: "An unexpected error occurred. Please try again.",
-            });
+            fd.append("message", formData.message);
+            fd.append("lang", lang);
+
+            const response = await fetch("/api/contact", { method: "POST", body: fd });
+            const result = await response.json();
+            if (result.success) {
+                setSubmitStatus({ type: "success", message: result.message });
+                setTimeout(handleClose, 3000);
+            } else {
+                setSubmitStatus({ type: "error", message: result.message });
+            }
+        } catch {
+            setSubmitStatus({ type: "error", message: t.errGeneric });
         } finally {
             setLoading(false);
         }
     };
 
-    const handleChange = (
-        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
-    ) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
-        // Clear error for this field when user starts typing
-        if (errors[name as keyof FormErrors]) {
-            setErrors((prev) => ({ ...prev, [name]: undefined }));
-        }
+        if (errors[name as keyof FormErrors]) setErrors((prev) => ({ ...prev, [name]: undefined }));
     };
 
-    if (!isOpen) return null;
+    const isPoc = intent === "poc";
 
     return (
         <div
-            className="fixed inset-0 z-50 flex items-center justify-end transition-colors"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 transition-colors"
             onClick={handleClose}
-            style={{
-                backgroundColor: "rgba(0, 0, 0, 0.4)",
-                backdropFilter: "blur(4px)",
-            }}
+            style={{ backgroundColor: "rgba(2, 6, 23, 0.45)", backdropFilter: "blur(4px)" }}
         >
             <div
-                className="h-full w-full max-w-2xl bg-white dark:bg-slate-900 shadow-2xl flex flex-col animate-in slide-in-from-right duration-300 transition-colors"
+                className="w-full max-w-2xl max-h-[92vh] sm:max-h-[88vh] bg-white dark:bg-slate-900 rounded-3xl shadow-2xl shadow-slate-900/30 border border-slate-200/70 dark:border-slate-700/60 flex flex-col overflow-hidden animate-in fade-in zoom-in-95 slide-in-from-bottom-4 duration-300 transition-colors"
                 onClick={(e) => e.stopPropagation()}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="contact-modal-title"
             >
                 {/* Header */}
-                <div className="p-8 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-white/50 dark:bg-slate-900/50 backdrop-blur-md sticky top-0 z-20 transition-colors">
-                    <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 bg-slate-900 dark:bg-white rounded-xl flex items-center justify-center transition-colors">
-                            <span className="material-symbols-outlined text-white dark:text-slate-900 text-xl transition-colors">
-                                mail
-                            </span>
+                <div className="px-5 py-4 sm:px-7 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-white/50 dark:bg-slate-900/50 backdrop-blur-md sticky top-0 z-20 transition-colors">
+                    <div className="flex items-center gap-4 min-w-0">
+                        <div className="w-11 h-11 shrink-0 bg-slate-900 dark:bg-slate-800 rounded-xl flex items-center justify-center shadow-[0_0_18px_rgba(99,102,241,0.35)]">
+                            <NexusX />
                         </div>
-                        <div>
-                            <h2 className="text-xl font-display font-bold text-slate-900 dark:text-white transition-colors">
-                                Contact Us
+                        <div className="min-w-0">
+                            <h2
+                                id="contact-modal-title"
+                                className="text-lg sm:text-xl font-display font-bold text-slate-900 dark:text-white transition-colors leading-tight"
+                            >
+                                {isPoc ? t.pocTitle : t.contactTitle}
                             </h2>
-                            <p className="text-[0.6rem] text-slate-400 uppercase tracking-widest font-bold">
-                                Let's Transform Together
+                            <p className="text-[0.6rem] text-slate-400 uppercase tracking-widest font-bold truncate">
+                                {isPoc ? t.pocSub : t.contactSub}
                             </p>
                         </div>
                     </div>
                     <button
+                        type="button"
                         onClick={handleClose}
                         className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors text-slate-400 hover:text-slate-900 dark:hover:text-white"
-                        aria-label="Close modal"
+                        aria-label="Close"
                     >
                         <span className="material-symbols-outlined">close</span>
                     </button>
                 </div>
 
-                {/* Form Content */}
-                <div className="flex-1 overflow-y-auto p-8">
+                {/* Form — sized to fit the viewport; scroll only as a fallback */}
+                <div className="flex-1 overflow-y-auto p-5 sm:p-7">
                     <div className="max-w-xl mx-auto">
-                        <div className="text-center mb-12">
-                            <span className="inline-block px-3 py-1 bg-nexus-blue/5 text-nexus-blue text-[0.65rem] font-bold uppercase tracking-widest rounded-full mb-6">
-                                Get In Touch
-                            </span>
-                            <h3 className="text-3xl font-display font-bold text-slate-900 dark:text-white mb-4 transition-colors">
-                                Start Your Digital Transformation
-                            </h3>
-                            <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed font-light transition-colors">
-                                Share your vision with us, and our enterprise architects will
-                                connect with you within 24 hours to discuss your strategic
-                                objectives.
-                            </p>
-                        </div>
-
                         {submitStatus.type && (
                             <div
-                                className={`mb-8 p-6 rounded-2xl text-center text-sm font-medium animate-in fade-in slide-in-from-top-2 duration-300 ${
+                                className={`mb-4 px-4 py-3 rounded-xl text-center text-sm font-medium animate-in fade-in slide-in-from-top-2 duration-300 ${
                                     submitStatus.type === "success"
                                         ? "bg-nexus-green/10 text-nexus-green border border-nexus-green/20"
                                         : "bg-nexus-red/10 text-nexus-red border border-nexus-red/20"
                                 }`}
                             >
-                                <span className="material-symbols-outlined inline-block mr-2 align-middle">
+                                <span className="material-symbols-outlined inline-block mr-2 align-middle text-base">
                                     {submitStatus.type === "success" ? "check_circle" : "error"}
                                 </span>
                                 {submitStatus.message}
                             </div>
                         )}
 
-                        <form onSubmit={handleSubmit} className="space-y-6">
-                            {/* Full Name */}
-                            <div>
-                                <label
-                                    htmlFor="name"
-                                    className="block text-[0.65rem] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-3"
-                                >
-                                    Full Name <span className="text-nexus-red">*</span>
-                                </label>
-                                <input
-                                    type="text"
-                                    id="name"
-                                    name="name"
-                                    value={formData.name}
-                                    onChange={handleChange}
-                                    disabled={loading}
-                                    className={`w-full px-6 py-4 rounded-2xl border ${
-                                        errors.name
-                                            ? "border-nexus-red focus:ring-nexus-red"
-                                            : "border-slate-200 dark:border-slate-700 focus:ring-nexus-blue"
-                                    } focus:ring-2 focus:border-transparent resize-none text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-slate-800 focus:bg-white dark:focus:bg-slate-900 transition-all outline-none text-sm`}
-                                    placeholder="John Smith"
-                                />
-                                {errors.name && (
-                                    <p className="mt-2 text-xs text-nexus-red font-medium">
-                                        {errors.name}
-                                    </p>
-                                )}
+                        <form onSubmit={handleSubmit} className="space-y-4">
+                            <div className="grid grid-cols-1 min-[480px]:grid-cols-2 gap-4">
+                                <div>
+                                    <label htmlFor="name" className={LABEL}>
+                                        {t.name} <span className="text-nexus-red">*</span>
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="name"
+                                        name="name"
+                                        value={formData.name}
+                                        onChange={handleChange}
+                                        disabled={loading}
+                                        className={`${INPUT} ${errors.name ? BAD : OK}`}
+                                        placeholder="John Smith"
+                                        autoComplete="name"
+                                    />
+                                    {errors.name && <p className="mt-1 text-xs text-nexus-red font-medium">{errors.name}</p>}
+                                </div>
+                                <div>
+                                    <label htmlFor="email" className={LABEL}>
+                                        {t.email} <span className="text-nexus-red">*</span>
+                                    </label>
+                                    <input
+                                        type="email"
+                                        id="email"
+                                        name="email"
+                                        value={formData.email}
+                                        onChange={handleChange}
+                                        disabled={loading}
+                                        className={`${INPUT} ${errors.email ? BAD : OK}`}
+                                        placeholder="john.smith@company.com"
+                                        autoComplete="email"
+                                    />
+                                    {errors.email && <p className="mt-1 text-xs text-nexus-red font-medium">{errors.email}</p>}
+                                </div>
                             </div>
 
-                            {/* Email */}
-                            <div>
-                                <label
-                                    htmlFor="email"
-                                    className="block text-[0.65rem] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-3"
-                                >
-                                    Email Address <span className="text-nexus-red">*</span>
-                                </label>
-                                <input
-                                    type="email"
-                                    id="email"
-                                    name="email"
-                                    value={formData.email}
-                                    onChange={handleChange}
-                                    disabled={loading}
-                                    className={`w-full px-6 py-4 rounded-2xl border ${
-                                        errors.email
-                                            ? "border-nexus-red focus:ring-nexus-red"
-                                            : "border-slate-200 dark:border-slate-700 focus:ring-nexus-blue"
-                                    } focus:ring-2 focus:border-transparent resize-none text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-slate-800 focus:bg-white dark:focus:bg-slate-900 transition-all outline-none text-sm`}
-                                    placeholder="john.smith@company.com"
-                                />
-                                {errors.email && (
-                                    <p className="mt-2 text-xs text-nexus-red font-medium">
-                                        {errors.email}
-                                    </p>
-                                )}
-                            </div>
-
-                            {/* Phone (Optional) */}
-                            <div>
-                                <label
-                                    htmlFor="phone"
-                                    className="block text-[0.65rem] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-3"
-                                >
-                                    Phone Number <span className="text-slate-300 dark:text-slate-600">(Optional)</span>
-                                </label>
-                                <input
-                                    type="tel"
-                                    id="phone"
-                                    name="phone"
-                                    value={formData.phone}
-                                    onChange={handleChange}
-                                    disabled={loading}
-                                    className="w-full px-6 py-4 rounded-2xl border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-nexus-blue focus:border-transparent resize-none text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-slate-800 focus:bg-white dark:focus:bg-slate-900 transition-all outline-none text-sm"
-                                    placeholder="+1 (555) 123-4567"
-                                />
-                            </div>
-
-                            {/* Service Interest */}
-                            <div>
-                                <label
-                                    htmlFor="subject"
-                                    className="block text-[0.65rem] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-3"
-                                >
-                                    Service Interest
-                                </label>
-                                <div className="relative">
-                                <select
-                                    id="subject"
-                                    name="subject"
-                                    value={formData.subject}
-                                    onChange={handleChange}
-                                    disabled={loading}
-                                    className="w-full px-6 py-4 rounded-2xl border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-nexus-blue focus:border-transparent text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-slate-800 focus:bg-white dark:focus:bg-slate-900 transition-all outline-none text-sm appearance-none"
-                                >
-                                    <option value="General Inquiry">General Inquiry</option>
-                                    <option value="Cloud Architecture">Cloud Architecture</option>
-                                    <option value="AI Solutions">AI Solutions</option>
-                                    <option value="Cybersecurity">Cybersecurity</option>
-                                    <option value="Digital Transformation">
-                                        Digital Transformation
-                                    </option>
-                                </select>
-                                    <div className="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-slate-500">
-                                        <span className="material-symbols-outlined text-sm">expand_more</span>
+                            <div className={`grid gap-4 ${isPoc ? "grid-cols-1 min-[480px]:grid-cols-[0.8fr_1.2fr]" : "grid-cols-2"}`}>
+                                <div>
+                                    <label htmlFor="phone" className={LABEL}>
+                                        {t.phone} <span className="text-slate-300 dark:text-slate-600">{t.optional}</span>
+                                    </label>
+                                    <input
+                                        type="tel"
+                                        id="phone"
+                                        name="phone"
+                                        value={formData.phone}
+                                        onChange={handleChange}
+                                        disabled={loading}
+                                        className={`${INPUT} ${OK}`}
+                                        placeholder="+1 (555) 123-4567"
+                                        autoComplete="tel"
+                                    />
+                                </div>
+                                <div>
+                                    <label htmlFor="subject" className={LABEL}>
+                                        {isPoc ? t.which : t.service}
+                                    </label>
+                                    <div className="relative">
+                                        <select
+                                            id="subject"
+                                            name="subject"
+                                            value={formData.subject}
+                                            onChange={handleChange}
+                                            disabled={loading}
+                                            className={`${INPUT} ${OK} appearance-none pr-9`}
+                                        >
+                                            {isPoc
+                                                ? pocOptions.map((o) => (
+                                                      <option key={o.key} value={o.key}>
+                                                          {o[lang]}
+                                                      </option>
+                                                  ))
+                                                : t.contactOptions.map((o) => (
+                                                      <option key={o} value={o}>
+                                                          {o}
+                                                      </option>
+                                                  ))}
+                                        </select>
+                                        <div className="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none text-slate-500">
+                                            <span className="material-symbols-outlined text-sm">expand_more</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
-                            {/* Message */}
                             <div>
-                                <label
-                                    htmlFor="message"
-                                    className="block text-[0.65rem] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-3"
-                                >
-                                    Message <span className="text-nexus-red">*</span>
+                                <label htmlFor="message" className={LABEL}>
+                                    {t.message} <span className="text-nexus-red">*</span>
                                 </label>
                                 <textarea
                                     id="message"
@@ -358,84 +367,44 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
                                     value={formData.message}
                                     onChange={handleChange}
                                     disabled={loading}
-                                    rows={6}
-                                    className={`w-full px-6 py-4 rounded-2xl border ${
-                                        errors.message
-                                            ? "border-nexus-red focus:ring-nexus-red"
-                                            : "border-slate-200 dark:border-slate-700 focus:ring-nexus-blue"
-                                    } focus:ring-2 focus:border-transparent resize-none text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-slate-800 focus:bg-white dark:focus:bg-slate-900 transition-all outline-none text-sm leading-relaxed`}
-                                    placeholder="Tell us about your project goals and challenges..."
+                                    className={`${INPUT} ${errors.message ? BAD : OK} h-24 sm:h-28 resize-none leading-relaxed`}
+                                    placeholder={isPoc ? t.pocMessagePh : t.messagePh}
                                 />
-                                {errors.message && (
-                                    <p className="mt-2 text-xs text-nexus-red font-medium">
-                                        {errors.message}
-                                    </p>
-                                )}
+                                {errors.message && <p className="mt-1 text-xs text-nexus-red font-medium">{errors.message}</p>}
                             </div>
 
-                            {/* Submit Button */}
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="w-full py-5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-2xl font-bold text-sm uppercase tracking-[0.2em] hover:bg-slate-800 dark:hover:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 transition-all shadow-xl shadow-slate-200 dark:shadow-none active:scale-[0.98]"
+                                className="w-full py-3.5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-xl font-bold text-sm uppercase tracking-[0.18em] hover:bg-slate-800 dark:hover:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 transition-all shadow-xl shadow-slate-200 dark:shadow-none active:scale-[0.98]"
                             >
                                 {loading ? (
                                     <>
                                         <span className="w-5 h-5 border-2 border-white/20 dark:border-slate-900/20 border-t-white dark:border-t-slate-900 rounded-full animate-spin"></span>
-                                        Sending Message...
+                                        {t.sending}
                                     </>
                                 ) : (
                                     <>
-                                        Send Message
-                                        <span className="material-symbols-outlined text-sm">
-                                            send
-                                        </span>
+                                        {isPoc ? t.sendPoc : t.send}
+                                        <span className="material-symbols-outlined text-sm">{isPoc ? "bolt" : "send"}</span>
                                     </>
                                 )}
                             </button>
                         </form>
-
-                        {/* Additional Info */}
-                        <div className="mt-12 pt-8 border-t border-slate-100 dark:border-slate-800 transition-colors">
-                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
-                                <div className="flex flex-col items-center gap-2">
-                                    <span className="material-symbols-outlined text-nexus-blue text-2xl">
-                                        schedule
-                                    </span>
-                                    <p className="text-[0.6rem] font-bold uppercase tracking-widest text-slate-400">
-                                        24h Response
-                                    </p>
-                                </div>
-                                <div className="flex flex-col items-center gap-2">
-                                    <span className="material-symbols-outlined text-nexus-green text-2xl">
-                                        verified
-                                    </span>
-                                    <p className="text-[0.6rem] font-bold uppercase tracking-widest text-slate-400">
-                                        No Commitment
-                                    </p>
-                                </div>
-                                <div className="flex flex-col items-center gap-2">
-                                    <span className="material-symbols-outlined text-nexus-purple text-2xl">
-                                        security
-                                    </span>
-                                    <p className="text-[0.6rem] font-bold uppercase tracking-widest text-slate-400">
-                                        Secure & Private
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
                 {/* Footer */}
-                <div className="p-8 bg-slate-50/50 dark:bg-slate-800/20 border-t border-slate-100 dark:border-slate-800 transition-colors">
-                    <div className="flex justify-between items-center opacity-40">
-                        <p className="text-[0.6rem] text-slate-500 dark:text-slate-400 uppercase tracking-widest font-bold">
-                            Encrypted Connection
+                <div className="px-5 py-3 sm:px-7 bg-slate-50/50 dark:bg-slate-800/20 border-t border-slate-100 dark:border-slate-800 transition-colors">
+                    <div className="flex flex-wrap justify-between items-center gap-x-4 gap-y-1 opacity-50 text-[0.58rem] sm:text-[0.6rem] text-slate-500 dark:text-slate-400 uppercase tracking-widest font-bold">
+                        <p className="hidden sm:flex items-center gap-3">
+                            <span>{t.trust[0]}</span>
+                            <span aria-hidden="true">·</span>
+                            <span>{t.trust[1]}</span>
+                            <span aria-hidden="true">·</span>
+                            <span>{t.trust[2]}</span>
                         </p>
-                        <p className="text-[0.6rem] text-slate-500 dark:text-slate-400 uppercase tracking-widest font-bold">
-                            © 2024 Nexus Innovations
-                        </p>
+                        <p>© {new Date().getFullYear()} Nexus Innovations</p>
                     </div>
                 </div>
             </div>

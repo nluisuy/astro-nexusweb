@@ -1,6 +1,7 @@
 ---
 // MiniCTA — the free-offer band. Links to the booking section so it works on every page.
 import { getLangFromUrl, useTranslations } from "../i18n/utils";
+import { bookingHref } from "../lib/book";
 
 const lang = Astro.currentLocale || getLangFromUrl(Astro.url);
 const t = useTranslations(lang as any);
@@ -19,13 +20,13 @@ const prefix = lang === "es" ? "/es" : "";
                     {t("minicta2.desc")}
                 </p>
             </div>
-            <div class="flex flex-col sm:flex-row lg:flex-col xl:flex-row items-start sm:items-center gap-3 flex-shrink-0">
+            <div class="flex flex-col sm:flex-row lg:flex-col xl:flex-row items-start sm:items-center gap-3 min-w-0 max-w-full lg:flex-shrink-0">
                 <div class="flex flex-wrap gap-2">
                     <span class="mc-chip">{t("hero.offer.poc")}<i>{t("hero.offer.free")}</i></span>
                     <span class="mc-chip">{t("hero.offer.assessment")}<i>{t("hero.offer.free")}</i></span>
                     <span class="mc-chip">{t("hero.offer.case")}<i>{t("hero.offer.free")}</i></span>
                 </div>
-                <a href={`${prefix}/#contact`} class="nx-cta whitespace-nowrap">
+                <a href={bookingHref(prefix)} class="nx-cta whitespace-nowrap js-book" data-mode="poc">
                     {t("minicta2.btn")}
                     <span class="material-symbols-outlined text-lg">arrow_right_alt</span>
                 </a>
@@ -87,3 +88,8 @@ const prefix = lang === "es" ? "/es" : "";
         background: rgba(16, 185, 129, 0.14);
     }
 </style>
+
+<script>
+    import { wireBooking } from "../lib/book";
+    wireBooking("#mini-cta-banner .js-book");
+</script>

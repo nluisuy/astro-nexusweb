@@ -48,6 +48,7 @@ const also = [
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
             {
                 verticals.map((v) => (
+                    <div class="vcard-wrap">
                     <article class="service-tile vcard group">
                         <div class={`vcard-motif ${v.color}`}>
                             <Motif kind={v.kind} />
@@ -79,12 +80,13 @@ const also = [
                                 {t(`hero.p.${v.key}.metric` as any)}
                                 <small>{t(`hero.p.${v.key}.metriclabel` as any)}</small>
                             </span>
-                            <button type="button" class="nx-free js-open-planner">
+                            <button type="button" class="nx-free js-open-planner" data-mode="poc" data-poc={v.key}>
                                 <span class="material-symbols-outlined text-[1rem]">bolt</span>
                                 {t(`hero.p.${v.key}.free` as any)}
                             </button>
                         </div>
                     </article>
+                    </div>
                 ))
             }
         </div>
@@ -116,8 +118,13 @@ const also = [
 </section>
 
 <style>
+    .vcard-wrap {
+        display: flex; /* the article fills the wrapper so the three cards stay level */
+        will-change: transform, opacity;
+    }
     .vcard {
         position: relative;
+        flex: 1 1 auto;
         display: flex;
         flex-direction: column; /* footer pinned to the bottom so the three cards line up */
         padding: 26px 26px 24px;
@@ -148,6 +155,12 @@ const also = [
     }
     .vcard:hover .vcard-motif {
         transform: translateY(-2px) scale(1.03);
+    }
+    /* the motif SVG has no intrinsic size: size it by the band's height, never the card's width */
+    .vcard-motif :global(svg) {
+        height: 100%;
+        width: auto;
+        max-width: 100%;
     }
     .vcard-list {
         list-style: none;
@@ -232,10 +245,60 @@ const also = [
 </style>
 
 <script>
-    // Free-POC hooks open the AI planner (index.astro listens for this event).
-    document.querySelectorAll<HTMLElement>("#services .js-open-planner").forEach((b) =>
-        b.addEventListener("click", () => window.dispatchEvent(new Event("openPlanner")))
-    );
+    import gsap from "gsap";
+    import { ScrollTrigger } from "gsap/ScrollTrigger";
+    import { wireBooking } from "../lib/book";
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Free-POC hooks book a call.
+    wireBooking("#services .js-open-planner");
+
+    // ── Scroll-driven entrance (continues the deck's right→left motion) ──
+    // Scrubbed to the scroll position, so the cards slide in and settle as you go,
+    // and slide back out if you scroll up. Skipped for reduced motion.
+    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        const section = document.getElementById("services");
+        const wraps = gsap.utils.toArray<HTMLElement>("#services .vcard-wrap");
+        const acards = gsap.utils.toArray<HTMLElement>("#services .acard");
+        const signal = section?.querySelector<HTMLElement>(".nx-signal");
+
+        if (signal) {
+            gsap.fromTo(
+                signal,
+                { scaleX: 0, transformOrigin: "left center" },
+                { scaleX: 1, ease: "none", scrollTrigger: { trigger: section, start: "top 90%", end: "top 40%", scrub: 0.4 } }
+            );
+        }
+        if (wraps.length) {
+            gsap.fromTo(
+                wraps,
+                { x: "38vw", opacity: 0, rotateY: -16, transformPerspective: 900, transformOrigin: "left center" },
+                {
+                    x: 0,
+                    opacity: 1,
+                    rotateY: 0,
+                    ease: "power2.out",
+                    stagger: 0.22,
+                    scrollTrigger: { trigger: wraps[0].parentElement, start: "top 88%", end: "top 22%", scrub: 0.6 },
+                }
+            );
+        }
+        if (acards.length) {
+            gsap.fromTo(
+                acards,
+                { y: 48, opacity: 0 },
+                {
+                    y: 0,
+                    opacity: 1,
+                    ease: "power2.out",
+                    stagger: 0.12,
+                    scrollTrigger: { trigger: acards[0].parentElement, start: "top 92%", end: "top 55%", scrub: 0.5 },
+                }
+            );
+        }
+        document.addEventListener("astro:before-swap", () => ScrollTrigger.getAll().forEach((t) => t.kill()));
+    }
 
     // Light 3D tilt on the vertical cards (desktop pointers only).
     if (window.matchMedia("(hover: hover) and (prefers-reduced-motion: no-preference)").matches) {

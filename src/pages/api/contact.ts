@@ -12,7 +12,16 @@ interface ContactFormData {
     phone?: string;
     subject: string;
     message: string;
+    intent: "contact" | "poc";
+    poc?: string;
 }
+
+const MAX = { name: 120, email: 200, phone: 40, subject: 160, message: 5000, poc: 60 } as const;
+const clip = (v: FormDataEntryValue | null, n: number) => (typeof v === "string" ? v.trim().slice(0, n) : "");
+
+// User input goes into an HTML email: escape it.
+const esc = (s: string) =>
+    s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c] as string);
 
 export const POST: APIRoute = async ({ request }) => {
     try {
@@ -20,12 +29,16 @@ export const POST: APIRoute = async ({ request }) => {
         const formData = await request.formData();
 
         const data: ContactFormData = {
-            name: formData.get("name") as string,
-            email: formData.get("email") as string,
-            phone: (formData.get("phone") as string) || "",
-            subject: formData.get("subject") as string,
-            message: formData.get("message") as string,
+            name: clip(formData.get("name"), MAX.name),
+            email: clip(formData.get("email"), MAX.email),
+            phone: clip(formData.get("phone"), MAX.phone),
+            subject: clip(formData.get("subject"), MAX.subject),
+            message: clip(formData.get("message"), MAX.message),
+            intent: formData.get("intent") === "poc" ? "poc" : "contact",
+            poc: clip(formData.get("poc"), MAX.poc) || undefined,
         };
+        const isPoc = data.intent === "poc";
+        const kind = isPoc ? "POC request" : "Contact";
 
         // Validate required fields
         if (!data.name || !data.email || !data.subject || !data.message) {
@@ -85,12 +98,12 @@ export const POST: APIRoute = async ({ request }) => {
 
         // Create email content
         const textContent = `
-New Contact Form Submission
+New ${kind} from the website
 
 Name: ${data.name}
 Email: ${data.email}
 Phone: ${data.phone || "Not provided"}
-Service Interest: ${data.subject}
+${isPoc ? "POC requested" : "Service Interest"}: ${data.subject}${data.poc ? ` (${data.poc})` : ""}
 
 Message:
 ${data.message}
@@ -206,37 +219,37 @@ Sent from Nexus Innovations Contact Form
 <body>
     <div class="container">
         <div class="header">
-            <h1>New Contact Inquiry</h1>
+            <h1>${isPoc ? "New POC request" : "New Contact Inquiry"}</h1>
             <p>Nexus Innovations</p>
         </div>
         <div class="content">
             <div class="field">
                 <div class="field-label">Full Name</div>
-                <div class="field-value"><strong>${data.name}</strong></div>
+                <div class="field-value"><strong>${esc(data.name)}</strong></div>
             </div>
             <div class="field">
                 <div class="field-label">Email Address</div>
-                <div class="field-value"><a href="mailto:${data.email}" style="color: #3b82f6; text-decoration: none;">${data.email}</a></div>
+                <div class="field-value"><a href="mailto:${esc(data.email)}" style="color: #3b82f6; text-decoration: none;">${esc(data.email)}</a></div>
             </div>
             ${
                 data.phone
                     ? `
             <div class="field">
                 <div class="field-label">Phone Number</div>
-                <div class="field-value"><a href="tel:${data.phone}" style="color: #3b82f6; text-decoration: none;">${data.phone}</a></div>
+                <div class="field-value"><a href="tel:${esc(data.phone || "")}" style="color: #3b82f6; text-decoration: none;">${esc(data.phone || "")}</a></div>
             </div>
             `
                     : ""
             }
             <div class="field">
-                <div class="field-label">Service Interest</div>
+                <div class="field-label">${isPoc ? "POC requested" : "Service Interest"}</div>
                 <div class="field-value">
-                    <span class="badge">${data.subject}</span>
+                    <span class="badge">${esc(data.subject)}</span>
                 </div>
             </div>
             <div class="field">
                 <div class="field-label">Message</div>
-                <div class="message-box">${data.message}</div>
+                <div class="message-box">${esc(data.message)}</div>
             </div>
         </div>
         <div class="footer">
@@ -251,7 +264,7 @@ Sent from Nexus Innovations Contact Form
         const msg = {
             to: toEmail,
             from: fromEmail,
-            subject: `New Contact: ${data.subject} - ${data.name}`,
+            subject: `${isPoc ? "POC request" : "New Contact"}: ${data.subject} - ${data.name}`,
             text: textContent,
             html: htmlContent,
             replyTo: data.email,

@@ -3,9 +3,11 @@ import Layout from "../layouts/Layout.astro";
 import Navbar from "../components/Navbar.astro";
 import Footer from "../components/Footer.astro";
 import AILab from "../components/AILab.astro";
+import AIPortfolio from "../components/AIPortfolio.astro";
 import MiniCTA from "../components/MiniCTA.astro";
 import Motif from "../components/Motif.astro";
 import { getLangFromUrl, useTranslations } from "../i18n/utils";
+import { bookingHref } from "../lib/book";
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang as any);
@@ -46,7 +48,7 @@ const pageDescription =
                             <span class="nx-offer-chip">{t("hero.offer.case")}<i>{t("hero.offer.free")}</i></span>
                         </div>
                         <div class="flex flex-wrap items-center gap-4">
-                            <a href={`${prefix}/#contact`} class="nx-cta">
+                            <a href={bookingHref(prefix)} class="nx-cta js-book" data-mode="poc" data-poc="pod">
                                 {t("ailabpage.cta")}
                                 <span class="material-symbols-outlined text-lg">arrow_right_alt</span>
                             </a>
@@ -59,6 +61,7 @@ const pageDescription =
                 </div>
             </section>
 
+            <AIPortfolio />
             <AILab />
             <MiniCTA />
         </main>
@@ -108,3 +111,8 @@ const pageDescription =
         background: rgba(16, 185, 129, 0.14);
     }
 </style>
+
+<script>
+    import { wireBooking } from "../lib/book";
+    wireBooking(".js-book");
+</script>

@@ -8,7 +8,6 @@ import Projects from "../../components/Projects.astro";
 import About from "../../components/About.astro";
 import Footer from "../../components/Footer.astro";
 import AIProjectPlanner from "../../components/AIProjectPlanner";
-import ContactModal from "../../components/ContactModal";
 import Stats from "../../components/Stats.astro";
 import Bookingsession from "../../components/Bookingsession.astro";
 import { getLangFromUrl } from "../../i18n/utils";
@@ -49,10 +48,6 @@ const pageDescription =
             </div>
         </div>
 
-        <!-- Modal container for ContactModal -->
-        <div id="contact-modal" class="hidden fixed inset-0 z-[60]">
-            <ContactModal client:only="react" isOpen={true} onClose={() => {}} lang={lang} />
-        </div>
     </div>
 </Layout>
 
@@ -72,24 +67,6 @@ const pageDescription =
         }
     }
 
-    function openContactModal() {
-        const modal = document.getElementById("contact-modal");
-        if (modal) {
-            modal.classList.remove("hidden");
-            // Prevent body scroll when modal is open
-            document.body.style.overflow = "hidden";
-        }
-    }
-
-    function closeContactModal() {
-        const modal = document.getElementById("contact-modal");
-        if (modal) {
-            modal.classList.add("hidden");
-            // Restore body scroll when modal is closed
-            document.body.style.overflow = "unset";
-        }
-    }
-
     // Set up event listeners when DOM is ready
     document.addEventListener("DOMContentLoaded", () => {
         const heroBtn = document.getElementById("hero-planner-btn");
@@ -104,12 +81,8 @@ const pageDescription =
 
         // Custom event listener for opening planner from other components
         window.addEventListener("openPlanner", () => openPlanner());
-
-        // Custom event listener for opening contact modal from CTA
-        window.addEventListener("openContactModal", () => openContactModal());
     });
 
-    // Make closePlanner and closeContactModal available globally so React components can call them
+    // Make closePlanner available globally so the React planner can call it
     (window as any).closePlanner = closePlanner;
-    (window as any).closeContactModal = closeContactModal;
 </script>

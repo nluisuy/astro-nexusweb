@@ -97,32 +97,6 @@
         });
     });
 
-    // ─── Services Cards Stagger ───
-    const serviceCards = gsap.utils.toArray<HTMLElement>('.service-tile');
-    if (serviceCards.length > 0) {
-        gsap.fromTo(
-            serviceCards,
-            {
-                opacity: 0,
-                y: 60,
-                rotateX: 8,
-            },
-            {
-                opacity: 1,
-                y: 0,
-                rotateX: 0,
-                duration: 0.8,
-                stagger: 0.12,
-                ease: 'power3.out',
-                scrollTrigger: {
-                    trigger: serviceCards[0].parentElement,
-                    start: 'top 80%',
-                    toggleActions: 'play none none none',
-                },
-            }
-        );
-    }
-
     // ─── Projects Bento Grid Stagger ───
     const bentoCards = gsap.utils.toArray<HTMLElement>('.bento-card');
     if (bentoCards.length > 0) {
