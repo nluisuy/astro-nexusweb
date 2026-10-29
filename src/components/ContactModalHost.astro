@@ -1,0 +1,31 @@
+---
+// Mounts the contact / "start your POC" modal on every page (included from Layout).
+// Open it with `openContactModal` (see lib/book.ts); close with window.closeContactModal().
+import ContactModal from "./ContactModal";
+import { getLangFromUrl } from "../i18n/utils";
+
+const lang = (Astro.currentLocale || getLangFromUrl(Astro.url)) as "en" | "es";
+---
+
+<div id="contact-modal" class="hidden fixed inset-0 z-[60]">
+    <ContactModal client:idle lang={lang} />
+</div>
+
+<script>
+    const modal = document.getElementById("contact-modal");
+    function openContactModal() {
+        if (!modal) return;
+        modal.classList.remove("hidden");
+        document.body.style.overflow = "hidden";
+        // focus the first field once the island has rendered
+        setTimeout(() => modal.querySelector<HTMLInputElement>("input#name")?.focus(), 80);
+    }
+    function closeContactModal() {
+        if (!modal) return;
+        modal.classList.add("hidden");
+        document.body.style.overflow = "";
+        window.dispatchEvent(new Event("contactModalClosed"));
+    }
+    window.addEventListener("openContactModal", openContactModal);
+    (window as any).closeContactModal = closeContactModal;
+</script>

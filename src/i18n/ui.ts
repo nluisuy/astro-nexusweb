@@ -218,6 +218,13 @@ export const ui = {
     'stats.item4.desc': 'Driving Innovation',
 
     // AILab
+    'aiport.kicker': 'AI portfolio · built by the pods',
+    'aiport.title': 'Agents and products we have already shipped.',
+    'aiport.lead': 'Every item below runs in a real company today or is in pilot — built by an AI Innovation Pod, owned by the client, no lock-in. Any of them can start on your stack as a free 15-day POC.',
+    'aiport.count': 'products and agents',
+    'aiport.filter': 'Filter by area',
+    'aiport.cta': 'Start a POC',
+    'aiport.empty': 'Nothing in this area yet.',
     'ailab.badge': 'AI Innovation Lab',
     'ailab.title': 'The engine behind our AI-first approach.',
     'ailab.desc': 'We don\'t just advise on AI — we build and deploy production-grade agent systems. Our lab is where enterprise AI goes from concept to measurable impact.',
@@ -499,6 +506,13 @@ export const ui = {
     'stats.item4.desc': 'Impulsando Innovación',
 
     // AILab
+    'aiport.kicker': 'Portfolio de IA · construido por los pods',
+    'aiport.title': 'Agentes y productos que ya entregamos.',
+    'aiport.lead': 'Cada ítem corre hoy en una empresa real o está en piloto — construido por un AI Innovation Pod, propiedad del cliente, sin lock-in. Cualquiera puede arrancar en tu stack como POC gratis de 15 días.',
+    'aiport.count': 'productos y agentes',
+    'aiport.filter': 'Filtrar por área',
+    'aiport.cta': 'Iniciar un POC',
+    'aiport.empty': 'Todavía no hay nada en esta área.',
     'ailab.badge': 'Laboratorio de Innovación en IA',
     'ailab.title': 'El motor detrás de nuestro enfoque AI-first.',
     'ailab.desc': 'No solo asesoramos sobre IA; construimos e implementamos sistemas de agentes de grado de producción. Nuestro laboratorio es donde la IA empresarial pasa de un concepto a un impacto medible.',

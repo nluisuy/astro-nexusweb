@@ -3,7 +3,8 @@
 // Scene 0: the NE✕US brand (the X is the hub the mesh converges into).
 // Scenes 1-3: the three verticals; the mesh re-forms per scene.
 // SEO: all copy is server-rendered (H1 on brand, H2 per vertical).
-// Perf: canvas 2D only, paused when off-screen / tab hidden, DPR + node caps,
+// Backdrop: a breathing dot matrix; the (invisible) node simulation lights up the dots
+// around each scene's formation. Perf: canvas 2D only, paused when off-screen / tab hidden, DPR + node caps,
 // initialised after first paint, prefers-reduced-motion respected.
 import { getLangFromUrl, useTranslations } from "../i18n/utils";
 
@@ -27,6 +28,23 @@ const aas = t("hero.aas") as string;
             class="absolute inset-0 w-full h-full"
             aria-hidden="true"></canvas>
         <div class="deck-vignette absolute inset-0 pointer-events-none"></div>
+
+        <!-- The X that takes over the screen while you leave the brand scene (scroll-driven) -->
+        <div class="deck-xzoom" id="deck-xzoom" aria-hidden="true">
+            <svg viewBox="0 0 100 100">
+                <defs>
+                    <linearGradient id="xz-g" x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0" stop-color="#a99bff"></stop>
+                        <stop offset="0.55" stop-color="#6366f1"></stop>
+                        <stop offset="1" stop-color="#f59e42"></stop>
+                    </linearGradient>
+                </defs>
+                <line x1="18" y1="18" x2="82" y2="82" stroke="url(#xz-g)" stroke-width="14" stroke-linecap="round"></line>
+                <line x1="82" y1="18" x2="18" y2="82" stroke="url(#xz-g)" stroke-width="14" stroke-linecap="round"></line>
+                <circle cx="50" cy="50" r="14" fill="#fff" opacity="0.25"></circle>
+                <circle cx="50" cy="50" r="7.5" fill="#fff"></circle>
+            </svg>
+        </div>
 
         <nav class="deck-dots" aria-label={t("hero.explore")}>
             <button type="button" data-go="scene-brand" aria-label="Nexus" aria-current="true"
@@ -85,7 +103,7 @@ const aas = t("hero.aas") as string;
                 </h1>
 
                 <div class="flex flex-wrap items-center justify-center gap-4">
-                    <button type="button" class="nx-cta js-open-planner">
+                    <button type="button" class="nx-cta js-open-planner" data-mode="poc" data-poc="pod">
                         {t("hero.btn1")}
                         <span class="material-symbols-outlined text-lg">arrow_right_alt</span>
                     </button>
@@ -101,7 +119,13 @@ const aas = t("hero.aas") as string;
             </div>
         </section>
 
-        <!-- ── Scenes 1-3 · Verticals ── -->
+        <!-- ── Scenes 1-3 · Verticals ──
+             Desktop + motion OK: the wrap is tall, its inner box sticks for one viewport and
+             the track slides right→left as you scroll (deck--h, set by JS). Otherwise the
+             three scenes simply stack vertically (mobile, reduced motion, no JS). -->
+        <div class="deck-hwrap" id="deck-hwrap" style={`--panels:${verticals.length}`}>
+            <div class="deck-hsticky">
+                <div class="deck-track" id="deck-track">
         {
             verticals.map((v) => (
                 <section class="deck-scene" id={`scene-${v.key}`} data-formation={v.formation}>
@@ -128,7 +152,7 @@ const aas = t("hero.aas") as string;
                                 <span class="nx-mono scene-metric-v">{t(`hero.p.${v.key}.metric` as any)}</span>
                                 <span class="scene-metric-l">{t(`hero.p.${v.key}.metriclabel` as any)}</span>
                             </div>
-                            <button type="button" class="scene-free js-open-planner">
+                            <button type="button" class="scene-free js-open-planner" data-mode="poc" data-poc={v.key}>
                                 <span class="material-symbols-outlined text-[1.05rem]">bolt</span>
                                 {t(`hero.p.${v.key}.free` as any)}
                             </button>
@@ -139,7 +163,7 @@ const aas = t("hero.aas") as string;
                                 <span class="nx-offer">{t("hero.offer.poc")}<i>{t("hero.offer.free")}</i></span>
                                 <span class="nx-offer">{t("hero.offer.assessment")}<i>{t("hero.offer.free")}</i></span>
                                 <span class="nx-offer">{t("hero.offer.case")}<i>{t("hero.offer.free")}</i></span>
-                                <button type="button" class="nx-cta js-open-planner">
+                                <button type="button" class="nx-cta js-open-planner" data-mode="poc" data-poc="pod">
                                     {t("hero.btn1")}
                                     <span class="material-symbols-outlined text-lg">arrow_right_alt</span>
                                 </button>
@@ -149,6 +173,9 @@ const aas = t("hero.aas") as string;
                 </section>
             ))
         }
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -162,13 +189,18 @@ const aas = t("hero.aas") as string;
        deck's real bottom, so it never spills over the next section. */
     .deck {
         display: grid;
+        /* minmax(0, …): the horizontal track (three panels in a row) must never
+           widen the column past the viewport, or scene 0 centres on a phantom width */
+        grid-template-columns: minmax(0, 1fr);
     }
     .deck-stage {
         grid-area: 1 / 1;
         align-self: start;
+        min-width: 0;
     }
     .deck-scenes {
         grid-area: 1 / 1;
+        min-width: 0;
     }
     /* Empty areas fall through to the stage (scene dots); real content stays clickable. */
     .deck-scenes,
@@ -185,6 +217,51 @@ const aas = t("hero.aas") as string;
     .deck-scene > * {
         pointer-events: auto;
     }
+    /* ── Horizontal track (scenes 01-03) ── */
+    .deck-hwrap,
+    .deck-hsticky,
+    .deck-track {
+        pointer-events: none;
+        min-width: 0;
+    }
+    .deck-track {
+        display: flex;
+        flex-direction: column;
+    }
+    /* JS confirms desktop + motion before switching to the horizontal layout, so the
+       scenes are never unreachable when the script fails to run. */
+    .deck.deck--h .deck-hwrap {
+        /* one viewport of scroll per panel, plus a short dwell on the last one */
+        height: calc(var(--panels, 3) * 100svh + 40svh);
+    }
+    .deck.deck--h .deck-hsticky {
+        position: sticky;
+        top: 0;
+        height: 100svh;
+        overflow: hidden;
+    }
+    .deck.deck--h .deck-track {
+        flex-direction: row;
+        height: 100%;
+        will-change: transform;
+    }
+    .deck.deck--h .deck-track .deck-scene {
+        flex: 0 0 100%;
+        width: 100%;
+        min-height: 0;
+        height: 100%;
+        scroll-snap-align: none;
+    }
+    .deck.deck--h .deck-track .scene-inner {
+        max-height: 100%;
+        overflow-y: auto;
+        scrollbar-width: none;
+    }
+    /* Side entrance while the track slides */
+    .deck.deck--h .deck-track .deck-scene:not(.is-active) .scene-inner {
+        transform: translateX(28px);
+    }
+
     .scene-inner {
         width: 100%;
         max-width: 72rem;
@@ -198,6 +275,28 @@ const aas = t("hero.aas") as string;
         .scene-inner {
             padding: 7rem 3rem 4rem;
         }
+    }
+    /* Brand scene: everything centred (the scoped rule above would win over .items-center) */
+    #scene-brand .scene-inner {
+        align-items: center;
+    }
+
+    .deck-xzoom {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100px;
+        height: 100px;
+        opacity: 0;
+        pointer-events: none;
+        z-index: 1;
+        will-change: transform, opacity;
+    }
+    .deck-xzoom svg {
+        width: 100%;
+        height: 100%;
+        display: block;
+        overflow: visible;
     }
 
     /* Legibility over the mesh */
@@ -216,6 +315,8 @@ const aas = t("hero.aas") as string;
     .brandmark {
         display: inline-flex;
         align-items: center;
+        /* optical centring: "NE" is wider than "US", so nudge until the X sits on the axis */
+        padding-right: 0.08em;
         font-family: "Outfit", sans-serif;
         font-weight: 800;
         font-size: clamp(3.6rem, 13vw, 10rem);
@@ -592,21 +693,125 @@ const aas = t("hero.aas") as string;
 </style>
 
 <script>
+    import gsap from "gsap";
+    import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+    gsap.registerPlugin(ScrollTrigger);
+
     const deck = document.getElementById("verticals-deck");
     const canvas = document.getElementById("deck-mesh") as HTMLCanvasElement | null;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    // Any CTA in the deck opens the AI planner (index.astro listens for this event).
-    document.querySelectorAll<HTMLElement>("#verticals-deck .js-open-planner").forEach((b) =>
-        b.addEventListener("click", () => window.dispatchEvent(new Event("openPlanner")))
-    );
+    import { wireBooking } from "../lib/book";
 
-    // Scene dots → scroll to scene
+    // Every CTA in the deck (free POC, assessment…) books a call.
+    wireBooking("#verticals-deck .js-open-planner");
+
+    // ── Horizontal track: scenes 01-03 slide right→left while the wrap is pinned ──
+    const hwrap = document.getElementById("deck-hwrap");
+    const track = document.getElementById("deck-track");
+    const panels = Array.from(track?.querySelectorAll<HTMLElement>(".deck-scene") ?? []);
+    let hTween: gsap.core.Tween | null = null;
+
+    // Vertical scroll position that shows panel `i` fully (horizontal mode only).
+    function panelScrollY(i: number) {
+        if (!hwrap) return 0;
+        const top = hwrap.getBoundingClientRect().top + window.scrollY;
+        const travel = hwrap.offsetHeight - window.innerHeight; // total pinned distance
+        const perPanel = travel / panels.length; // dwell lives after the last panel
+        return Math.round(top + perPanel * i);
+    }
+
+    function goToScene(id: string) {
+        const i = panels.findIndex((p) => p.id === id);
+        if (hTween && i >= 0) {
+            window.scrollTo({ top: panelScrollY(i), behavior: "smooth" });
+        } else {
+            document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+        }
+    }
+
     document.querySelectorAll<HTMLButtonElement>(".deck-dots button").forEach((b) =>
-        b.addEventListener("click", () => {
-            document.getElementById(b.dataset.go || "")?.scrollIntoView({ behavior: "smooth" });
+        b.addEventListener("click", () => goToScene(b.dataset.go || ""))
+    );
+    document.querySelectorAll<HTMLAnchorElement>("#verticals-deck .scroll-cue").forEach((a) =>
+        a.addEventListener("click", (e) => {
+            e.preventDefault();
+            goToScene(a.getAttribute("href")?.slice(1) || "");
         })
     );
+
+    const mm = gsap.matchMedia();
+
+    // ── X takeover: leaving the brand scene, the X grows until it fills the screen,
+    //    then drops and shrinks away as scene 01 arrives. Scrubbed, so it reverses. ──
+    const xzoom = document.getElementById("deck-xzoom");
+    const bmX = document.getElementById("bm-x");
+    const brandScene = document.getElementById("scene-brand");
+    const stageEl = deck?.querySelector<HTMLElement>(".deck-stage");
+    if (deck && xzoom && bmX && brandScene && stageEl) {
+        // The overlay is rendered at its *largest* size (so it never rasterises blurry) and
+        // starts scaled down to the brandmark's X; `place` centres it on that X.
+        const bigSize = () => Math.round(Math.min(window.innerWidth, window.innerHeight) * 0.55);
+        const startScale = () => Math.max(0.05, bmX.getBoundingClientRect().width / bigSize());
+        const place = () => {
+            const x = bmX.getBoundingClientRect();
+            const st = stageEl.getBoundingClientRect();
+            const inDeck = Math.max(0, Math.min(window.scrollY, deck.offsetHeight - window.innerHeight));
+            const S = bigSize();
+            xzoom.style.width = `${S}px`;
+            xzoom.style.height = `${S}px`;
+            xzoom.style.left = `${x.left + x.width / 2 - S / 2 - st.left}px`;
+            xzoom.style.top = `${x.top + x.height / 2 - S / 2 - st.top + inDeck}px`;
+        };
+        mm.add("(prefers-reduced-motion: no-preference)", () => {
+            place();
+            const tl = gsap.timeline({
+                scrollTrigger: {
+                    trigger: brandScene,
+                    start: "top top",
+                    end: "bottom top",
+                    scrub: 0.4,
+                    invalidateOnRefresh: true,
+                    onRefreshInit: place,
+                },
+            });
+            tl.fromTo(xzoom, { opacity: 0, scale: startScale, y: 0, transformOrigin: "50% 50%" }, { scale: 1, duration: 0.5, ease: "power1.inOut" }, 0)
+                .to(xzoom, { opacity: 1, duration: 0.1, ease: "none" }, 0)
+                .to(bmX, { opacity: 0, duration: 0.1, ease: "none" }, 0)
+                .to(xzoom, { scale: 0.35, y: () => window.innerHeight * 0.4, opacity: 0, duration: 0.5, ease: "power2.inOut" }, 0.5);
+            return () => {
+                tl.scrollTrigger?.kill();
+                tl.kill();
+                gsap.set([xzoom, bmX], { clearProps: "all" });
+            };
+        });
+    }
+
+    if (deck && hwrap && track && panels.length > 1) {
+        mm.add("(min-width: 768px) and (prefers-reduced-motion: no-preference)", () => {
+            deck.classList.add("deck--h");
+            hTween = gsap.to(track, {
+                x: () => -(track.scrollWidth - track.clientWidth),
+                ease: "none",
+                scrollTrigger: {
+                    trigger: hwrap,
+                    start: "top top",
+                    // stop sliding when the last panel is in view; the dwell is plain scroll
+                    end: () => `+=${(hwrap.offsetHeight - window.innerHeight) * ((panels.length - 1) / panels.length)}`,
+                    scrub: 0.5,
+                    invalidateOnRefresh: true,
+                },
+            });
+            return () => {
+                hTween?.scrollTrigger?.kill();
+                hTween?.kill();
+                hTween = null;
+                gsap.set(track, { clearProps: "transform" });
+                deck.classList.remove("deck--h");
+            };
+        });
+    }
 
     if (deck && canvas) {
         deck.classList.add("deck--js");
@@ -757,6 +962,45 @@ const aas = t("hero.aas") as string;
             pulses.push({ sx: a.x, sy: a.y, ex, ey, t: 0, sp: 0.012 + Math.random() * 0.02 });
         }
 
+        // The dot matrix: breathes gently; nodes (the formation) light up the dots around them.
+        let dotBoost = new Float32Array(0);
+        function drawDots(now: number) {
+            const t = now / 1000;
+            const S = Math.min(W, H) < 560 ? 28 : 34;
+            const cols = Math.ceil(W / S) + 1;
+            const rows = Math.ceil(H / S) + 1;
+            if (dotBoost.length !== cols * rows) dotBoost = new Float32Array(cols * rows);
+            else dotBoost.fill(0);
+            const bump = (px: number, py: number, R: number, k: number) => {
+                const R2 = R * R;
+                const c0 = Math.max(0, Math.floor((px - R) / S));
+                const c1 = Math.min(cols - 1, Math.ceil((px + R) / S));
+                const r0 = Math.max(0, Math.floor((py - R) / S));
+                const r1 = Math.min(rows - 1, Math.ceil((py + R) / S));
+                for (let r = r0; r <= r1; r++)
+                    for (let c = c0; c <= c1; c++) {
+                        const dx = c * S - px;
+                        const dy = r * S - py;
+                        const d2 = dx * dx + dy * dy;
+                        if (d2 < R2) dotBoost[r * cols + c] += (1 - d2 / R2) * k;
+                    }
+            };
+            for (const n of nodes) bump(n.x, n.y, S * 2.2, 0.55);
+            if (mouse.active) bump(mouse.x, mouse.y, 130, 0.6);
+            for (let r = 0; r < rows; r++)
+                for (let c = 0; c < cols; c++) {
+                    const b = Math.min(1, dotBoost[r * cols + c]);
+                    const x = c * S + 1.5 * Math.sin(t * 0.8 + r * 0.5);
+                    const y = r * S + 1.5 * Math.cos(t * 0.7 + c * 0.5);
+                    const o = 0.09 + b * 0.5;
+                    const rad = 1 + b * 1.2;
+                    ctx.fillStyle = `rgba(${rgb},${o.toFixed(3)})`;
+                    ctx.beginPath();
+                    ctx.arc(x, y, rad, 0, 6.2832);
+                    ctx.fill();
+                }
+        }
+
         let last = 0;
         let raf = 0;
         let running = false;
@@ -775,9 +1019,6 @@ const aas = t("hero.aas") as string;
                 }
             }
             ctx.clearRect(0, 0, W, H);
-            const DIST = Math.min(W, H) < 560 ? 104 : 136;
-            const DIST2 = DIST * DIST;
-
             for (const n of nodes) {
                 n.x += (n.tx - n.x) * 0.022 * dt + n.vx * dt;
                 n.y += (n.ty - n.y) * 0.022 * dt + n.vy * dt;
@@ -797,71 +1038,7 @@ const aas = t("hero.aas") as string;
                 }
             }
 
-            // In the brand scene every node is also tied to the X: the hub.
-            if (formation === "hub") {
-                const HR = Math.min(W, H) * 0.42;
-                const HR2 = HR * HR;
-                for (const n of nodes) {
-                    const dx = n.x - hub.x;
-                    const dy = n.y - hub.y;
-                    const d2 = dx * dx + dy * dy;
-                    if (d2 < HR2) {
-                        const o = (1 - d2 / HR2) * 0.32;
-                        ctx.strokeStyle = `rgba(${rgb},${o.toFixed(3)})`;
-                        ctx.lineWidth = 0.8;
-                        ctx.beginPath();
-                        ctx.moveTo(n.x, n.y);
-                        ctx.lineTo(hub.x, hub.y);
-                        ctx.stroke();
-                    }
-                }
-            }
-
-            for (let a = 0; a < nodes.length; a++) {
-                const na = nodes[a];
-                for (let b = a + 1; b < nodes.length; b++) {
-                    const nb = nodes[b];
-                    const dx = na.x - nb.x;
-                    const dy = na.y - nb.y;
-                    const d2 = dx * dx + dy * dy;
-                    if (d2 < DIST2) {
-                        let o = (1 - d2 / DIST2) * 0.4;
-                        if (mouse.active) {
-                            const mx = (na.x + nb.x) / 2 - mouse.x;
-                            const my = (na.y + nb.y) / 2 - mouse.y;
-                            if (mx * mx + my * my < 30000) o = Math.min(0.8, o + 0.4);
-                        }
-                        ctx.strokeStyle = `rgba(${rgb},${o.toFixed(3)})`;
-                        ctx.lineWidth = 1;
-                        ctx.beginPath();
-                        ctx.moveTo(na.x, na.y);
-                        ctx.lineTo(nb.x, nb.y);
-                        ctx.stroke();
-                    }
-                }
-            }
-
-            // Infra: the backbone joining the regions, drawn hub to hub so it breathes with them
-            if (formation === "regions") {
-                ctx.strokeStyle = `rgba(${rgb},0.34)`;
-                ctx.lineWidth = 1.4;
-                for (const [ha, hb] of backbone) {
-                    const A = nodes[regionHubs[ha]];
-                    const B = nodes[regionHubs[hb]];
-                    if (!A || !B) continue;
-                    ctx.beginPath();
-                    ctx.moveTo(A.x, A.y);
-                    ctx.lineTo(B.x, B.y);
-                    ctx.stroke();
-                }
-            }
-
-            ctx.fillStyle = `rgba(${rgb},0.85)`;
-            for (const n of nodes) {
-                ctx.beginPath();
-                ctx.arc(n.x, n.y, n.r, 0, 6.2832);
-                ctx.fill();
-            }
+            drawDots(now);
 
             for (let p = pulses.length - 1; p >= 0; p--) {
                 const pl = pulses[p];
@@ -990,6 +1167,7 @@ const aas = t("hero.aas") as string;
 
         document.addEventListener("astro:before-swap", () => {
             stop();
+            mm.revert();
             themeObserver.disconnect();
             sceneIO.disconnect();
             deckIO.disconnect();

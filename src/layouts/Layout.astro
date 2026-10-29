@@ -1,6 +1,7 @@
 ---
 import Analytics from '@vercel/analytics/astro';
 import ScrollEngine from '../components/ScrollEngine.astro';
+import ContactModalHost from '../components/ContactModalHost.astro';
 import { getLangFromUrl } from "../i18n/utils";
 import "../styles/global.css";
 
@@ -212,6 +213,7 @@ const organizationSchema = {
         <!-- End Google Tag Manager (noscript) -->
         
         <slot />
+        <ContactModalHost />
         <ScrollEngine />
         <Analytics />
     </body>

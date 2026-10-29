@@ -1,0 +1,353 @@
+---
+// AI portfolio — the products and agents built by the Innovation Pods, filterable by area.
+// Content lives in src/data/aiPortfolio.ts.
+import { getLangFromUrl, useTranslations } from "../i18n/utils";
+import { bookingHref } from "../lib/book";
+import { categories, products, statusLabel } from "../data/aiPortfolio";
+
+const lang = (Astro.currentLocale || getLangFromUrl(Astro.url)) as "en" | "es";
+const t = useTranslations(lang as any);
+const prefix = lang === "es" ? "/es" : "";
+
+const accent: Record<string, string> = {
+    amber: "text-nexus-amber",
+    indigo: "text-indigo-500",
+    blue: "text-nexus-blue",
+    purple: "text-nexus-purple",
+    green: "text-emerald-500",
+};
+---
+
+<section id="ai-portfolio" class="relative py-24 lg:py-32 overflow-hidden">
+    <div class="nx-signal absolute top-0 inset-x-0 h-px" aria-hidden="true"></div>
+    <div
+        class="absolute -bottom-40 right-[-10%] w-[44%] h-[44%] rounded-full blur-[140px] bg-nexus-amber/8 dark:bg-nexus-amber/10 pointer-events-none"
+        aria-hidden="true"
+    >
+    </div>
+
+    <div class="relative max-w-7xl mx-auto px-6 lg:px-12">
+        <div class="reveal mb-10 lg:mb-12 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8">
+            <div class="max-w-3xl">
+                <div class="nx-kicker mb-5">{t("aiport.kicker")}</div>
+                <h2
+                    class="font-display font-extrabold tracking-[-0.035em] leading-[0.98] text-4xl md:text-5xl text-slate-900 dark:text-white mb-4"
+                >
+                    {t("aiport.title")}
+                </h2>
+                <p class="text-slate-500 dark:text-slate-400 text-base md:text-lg font-light leading-relaxed">
+                    {t("aiport.lead")}
+                </p>
+            </div>
+            <div class="nx-mono text-xs text-slate-400 dark:text-slate-500 whitespace-nowrap">
+                {products.length} {t("aiport.count")}
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="ap-filters reveal" role="tablist" aria-label={t("aiport.filter")}>
+            {
+                categories.map((c, i) => (
+                    <button type="button" role="tab" data-cat={c.key} aria-selected={i === 0 ? "true" : "false"}>
+                        {c[lang]}
+                        <i>{c.key === "all" ? products.length : products.filter((p) => p.category === c.key).length}</i>
+                    </button>
+                ))
+            }
+        </div>
+
+        <!-- Grid -->
+        <div id="ap-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {
+                products.map((p) => (
+                    <article class="ap-card" data-cat={p.category}>
+                        <div class="ap-top">
+                            <span class={`ap-icon ${accent[p.accent]}`}>
+                                <span class="material-symbols-outlined text-[1.4rem]">{p.icon}</span>
+                            </span>
+                            <span class={`ap-status ap-status--${p.status}`}>
+                                <i />
+                                {statusLabel[p.status][lang]}
+                            </span>
+                        </div>
+                        <span class="nx-kicker ap-chip">{categories.find((c) => c.key === p.category)?.[lang]}</span>
+                        <h3 class="font-display font-bold text-slate-900 dark:text-white text-[1.2rem] tracking-tight leading-snug mt-2">
+                            {p.name}
+                        </h3>
+                        <p class={`ap-tagline ${accent[p.accent]}`}>{p[lang].tagline}</p>
+                        <p class="text-[0.86rem] leading-relaxed text-slate-500 dark:text-slate-400 font-light mb-4">
+                            {p[lang].desc}
+                        </p>
+                        <ul class="ap-outcomes">
+                            {p[lang].outcomes.map((o) => (
+                                <li>
+                                    <i class="nx-check" />
+                                    <span>{o}</span>
+                                </li>
+                            ))}
+                        </ul>
+                        <div class="ap-foot">
+                            <span class="ap-tags">
+                                {p.stack.map((s) => (
+                                    <i>{s}</i>
+                                ))}
+                            </span>
+                            <a href={bookingHref(prefix)} class="ap-cta js-book" data-mode="poc" data-poc={p.key} aria-label={`${t("aiport.cta")} · ${p.name}`}>
+                                {t("aiport.cta")}
+                                <span class="material-symbols-outlined text-[1rem]">arrow_right_alt</span>
+                            </a>
+                        </div>
+                    </article>
+                ))
+            }
+        </div>
+        <p id="ap-empty" class="hidden nx-mono text-sm text-slate-400 py-10 text-center">{t("aiport.empty")}</p>
+    </div>
+</section>
+
+<style>
+    .ap-filters {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 22px;
+    }
+    .ap-filters button {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px 8px 14px;
+        border-radius: 999px;
+        border: 1px solid rgba(100, 116, 139, 0.22);
+        background: rgba(255, 255, 255, 0.55);
+        color: #475569;
+        font-family: inherit;
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+    :global(.dark) .ap-filters button {
+        background: rgba(15, 23, 42, 0.5);
+        border-color: rgba(148, 163, 184, 0.18);
+        color: #cbd5e1;
+    }
+    .ap-filters button i {
+        font-style: normal;
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-size: 0.62rem;
+        padding: 2px 7px;
+        border-radius: 999px;
+        background: rgba(100, 116, 139, 0.12);
+        color: #64748b;
+    }
+    .ap-filters button:hover {
+        border-color: rgba(99, 102, 241, 0.5);
+    }
+    .ap-filters button[aria-selected="true"] {
+        background: #0f172a;
+        border-color: #0f172a;
+        color: #fff;
+    }
+    :global(.dark) .ap-filters button[aria-selected="true"] {
+        background: #fff;
+        border-color: #fff;
+        color: #0f172a;
+    }
+    .ap-filters button[aria-selected="true"] i {
+        background: rgba(255, 255, 255, 0.18);
+        color: inherit;
+    }
+    :global(.dark) .ap-filters button[aria-selected="true"] i {
+        background: rgba(15, 23, 42, 0.12);
+    }
+
+    .ap-card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        padding: 18px 18px 16px;
+        border-radius: 16px;
+        border: 1px solid rgba(100, 116, 139, 0.16);
+        background: rgba(255, 255, 255, 0.62);
+        backdrop-filter: blur(10px);
+        transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, opacity 0.25s ease;
+    }
+    :global(.dark) .ap-card {
+        background: rgba(15, 23, 42, 0.5);
+        border-color: rgba(148, 163, 184, 0.14);
+    }
+    .ap-card:hover {
+        transform: translateY(-3px);
+        border-color: rgba(99, 102, 241, 0.6);
+        box-shadow: 0 26px 50px -30px rgba(99, 102, 241, 0.45);
+    }
+    .ap-card.is-hidden {
+        display: none;
+    }
+    .ap-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 12px;
+    }
+    .ap-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(99, 102, 241, 0.1);
+        flex-shrink: 0;
+    }
+    .ap-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-size: 0.6rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: #64748b;
+    }
+    .ap-status i {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #94a3b8;
+    }
+    .ap-status--production i {
+        background: #10b981;
+        box-shadow: 0 0 8px #10b981;
+    }
+    .ap-status--pilot i {
+        background: #f59e42;
+        box-shadow: 0 0 8px #f59e42;
+    }
+    .ap-status--poc i {
+        background: #6366f1;
+        box-shadow: 0 0 8px #6366f1;
+    }
+    .ap-chip {
+        align-self: flex-start;
+        padding: 3px 9px;
+        border-radius: 999px;
+        border: 1px solid rgba(99, 102, 241, 0.3);
+        color: #6366f1;
+    }
+    .ap-tagline {
+        font-weight: 600;
+        font-size: 0.9rem;
+        margin: 2px 0 8px;
+    }
+    .ap-outcomes {
+        list-style: none;
+        margin: 0 0 16px;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+    }
+    .ap-outcomes li {
+        display: flex;
+        align-items: flex-start;
+        gap: 9px;
+        font-size: 0.82rem;
+        line-height: 1.4;
+        color: #475569;
+    }
+    :global(.dark) .ap-outcomes li {
+        color: #cbd5e1;
+    }
+    .nx-check {
+        margin-top: 3px;
+        width: 13px;
+        height: 13px;
+        flex-shrink: 0;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        position: relative;
+    }
+    .nx-check::after {
+        content: "";
+        position: absolute;
+        left: 4.5px;
+        top: 2px;
+        width: 2.5px;
+        height: 5.5px;
+        border: solid #fff;
+        border-width: 0 1.5px 1.5px 0;
+        transform: rotate(45deg);
+    }
+    .ap-foot {
+        margin-top: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        padding-top: 12px;
+        border-top: 1px solid rgba(100, 116, 139, 0.14);
+    }
+    .ap-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+    .ap-tags i {
+        font-style: normal;
+        font-size: 0.66rem;
+        font-weight: 500;
+        padding: 3px 8px;
+        border-radius: 999px;
+        background: rgba(100, 116, 139, 0.1);
+        color: #475569;
+    }
+    :global(.dark) .ap-tags i {
+        background: rgba(148, 163, 184, 0.12);
+        color: #cbd5e1;
+    }
+    .ap-cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: #0f172a;
+        text-decoration: none;
+        white-space: nowrap;
+    }
+    :global(.dark) .ap-cta {
+        color: #f8fafc;
+    }
+    .ap-cta .material-symbols-outlined {
+        transition: transform 0.2s;
+    }
+    .ap-cta:hover .material-symbols-outlined {
+        transform: translateX(3px);
+    }
+</style>
+
+<script>
+    import { wireBooking } from "../lib/book";
+    wireBooking("#ai-portfolio .js-book");
+
+    // Category filter
+    const tabs = document.querySelectorAll<HTMLButtonElement>("#ai-portfolio .ap-filters button");
+    const cards = document.querySelectorAll<HTMLElement>("#ap-grid .ap-card");
+    const empty = document.getElementById("ap-empty");
+    tabs.forEach((tab) =>
+        tab.addEventListener("click", () => {
+            const cat = tab.dataset.cat || "all";
+            tabs.forEach((x) => x.setAttribute("aria-selected", x === tab ? "true" : "false"));
+            let shown = 0;
+            cards.forEach((c) => {
+                const hit = cat === "all" || c.dataset.cat === cat;
+                c.classList.toggle("is-hidden", !hit);
+                if (hit) shown++;
+            });
+            empty?.classList.toggle("hidden", shown > 0);
+        })
+    );
+</script>
