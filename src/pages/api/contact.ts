@@ -1,5 +1,4 @@
 import type { APIRoute } from "astro";
-import sgMail from "@sendgrid/mail";
 
 export const prerender = false;
 
@@ -72,29 +71,22 @@ export const POST: APIRoute = async ({ request }) => {
             );
         }
 
-        // Check for SendGrid API key
-        const apiKey = (import.meta.env.SENDGRID_API_KEY || process.env.SENDGRID_API_KEY || "").trim();
+        // Email provider: Resend (https://resend.com). The key must be a "sending only" key.
+        const apiKey = (import.meta.env.RESEND_API_KEY || process.env.RESEND_API_KEY || "").trim();
         if (!apiKey) {
-            console.error("SENDGRID_API_KEY is not configured");
+            console.error("RESEND_API_KEY is not configured");
             return new Response(
                 JSON.stringify({
                     success: false,
                     message: "Email service is not configured. Please contact support.",
                 }),
-                {
-                    status: 500,
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                },
+                { status: 500, headers: { "Content-Type": "application/json" } },
             );
         }
 
-        // Initialize SendGrid
-        sgMail.setApiKey(apiKey);
-
-        const fromEmail = import.meta.env.SENDGRID_FROM_EMAIL || "noreply@nexusinnovations.com";
-        const toEmail = import.meta.env.SENDGRID_TO_EMAIL || "hello@nexusinnova.com";
+        const fromEmail =
+            import.meta.env.MAIL_FROM || process.env.MAIL_FROM || "Nexus Innovations <hello@nexusinnova.com>";
+        const toEmail = import.meta.env.MAIL_TO || process.env.MAIL_TO || "hello@nexusinnova.com";
 
         // Create email content
         const textContent = `
@@ -260,17 +252,22 @@ Sent from Nexus Innovations Contact Form
 </html>
     `.trim();
 
-        // Send email using SendGrid
-        const msg = {
-            to: toEmail,
-            from: fromEmail,
-            subject: `${isPoc ? "POC request" : "New Contact"}: ${data.subject} - ${data.name}`,
-            text: textContent,
-            html: htmlContent,
-            replyTo: data.email,
-        };
-
-        await sgMail.send(msg);
+        // Send email using Resend's REST API (no SDK needed)
+        const res = await fetch("https://api.resend.com/emails", {
+            method: "POST",
+            headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
+            body: JSON.stringify({
+                from: fromEmail,
+                to: [toEmail],
+                reply_to: data.email,
+                subject: `${isPoc ? "POC request" : "New Contact"}: ${data.subject} - ${data.name}`,
+                text: textContent,
+                html: htmlContent,
+            }),
+        });
+        if (!res.ok) {
+            throw new Error(`Resend ${res.status}: ${await res.text()}`);
+        }
 
         return new Response(
             JSON.stringify({
@@ -285,14 +282,7 @@ Sent from Nexus Innovations Contact Form
             },
         );
     } catch (error) {
-        const e = error as { code?: number; response?: { body?: unknown } };
-        const key = (import.meta.env.SENDGRID_API_KEY || process.env.SENDGRID_API_KEY || "") as string;
-        console.error("Error processing contact form:", e?.code, JSON.stringify(e?.response?.body ?? String(error)), {
-            keyLen: key.length,
-            keyPrefix: key.slice(0, 6),
-            keySuffix: key.slice(-4),
-            keyHasWhitespace: /\s/.test(key),
-        });
+        console.error("Error processing contact form:", error instanceof Error ? error.message : error);
 
         return new Response(
             JSON.stringify({
