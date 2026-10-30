@@ -73,7 +73,7 @@ export const POST: APIRoute = async ({ request }) => {
         }
 
         // Check for SendGrid API key
-        const apiKey = import.meta.env.SENDGRID_API_KEY;
+        const apiKey = (import.meta.env.SENDGRID_API_KEY || process.env.SENDGRID_API_KEY || "").trim();
         if (!apiKey) {
             console.error("SENDGRID_API_KEY is not configured");
             return new Response(
@@ -285,7 +285,14 @@ Sent from Nexus Innovations Contact Form
             },
         );
     } catch (error) {
-        console.error("Error processing contact form:", error);
+        const e = error as { code?: number; response?: { body?: unknown } };
+        const key = (import.meta.env.SENDGRID_API_KEY || process.env.SENDGRID_API_KEY || "") as string;
+        console.error("Error processing contact form:", e?.code, JSON.stringify(e?.response?.body ?? String(error)), {
+            keyLen: key.length,
+            keyPrefix: key.slice(0, 6),
+            keySuffix: key.slice(-4),
+            keyHasWhitespace: /\s/.test(key),
+        });
 
         return new Response(
             JSON.stringify({
